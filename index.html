@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>لجنة المخالفات — جامعة الطائف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#be9647; --primary-dark:#9c7a35; --gold:#d5b254; --navy:#162b48;
+    --bg:#f5f7f9; --card:#ffffff; --border:#e5e7e9; --border2:#d8dde2;
+    --text:#333333; --muted:#6a6f75; --danger:#c0392b; --ok:#2f8f5b; --warn:#c98a1c;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Alexandria',sans-serif; background:var(--bg); color:var(--text);
+    min-height:100vh; line-height:1.6;
+  }
+  header{
+    background:#ffffff;
+    padding:22px 20px 0; position:sticky; top:0; z-index:50;
+    box-shadow:0 2px 10px rgba(22,43,72,.08);
+  }
+  .header-top{display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; flex-wrap:wrap; gap:16px;}
+  .brand{display:flex; align-items:center; gap:14px; direction:ltr;}
+  .brand .wordmark{display:flex; flex-direction:column; align-items:flex-start;}
+  .brand .rule{width:100%; height:2px; background:var(--gold); border:none;}
+  .brand .wordmark .ar{
+    font-size:1.5rem; font-weight:800; color:var(--gold); margin:4px 0 2px; direction:rtl;
+    font-family:'Alexandria',sans-serif; white-space:nowrap;
+  }
+  .brand .wordmark .en{
+    font-size:.85rem; font-weight:800; color:var(--gold); letter-spacing:2px; text-transform:uppercase; white-space:nowrap;
+  }
+  .brand .tu{
+    font-size:3.4rem; font-weight:900; color:var(--gold); line-height:.8; letter-spacing:-2px;
+    font-family:'Alexandria',sans-serif;
+  }
+  .committee-tag{font-size:.78rem; color:var(--navy); font-weight:600; display:block; margin-top:6px;}
+  .notice{max-width:1200px; margin:10px auto 0; font-size:.78rem; color:var(--muted); padding-bottom:14px; border-bottom:1px solid var(--border);}
+  nav.tabs{display:flex; gap:6px; max-width:1200px; margin:14px auto 0; overflow-x:auto;}
+  nav.tabs button{
+    flex:1; min-width:110px; padding:12px 14px; background:transparent; border:none; border-bottom:3px solid transparent;
+    color:var(--muted); font-family:inherit; font-size:.92rem; font-weight:600; cursor:pointer;
+    transition:.2s; white-space:nowrap;
+  }
+  nav.tabs button.active{color:var(--navy); border-bottom-color:var(--primary);}
+  nav.tabs button:hover{color:var(--navy);}
+  main{max-width:1200px; margin:0 auto; padding:26px 18px 60px;}
+  .view{display:none; animation:fadeIn .25s ease;}
+  .view.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:0 2px 10px rgba(179,57,42,.05);}
+  .card + .card{margin-top:18px;}
+  .card h2{font-size:1.05rem; color:var(--primary-dark); margin-bottom:4px; position:relative; display:inline-block; padding-bottom:8px;}
+  .card h2::after{content:""; position:absolute; bottom:0; right:0; width:56px; height:2px; background:var(--gold); box-shadow:0 4px 0 var(--gold);}
+  .card h3.section-title{font-size:.95rem; color:var(--primary-dark); margin-bottom:14px; position:relative; display:inline-block; padding-bottom:7px;}
+  .card h3.section-title::after{content:""; position:absolute; bottom:0; right:0; width:40px; height:1.5px; background:var(--gold); box-shadow:0 3px 0 var(--gold);}
+  .card .sub{color:var(--muted); font-size:.85rem; margin-bottom:18px;}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:680px){.grid{grid-template-columns:1fr;}}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:.85rem; color:var(--text); font-weight:600;}
+  .field label .req{color:var(--danger);}
+  input,select,textarea{
+    background:var(--bg); border:1px solid var(--border2); color:var(--text);
+    border-radius:10px; padding:11px 12px; font-family:inherit; font-size:.92rem; width:100%;
+  }
+  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--primary);}
+  textarea{resize:vertical; min-height:90px;}
+  input[type="file"]{padding:8px; background:#fff;}
+  .option-list{display:flex; flex-direction:column; gap:10px;}
+  .option-row{display:flex; align-items:center; gap:8px; font-size:.9rem;}
+  .option-row input{width:auto; accent-color:var(--primary);}
+  .option-row.other input[type="text"]{width:100%; margin-inline-start:8px;}
+  .checkbox-row{display:flex; align-items:flex-start; gap:8px; font-size:.85rem; color:var(--muted);}
+  .checkbox-row input{width:auto; margin-top:3px; accent-color:var(--primary);}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--primary); color:#fff; border:none; border-radius:10px;
+    padding:12px 22px; font-family:inherit; font-weight:700; font-size:.92rem; cursor:pointer;
+    transition:.2s;
+  }
+  .btn:hover{background:var(--primary-dark);}
+  .btn.secondary{background:transparent; color:var(--text); border:1px solid var(--border2);}
+  .btn.secondary:hover{border-color:var(--primary); color:var(--primary);}
+  .btn.danger{background:var(--danger); color:#fff;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .btn-row{display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;}
+
+  .success-banner{
+    background:rgba(47,143,91,.1); border:1px solid var(--ok); color:var(--ok);
+    border-radius:10px; padding:14px 16px; margin-bottom:18px; font-size:.9rem; display:none;
+  }
+  .success-banner.show{display:block;}
+
+  /* Committee area */
+  .gate{max-width:400px; margin:60px auto; text-align:center;}
+  .gate .icon-lg{font-size:2.4rem; margin-bottom:10px;}
+
+  .subnav{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+  .subnav button{
+    background:var(--card); border:1px solid var(--border2); color:var(--muted);
+    padding:9px 16px; border-radius:20px; font-family:inherit; font-size:.85rem; font-weight:600; cursor:pointer;
+    transition:.2s;
+  }
+  .subnav button.active{background:var(--primary); border-color:var(--primary); color:#fff;}
+  .subview{display:none;}
+  .subview.active{display:block;}
+
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;}
+  @media (max-width:680px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center;}
+  .stat b{display:block; font-size:1.6rem; color:var(--primary-dark);}
+  .stat span{font-size:.78rem; color:var(--muted);}
+
+  .breakdown-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:780px){.breakdown-grid{grid-template-columns:1fr;}}
+  .bar-row{display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:.85rem;}
+  .bar-row .label{width:150px; flex-shrink:0; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .bar-row .track{flex:1; background:var(--bg); border-radius:6px; height:10px; overflow:hidden;}
+  .bar-row .fill{height:100%; background:var(--primary); border-radius:6px;}
+  .bar-row .count{width:26px; text-align:left; color:var(--muted); font-weight:700;}
+
+  .recent-list{display:flex; flex-direction:column; gap:0;}
+  .recent-item{display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border); font-size:.87rem;}
+  .recent-item:last-child{border-bottom:none;}
+  .recent-item .who{font-weight:600;}
+  .recent-item .meta{color:var(--muted); font-size:.78rem;}
+
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;}
+  .toolbar input, .toolbar select{width:auto; flex:1; min-width:140px;}
+
+  table{width:100%; border-collapse:collapse; font-size:.86rem;}
+  th,td{padding:10px 8px; text-align:right; border-bottom:1px solid var(--border);}
+  th{color:var(--muted); font-weight:600; font-size:.78rem;}
+  tr:hover td{background:rgba(179,57,42,.03);}
+  .badge{
+    display:inline-block; padding:4px 10px; border-radius:20px; font-size:.74rem; font-weight:700;
+  }
+  .badge.new{background:rgba(201,138,28,.15); color:var(--warn);}
+  .badge.review{background:rgba(70,110,200,.12); color:#3f5fb0;}
+  .badge.action{background:rgba(47,143,91,.15); color:var(--ok);}
+  .badge.closed{background:rgba(138,111,102,.15); color:var(--muted);}
+  .row-actions button{background:none; border:none; color:var(--primary); cursor:pointer; font-family:inherit; font-size:.82rem; text-decoration:underline;}
+  .empty{text-align:center; color:var(--muted); padding:40px 0;}
+
+  /* Modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(36,36,36,.55); display:none;
+    align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--card); border:1px solid var(--border); border-radius:16px;
+    max-width:640px; width:100%; max-height:88vh; overflow-y:auto; padding:24px;
+  }
+  .modal h3{color:var(--primary-dark); margin-bottom:14px; font-size:1.05rem;}
+  .detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; margin-bottom:16px; font-size:.88rem;}
+  .detail-grid .k{color:var(--muted); font-size:.76rem;}
+  .detail-grid .full{grid-column:1/-1;}
+  .modal-close{position:absolute; left:20px; top:16px;}
+  .action-box{background:var(--bg); border:1px dashed var(--border2); border-radius:10px; padding:14px; margin-top:14px;}
+
+  ::placeholder{color:#b79b8f;}
+  .hidden{display:none !important;}
+
+  /* Student history */
+  .student-profile{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:6px;}
+  .student-profile h2{margin-bottom:0;}
+  .student-profile .mini-stats{display:flex; gap:18px;}
+  .student-profile .mini-stats div{text-align:center;}
+  .student-profile .mini-stats b{display:block; font-size:1.3rem; color:var(--primary-dark);}
+  .student-profile .mini-stats span{font-size:.74rem; color:var(--muted);}
+  .timeline{margin-top:10px;}
+  .timeline-item{border-right:3px solid var(--primary); padding:10px 16px; margin-bottom:12px; background:var(--bg); border-radius:0 10px 10px 0;}
+  .timeline-item .row1{display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;}
+  .timeline-item .date{font-size:.76rem; color:var(--muted);}
+  .timeline-item .types{font-size:.88rem; font-weight:600;}
+  .timeline-item .action-line{font-size:.8rem; color:var(--ok); margin-top:4px;}
+
+  /* Print area: hidden on screen, only shown for printing */
+  #printArea{display:none;}
+  @media print{
+    body *{visibility:hidden;}
+    #printArea, #printArea *{visibility:visible;}
+    #printArea{
+      display:block; position:absolute; top:0; right:0; left:0; margin:0 auto; padding:24px; width:100%;
+    }
+    .print-header{display:flex; justify-content:space-between; align-items:center; direction:ltr; border-bottom:3px solid var(--gold); padding-bottom:10px;}
+    .print-wordmark{display:flex; flex-direction:column;}
+    .print-wordmark hr{border:none; height:2px; background:var(--primary);}
+    .print-wordmark .ar{font-size:1.3rem; font-weight:800; color:var(--primary); margin:3px 0;}
+    .print-wordmark .en{font-size:.75rem; font-weight:800; letter-spacing:2px; color:var(--primary); text-transform:uppercase;}
+    .print-tu{font-size:2.6rem; font-weight:900; color:var(--primary); line-height:.8;}
+    .print-committee{direction:rtl; text-align:center; color:var(--muted); font-size:.85rem; margin:10px 0;}
+    .print-title{direction:rtl; text-align:center; color:var(--primary-dark); margin:14px 0; font-size:1.2rem;}
+    .print-table{direction:rtl; width:100%; border-collapse:collapse; margin-top:10px;}
+    .print-table td{border:1px solid #ccc; padding:8px 10px; font-size:.88rem;}
+    .print-table td.k{background:#f6efe9; font-weight:700; width:32%;}
+    .print-signatures{direction:rtl; display:flex; justify-content:space-between; margin-top:60px; gap:20px;}
+    .print-signatures div{flex:1; text-align:center; font-size:.85rem;}
+    .print-signatures hr{margin-top:40px; border:none; border-top:1px solid #999;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <div class="wordmark">
+        <hr class="rule"/>
+        <span class="ar">جامعة الطائف</span>
+        <span class="en">Taif University</span>
+        <hr class="rule"/>
+      </div>
+      <div class="tu">TU</div>
+    </div>
+    <button class="btn secondary" id="logoutBtn" style="display:none;" onclick="logoutDashboard()">تسجيل الخروج</button>
+  </div>
+  <p class="committee-tag" style="max-width:1200px; margin:0 auto;">لجنة متابعة مخالفات الملبس والمظهر</p>
+  <p class="notice">هذا النموذج خاص بإدخال المخالفات الخاصة بالملبس والمظهر فقط.</p>
+  <nav class="tabs">
+    <button class="active" data-view="submit" onclick="switchView('submit')">تقديم بلاغ</button>
+    <button data-view="dashboard" onclick="switchView('dashboard')">لوحة اللجنة</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ SUBMIT VIEW ============ -->
+  <section class="view active" id="view-submit">
+
+    <div class="gate" id="recorderGateBox">
+      <div class="icon-lg">🔒</div>
+      <div class="card">
+        <h2>دخول تسجيل المخالفات</h2>
+        <p class="sub">الرجاء تسجيل الدخول باسم العضو وكلمة السر لتسجيل مخالفة</p>
+        <div class="field">
+          <label>اسم العضو</label>
+          <input type="text" id="recorderUsername" placeholder="اسم المستخدم"/>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label>كلمة السر</label>
+          <input type="password" id="recorderPassword" placeholder="كلمة السر"/>
+        </div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" onclick="tryRecorderLogin()">دخول</button>
+        </div>
+        <p class="sub" id="recorderGateError" style="color:var(--danger); display:none; margin-top:10px;">اسم المستخدم أو كلمة السر غير صحيحة</p>
+      </div>
+    </div>
+
+    <div id="recorderFormWrap" style="display:none">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+        <h2>نموذج جمع بيانات الطالبات المخالفات</h2>
+        <button class="btn secondary" onclick="logoutRecorder()">تسجيل الخروج</button>
+      </div>
+      <p class="sub" style="margin-bottom:4px">مسجّلة الدخول باسم: <b id="recorderNameDisplay"></b></p>
+      <p class="sub">عند إرسال هذا النموذج، لن تُجمع تفاصيلك تلقائياً مثل الاسم وعنوان البريد الإلكتروني إلا إذا قدمتها بنفسك.</p>
+
+      <div class="success-banner" id="successBanner">
+        ✅ تم استلام البلاغ بنجاح، رقم المتابعة: <b id="successRef"></b>
+      </div>
+
+      <form id="reportForm">
+        <div class="grid">
+          <div class="field full">
+            <label>1. اسم الطالبة <span class="req">*</span></label>
+            <input type="text" name="studentName" required placeholder="أدخل إجابتك"/>
+          </div>
+
+          <div class="field">
+            <label>2. الرقم الجامعي <span class="req">*</span></label>
+            <input type="number" inputmode="numeric" name="universityId" required placeholder="يجب أن تكون القيمة رقماً"/>
+          </div>
+          <div class="field">
+            <label>3. الكلية <span class="req">*</span></label>
+            <select name="college" id="collegeSelect" required>
+              <option value="">حدد إجابتك</option>
+              <option>كلية التربية</option>
+              <option>كلية الآداب</option>
+              <option>كلية الشريعة والأنظمة</option>
+              <option>كلية إدارة الأعمال</option>
+              <option>كلية العلوم</option>
+              <option>كلية الحاسبات</option>
+              <option>كلية التصاميم والفنون التطبيقية</option>
+              <option>كلية الطب</option>
+              <option>كلية الصيدلة</option>
+              <option>كلية الهندسة</option>
+              <option>كلية التمريض</option>
+              <option>الكلية التطبيقية / الدبلوم</option>
+              <option>كلية العلوم الطبية التطبيقية</option>
+              <option value="غير ذلك">غير ذلك</option>
+            </select>
+          </div>
+          <div class="field full hidden" id="collegeOtherWrap">
+            <label>يرجى تحديد الكلية</label>
+            <input type="text" name="collegeOther" placeholder="أدخل إجابتك"/>
+          </div>
+
+          <div class="field full">
+            <label>4. القسم <span class="req">*</span></label>
+            <input type="text" name="department" required placeholder="أدخل إجابتك"/>
+          </div>
+
+          <div class="field full">
+            <label>5. المبنى/البوابة <span class="req">*</span></label>
+            <div class="option-list" id="buildingGateList">
+              <label class="option-row"><input type="radio" name="buildingGate" value="بوابة 16" required/> بوابة 16</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="بوابة 2"/> بوابة 2</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="بوابة 27"/> بوابة 27</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="مبنى 18"/> مبنى 18</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="مبنى 9"/> مبنى 9</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="مبنى 13"/> مبنى 13</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="الكلية الصحية"/> الكلية الصحية</label>
+              <label class="option-row"><input type="radio" name="buildingGate" value="كليه العلوم الطبية التطبيقية"/> كليه العلوم الطبية التطبيقية</label>
+              <label class="option-row other"><input type="radio" name="buildingGate" value="غير ذلك" id="buildingGateOtherRadio"/> غير ذلك</label>
+            </div>
+          </div>
+          <div class="field full hidden" id="buildingGateOtherWrap">
+            <label>يرجى تحديد المبنى/البوابة</label>
+            <input type="text" name="buildingGateOther" placeholder="أدخل إجابتك"/>
+          </div>
+
+          <div class="field full">
+            <label>6. اسم من ضبط المخالفة <span class="req">*</span></label>
+            <input type="text" name="recorderName" id="recorderNameField" required readonly style="background:#eef0f2; cursor:not-allowed;"/>
+          </div>
+
+          <div class="field full">
+            <label>7. نوع المخالفة <span class="req">*</span></label>
+            <div class="option-list" id="violationTypeList">
+              <label class="option-row"><input type="checkbox" name="violationType" value="لبس مخالف"/> لبس مخالف</label>
+              <label class="option-row"><input type="checkbox" name="violationType" value="ذوق عام"/> ذوق عام</label>
+              <label class="option-row"><input type="checkbox" name="violationType" value="تخريم"/> تخريم</label>
+              <label class="option-row"><input type="checkbox" name="violationType" value="عباية ملونة"/> عباية ملونة</label>
+              <label class="option-row other"><input type="checkbox" name="violationType" value="غير ذلك" id="violationOtherCheck"/> غير ذلك</label>
+            </div>
+          </div>
+          <div class="field full hidden" id="violationOtherWrap">
+            <label>يرجى تحديد نوع المخالفة</label>
+            <input type="text" name="violationTypeOther" placeholder="أدخل إجابتك"/>
+          </div>
+
+          <div class="field full">
+            <label>8. ملاحظات اضافية</label>
+            <textarea name="notes" placeholder="أدخل إجابتك"></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn">إرسال</button>
+          <button type="reset" class="btn secondary">تفريغ الحقول</button>
+        </div>
+      </form>
+    </div>
+    </div>
+  </section>
+
+  <!-- ============ COMMITTEE PLATFORM VIEW ============ -->
+  <section class="view" id="view-dashboard">
+
+    <div class="gate" id="gateBox">
+      <div class="icon-lg">🔒</div>
+      <div class="card">
+        <h2>دخول أعضاء اللجنة</h2>
+        <p class="sub">الرجاء تسجيل الدخول باسم العضو وكلمة السر</p>
+        <div class="field">
+          <label>اسم العضو</label>
+          <input type="text" id="committeeUsername" placeholder="اسم المستخدم"/>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label>كلمة السر</label>
+          <input type="password" id="passInput" placeholder="كلمة السر"/>
+        </div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn" onclick="tryLogin()">دخول</button>
+        </div>
+        <p class="sub" id="gateError" style="color:var(--danger); display:none; margin-top:10px;">اسم المستخدم أو كلمة السر غير صحيحة</p>
+      </div>
+    </div>
+
+    <div id="dashboardContent" style="display:none">
+
+      <div class="subnav">
+        <button class="active" data-sub="overview" onclick="switchSubView('overview')">نظرة عامة</button>
+        <button data-sub="reports" onclick="switchSubView('reports')">البلاغات</button>
+        <button data-sub="actions" onclick="switchSubView('actions')">الإجراءات</button>
+        <button data-sub="student" onclick="switchSubView('student')">سجل الطالبة</button>
+        <button data-sub="members" onclick="switchSubView('members')">الأعضاء</button>
+      </div>
+
+      <!-- ---- Overview sub-view ---- -->
+      <div class="subview active" id="sub-overview">
+        <div class="stat-row">
+          <div class="stat"><b id="statTotal">0</b><span>إجمالي البلاغات</span></div>
+          <div class="stat"><b id="statNew">0</b><span>جديدة</span></div>
+          <div class="stat"><b id="statReview">0</b><span>قيد المراجعة</span></div>
+          <div class="stat"><b id="statDone">0</b><span>تم اتخاذ إجراء</span></div>
+        </div>
+
+        <div class="card">
+          <div class="breakdown-grid">
+            <div>
+              <h3 class="section-title">الأكثر تكراراً — نوع المخالفة</h3>
+              <div id="violationBreakdown"></div>
+            </div>
+            <div>
+              <h3 class="section-title">توزيع البلاغات — حسب الكلية</h3>
+              <div id="collegeBreakdown"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="section-title">أحدث البلاغات</h3>
+          <div class="recent-list" id="recentList"></div>
+        </div>
+      </div>
+
+      <!-- ---- Reports sub-view ---- -->
+      <div class="subview" id="sub-reports">
+        <div class="card">
+          <div class="toolbar">
+            <input type="text" id="searchInput" placeholder="بحث عن الطالبة بالاسم أو الرقم الجامعي..." oninput="renderTable()"/>
+            <select id="statusFilter" onchange="renderTable()">
+              <option value="">كل الحالات</option>
+              <option value="جديد">جديد</option>
+              <option value="قيد المراجعة">قيد المراجعة</option>
+              <option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option>
+              <option value="إغلاق دون إجراء">إغلاق دون إجراء</option>
+            </select>
+            <select id="collegeFilter" onchange="renderTable()">
+              <option value="">كل الكليات</option>
+            </select>
+            <button class="btn secondary" onclick="exportReportsCSV()">تصدير CSV</button>
+          </div>
+
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>التاريخ</th><th>اسم الطالبة</th><th>الرقم الجامعي</th><th>الكلية</th><th>نوع المخالفة</th><th>الحالة</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty" id="emptyState" style="display:none">لا توجد بلاغات مطابقة</div>
+        </div>
+      </div>
+
+      <!-- ---- Actions sub-view ---- -->
+      <div class="subview" id="sub-actions">
+        <div class="card">
+          <div class="toolbar">
+            <input type="text" id="actionSearchInput" placeholder="بحث بالاسم أو نوع الإجراء..." oninput="renderActionsTable()"/>
+            <select id="actionTypeFilter" onchange="renderActionsTable()">
+              <option value="">كل الإجراءات</option>
+              <option>توجيه شفهي</option>
+              <option>إنذار كتابي أول</option>
+              <option>إنذار كتابي ثاني</option>
+              <option>إنذار نهائي</option>
+              <option>خصم من درجة المواظبة</option>
+              <option>إحالة إلى عمادة شؤون الطلاب</option>
+              <option>إحالة إلى لجنة الانضباط</option>
+              <option>فصل مؤقت</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+            <button class="btn secondary" onclick="exportActionsCSV()">تصدير CSV</button>
+          </div>
+
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>تاريخ الإجراء</th><th>اسم الطالبة</th><th>الرقم الجامعي</th><th>نوع الإجراء</th><th>المسؤول عن الإجراء</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="actionsTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty" id="actionsEmptyState" style="display:none">لا توجد إجراءات مسجّلة بعد</div>
+        </div>
+      </div>
+
+      <!-- ---- Student history sub-view ---- -->
+      <div class="subview" id="sub-student">
+        <div class="card">
+          <h2>سجل الطالبة</h2>
+          <p class="sub">ابحثي بالرقم الجامعي (الأدق) أو باسم الطالبة لعرض كل مخالفاتها وإجراءاتها السابقة مجمّعة.</p>
+          <div class="toolbar">
+            <input type="text" id="studentSearchInput" placeholder="الرقم الجامعي أو اسم الطالبة..."/>
+            <button class="btn" onclick="renderStudentHistory()">بحث</button>
+          </div>
+        </div>
+        <div id="studentHistoryResult"></div>
+      </div>
+
+      <!-- ---- Members management sub-view ---- -->
+      <div class="subview" id="sub-members">
+        <div class="card">
+          <h2>إدارة حسابات الأعضاء</h2>
+          <p class="sub">أضيفي أو عدّلي حسابات الأعضاء المخوّلين بتسجيل المخالفات و/أو الدخول للوحة اللجنة.</p>
+          <div class="grid">
+            <div class="field">
+              <label>اسم المستخدم</label>
+              <input type="text" id="memberUsernameInput" placeholder="username"/>
+            </div>
+            <div class="field">
+              <label>كلمة السر</label>
+              <input type="text" id="memberPasswordInput" placeholder="كلمة السر"/>
+            </div>
+            <div class="field">
+              <label>الاسم الظاهر</label>
+              <input type="text" id="memberDisplayNameInput" placeholder="مثال: أ. سارة القحطاني"/>
+            </div>
+            <div class="field">
+              <label>الصلاحية</label>
+              <select id="memberRoleInput">
+                <option value="both">تسجيل مخالفات + لوحة اللجنة</option>
+                <option value="recorder">تسجيل مخالفات فقط</option>
+                <option value="committee">لوحة اللجنة فقط</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn" onclick="saveMemberForm()">إضافة / حفظ العضو</button>
+            <button class="btn secondary" onclick="resetMemberForm()">تفريغ الحقول</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="section-title">الأعضاء الحاليون</h3>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>اسم المستخدم</th><th>الاسم الظاهر</th><th>الصلاحية</th><th></th></tr></thead>
+              <tbody id="membersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- Detail modal -->
+<div class="overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal" style="position:relative">
+    <button class="btn secondary modal-close" onclick="closeModal()">إغلاق ✕</button>
+    <h3>تفاصيل البلاغ</h3>
+    <div class="detail-grid" id="modalDetails"></div>
+
+    <div class="field full">
+      <label>قرار اللجنة / ملاحظات</label>
+      <textarea id="committeeNotes"></textarea>
+    </div>
+    <div class="field full" style="margin-top:12px;">
+      <label>الحالة</label>
+      <select id="statusSelect" onchange="toggleActionBox()">
+        <option value="جديد">جديد</option>
+        <option value="قيد المراجعة">قيد المراجعة</option>
+        <option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option>
+        <option value="إغلاق دون إجراء">إغلاق دون إجراء</option>
+      </select>
+    </div>
+
+    <div class="action-box hidden" id="actionBox">
+      <div class="grid">
+        <div class="field">
+          <label>نوع الإجراء</label>
+          <select id="actionTypeSelect">
+            <option value="">اختر النوع</option>
+            <option>توجيه شفهي</option>
+            <option>إنذار كتابي أول</option>
+            <option>إنذار كتابي ثاني</option>
+            <option>إنذار نهائي</option>
+            <option>خصم من درجة المواظبة</option>
+            <option>إحالة إلى عمادة شؤون الطلاب</option>
+            <option>إحالة إلى لجنة الانضباط</option>
+            <option>فصل مؤقت</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>تاريخ الإجراء</label>
+          <input type="date" id="actionDateInput"/>
+        </div>
+        <div class="field full">
+          <label>اسم عضو اللجنة المسؤول</label>
+          <input type="text" id="actionByInput" placeholder="أدخل الاسم"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="saveReport()">حفظ</button>
+      <button class="btn secondary" onclick="printReport()">🖨️ طباعة المحضر</button>
+      <button class="btn danger" onclick="deleteReport()">حذف البلاغ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Printable official case report (hidden on screen, shown only via print) -->
+<div id="printArea">
+  <div class="print-header">
+    <div class="print-wordmark">
+      <hr/>
+      <span class="ar">جامعة الطائف</span>
+      <span class="en">Taif University</span>
+      <hr/>
+    </div>
+    <div class="print-tu">TU</div>
+  </div>
+  <p class="print-committee">لجنة متابعة مخالفات الملبس والمظهر</p>
+  <h2 class="print-title">محضر بلاغ مخالفة</h2>
+  <table class="print-table" id="printTable"></table>
+  <div class="print-signatures">
+    <div><span>رئيسة اللجنة</span><hr/></div>
+    <div><span>عضو اللجنة</span><hr/></div>
+    <div><span>الطالبة (بالعلم)</span><hr/></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'lajnat_mukhalafat_reports_v2';
+const MEMBERS_KEY = 'lajnat_mukhalafat_members_v1';
+const RECORDER_SESSION_KEY = 'lajnat_recorder_session_v1';
+const COMMITTEE_SESSION_KEY = 'lajnat_committee_session_v1';
+let activeReportId = null;
+let editingMemberUsername = null;
+
+const COLLEGES = [
+  'كلية التربية','كلية الآداب','كلية الشريعة والأنظمة','كلية إدارة الأعمال','كلية العلوم',
+  'كلية الحاسبات','كلية التصاميم والفنون التطبيقية','كلية الطب','كلية الصيدلة','كلية الهندسة',
+  'كلية التمريض','الكلية التطبيقية / الدبلوم','كلية العلوم الطبية التطبيقية'
+];
+
+const ROLE_LABELS = {both:'تسجيل مخالفات + لوحة اللجنة', recorder:'تسجيل مخالفات فقط', committee:'لوحة اللجنة فقط'};
+
+// NOTE: this is a client-only access gate (no server) — good for tracking who logged
+// what within a trusted team, not real security against someone reading the page source.
+function loadMembers(){
+  let m;
+  try { m = JSON.parse(localStorage.getItem(MEMBERS_KEY)); } catch(e){ m = null; }
+  if(!m || !m.length){
+    m = [{username:'admin', password:'2580', displayName:'المشرف العام', role:'both'}];
+    saveMembers(m);
+  }
+  return m;
+}
+function saveMembers(list){ localStorage.setItem(MEMBERS_KEY, JSON.stringify(list)); }
+function findMember(username, password){
+  return loadMembers().find(m => m.username === username && m.password === password);
+}
+function getRecorderSession(){ try { return JSON.parse(sessionStorage.getItem(RECORDER_SESSION_KEY)); } catch(e){ return null; } }
+function getCommitteeSession(){ try { return JSON.parse(sessionStorage.getItem(COMMITTEE_SESSION_KEY)); } catch(e){ return null; } }
+
+function loadReports(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e){ return []; }
+}
+function saveReports(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+function switchView(name){
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.getElementById('logoutBtn').style.display = (name==='dashboard' && getCommitteeSession()) ? 'inline-flex' : 'none';
+  if(name==='dashboard') refreshDashboard();
+  if(name==='submit') refreshRecorderGate();
+}
+
+function switchSubView(name){
+  document.querySelectorAll('.subnav button').forEach(b=>b.classList.toggle('active', b.dataset.sub===name));
+  document.querySelectorAll('.subview').forEach(v=>v.classList.remove('active'));
+  document.getElementById('sub-'+name).classList.add('active');
+  if(name==='overview') renderOverview();
+  if(name==='reports') renderTable();
+  if(name==='actions') renderActionsTable();
+  if(name==='members') renderMembersTable();
+}
+
+function refreshDashboard(){
+  const session = getCommitteeSession();
+  document.getElementById('gateBox').style.display = session ? 'none' : 'block';
+  document.getElementById('dashboardContent').style.display = session ? 'block' : 'none';
+  document.getElementById('logoutBtn').style.display = session ? 'inline-flex' : 'none';
+  if(session){
+    populateCollegeFilter();
+    renderOverview();
+    renderTable();
+    renderActionsTable();
+    renderMembersTable();
+  }
+}
+
+function tryLogin(){
+  const u = document.getElementById('committeeUsername').value.trim();
+  const p = document.getElementById('passInput').value;
+  const member = findMember(u, p);
+  if(member && (member.role === 'committee' || member.role === 'both')){
+    sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({username: member.username, displayName: member.displayName}));
+    document.getElementById('gateError').style.display='none';
+    refreshDashboard();
+  } else {
+    document.getElementById('gateError').style.display='block';
+  }
+}
+function logoutDashboard(){
+  sessionStorage.removeItem(COMMITTEE_SESSION_KEY);
+  refreshDashboard();
+}
+
+// ---- Recorder (submit-form) login ----
+function refreshRecorderGate(){
+  const session = getRecorderSession();
+  document.getElementById('recorderGateBox').style.display = session ? 'none' : 'block';
+  document.getElementById('recorderFormWrap').style.display = session ? 'block' : 'none';
+  if(session){
+    document.getElementById('recorderNameDisplay').textContent = session.displayName;
+    const rf = document.getElementById('recorderNameField');
+    if(rf) rf.value = session.displayName;
+  }
+}
+function tryRecorderLogin(){
+  const u = document.getElementById('recorderUsername').value.trim();
+  const p = document.getElementById('recorderPassword').value;
+  const member = findMember(u, p);
+  if(member && (member.role === 'recorder' || member.role === 'both')){
+    sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({username: member.username, displayName: member.displayName}));
+    document.getElementById('recorderGateError').style.display='none';
+    refreshRecorderGate();
+  } else {
+    document.getElementById('recorderGateError').style.display='block';
+  }
+}
+function logoutRecorder(){
+  sessionStorage.removeItem(RECORDER_SESSION_KEY);
+  refreshRecorderGate();
+}
+
+// ---- Member accounts management ----
+function renderMembersTable(){
+  const tbody = document.getElementById('membersTableBody');
+  if(!tbody) return;
+  tbody.innerHTML = loadMembers().map(m => `
+    <tr>
+      <td>${escapeHtml(m.username)}</td>
+      <td>${escapeHtml(m.displayName)}</td>
+      <td>${ROLE_LABELS[m.role] || m.role}</td>
+      <td class="row-actions">
+        <button onclick="editMember('${m.username}')">تعديل</button>
+        <button onclick="deleteMember('${m.username}')">حذف</button>
+      </td>
+    </tr>
+  `).join('');
+}
+function saveMemberForm(){
+  const username = document.getElementById('memberUsernameInput').value.trim();
+  const password = document.getElementById('memberPasswordInput').value.trim();
+  const displayName = document.getElementById('memberDisplayNameInput').value.trim();
+  const role = document.getElementById('memberRoleInput').value;
+  if(!username || !password || !displayName){ alert('يرجى تعبئة كل الحقول'); return; }
+
+  const members = loadMembers();
+  const targetUsername = editingMemberUsername || username;
+  const idx = members.findIndex(m => m.username === targetUsername);
+  const record = {username, password, displayName, role};
+  if(idx > -1) members[idx] = record; else members.push(record);
+  saveMembers(members);
+  resetMemberForm();
+  renderMembersTable();
+}
+function editMember(username){
+  const m = loadMembers().find(x=>x.username===username);
+  if(!m) return;
+  editingMemberUsername = username;
+  document.getElementById('memberUsernameInput').value = m.username;
+  document.getElementById('memberPasswordInput').value = m.password;
+  document.getElementById('memberDisplayNameInput').value = m.displayName;
+  document.getElementById('memberRoleInput').value = m.role;
+}
+function resetMemberForm(){
+  editingMemberUsername = null;
+  document.getElementById('memberUsernameInput').value = '';
+  document.getElementById('memberPasswordInput').value = '';
+  document.getElementById('memberDisplayNameInput').value = '';
+  document.getElementById('memberRoleInput').value = 'both';
+}
+function deleteMember(username){
+  if(!confirm('هل تريدين حذف هذا العضو؟')) return;
+  const members = loadMembers().filter(m=>m.username!==username);
+  saveMembers(members);
+  renderMembersTable();
+}
+
+// ---- Conditional "other" fields (submit form) ----
+document.getElementById('collegeSelect').addEventListener('change', function(){
+  document.getElementById('collegeOtherWrap').classList.toggle('hidden', this.value !== 'غير ذلك');
+});
+document.getElementById('buildingGateList').addEventListener('change', function(){
+  const other = document.getElementById('buildingGateOtherRadio').checked;
+  document.getElementById('buildingGateOtherWrap').classList.toggle('hidden', !other);
+});
+document.getElementById('violationTypeList').addEventListener('change', function(){
+  const other = document.getElementById('violationOtherCheck').checked;
+  document.getElementById('violationOtherWrap').classList.toggle('hidden', !other);
+});
+
+// ---- Submit form ----
+document.getElementById('reportForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+
+  const violationTypes = fd.getAll('violationType');
+
+  const reports = loadReports();
+  const id = 'RPT-' + Date.now().toString(36).toUpperCase();
+  reports.unshift({
+    id,
+    createdAt: new Date().toISOString(),
+    studentName: fd.get('studentName'),
+    universityId: fd.get('universityId'),
+    college: fd.get('college'),
+    collegeOther: fd.get('collegeOther') || '',
+    department: fd.get('department'),
+    buildingGate: fd.get('buildingGate'),
+    buildingGateOther: fd.get('buildingGateOther') || '',
+    recorderName: fd.get('recorderName'),
+    violationTypes,
+    violationTypeOther: fd.get('violationTypeOther') || '',
+    notes: fd.get('notes') || '',
+    status: 'جديد',
+    committeeNotes: '',
+    actionType: '', actionDate: '', actionBy: ''
+  });
+  saveReports(reports);
+  document.getElementById('successRef').textContent = id;
+  document.getElementById('successBanner').classList.add('show');
+  form.reset();
+  document.getElementById('collegeOtherWrap').classList.add('hidden');
+  document.getElementById('buildingGateOtherWrap').classList.add('hidden');
+  document.getElementById('violationOtherWrap').classList.add('hidden');
+  refreshRecorderGate();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+// ---- Helpers ----
+function statusBadgeClass(status){
+  return {'جديد':'new','قيد المراجعة':'review','تم اتخاذ إجراء':'action','إغلاق دون إجراء':'closed'}[status] || 'new';
+}
+function collegeLabel(r){
+  return r.college === 'غير ذلك' ? (r.collegeOther || 'غير ذلك') : r.college;
+}
+function buildingGateLabel(r){
+  return r.buildingGate === 'غير ذلك' ? (r.buildingGateOther || 'غير ذلك') : r.buildingGate;
+}
+function violationTypesLabel(r){
+  const list = (r.violationTypes || []).map(v => v === 'غير ذلك' ? (r.violationTypeOther || 'غير ذلك') : v);
+  return list.join('، ');
+}
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+function populateCollegeFilter(){
+  const sel = document.getElementById('collegeFilter');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">كل الكليات</option>' + COLLEGES.map(c=>`<option>${c}</option>`).join('');
+  sel.value = current;
+}
+
+// ---- Overview ----
+function renderOverview(){
+  const reports = loadReports();
+  document.getElementById('statTotal').textContent = reports.length;
+  document.getElementById('statNew').textContent = reports.filter(r=>r.status==='جديد').length;
+  document.getElementById('statReview').textContent = reports.filter(r=>r.status==='قيد المراجعة').length;
+  document.getElementById('statDone').textContent = reports.filter(r=>r.status==='تم اتخاذ إجراء').length;
+
+  // violation type breakdown
+  const vCounts = {};
+  reports.forEach(r=>{
+    (r.violationTypes||[]).forEach(v=>{
+      const label = v === 'غير ذلك' ? (r.violationTypeOther || 'غير ذلك') : v;
+      vCounts[label] = (vCounts[label]||0) + 1;
+    });
+  });
+  renderBarList('violationBreakdown', vCounts);
+
+  // college breakdown
+  const cCounts = {};
+  reports.forEach(r=>{
+    const label = collegeLabel(r) || 'غير محدد';
+    cCounts[label] = (cCounts[label]||0) + 1;
+  });
+  renderBarList('collegeBreakdown', cCounts);
+
+  // recent list
+  const recentEl = document.getElementById('recentList');
+  const recent = reports.slice(0,5);
+  recentEl.innerHTML = recent.length ? recent.map(r=>`
+    <div class="recent-item">
+      <div>
+        <div class="who">${escapeHtml(r.studentName)}</div>
+        <div class="meta">${escapeHtml(collegeLabel(r))} — ${new Date(r.createdAt).toLocaleDateString('ar-SA')}</div>
+      </div>
+      <span class="badge ${statusBadgeClass(r.status)}">${r.status}</span>
+    </div>
+  `).join('') : '<div class="empty">لا توجد بلاغات بعد</div>';
+}
+
+function renderBarList(containerId, counts){
+  const el = document.getElementById(containerId);
+  const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if(!entries.length){ el.innerHTML = '<div class="empty" style="padding:10px 0">لا توجد بيانات</div>'; return; }
+  const max = Math.max(...entries.map(e=>e[1]));
+  el.innerHTML = entries.map(([label,count])=>`
+    <div class="bar-row">
+      <div class="label">${escapeHtml(label)}</div>
+      <div class="track"><div class="fill" style="width:${(count/max*100).toFixed(0)}%"></div></div>
+      <div class="count">${count}</div>
+    </div>
+  `).join('');
+}
+
+// ---- Reports table ----
+function renderTable(){
+  const reports = loadReports();
+  const q = (document.getElementById('searchInput').value || '').trim();
+  const statusFilter = document.getElementById('statusFilter').value;
+  const collegeFilter = document.getElementById('collegeFilter').value;
+
+  const filtered = reports.filter(r=>{
+    const matchesQ = !q || (r.studentName + r.universityId).includes(q);
+    const matchesStatus = !statusFilter || r.status === statusFilter;
+    const matchesCollege = !collegeFilter || collegeLabel(r) === collegeFilter;
+    return matchesQ && matchesStatus && matchesCollege;
+  });
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
+
+  filtered.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${new Date(r.createdAt).toLocaleDateString('ar-SA')}</td>
+      <td>${escapeHtml(r.studentName)}</td>
+      <td>${escapeHtml(r.universityId)}</td>
+      <td>${escapeHtml(collegeLabel(r))}</td>
+      <td>${escapeHtml(violationTypesLabel(r))}</td>
+      <td><span class="badge ${statusBadgeClass(r.status)}">${r.status}</span></td>
+      <td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ---- Actions table ----
+function renderActionsTable(){
+  const reports = loadReports().filter(r => r.status === 'تم اتخاذ إجراء' && r.actionType);
+  const q = (document.getElementById('actionSearchInput').value || '').trim();
+  const typeFilter = document.getElementById('actionTypeFilter').value;
+
+  const filtered = reports.filter(r=>{
+    const matchesQ = !q || (r.studentName + r.universityId + r.actionType).includes(q);
+    const matchesType = !typeFilter || r.actionType === typeFilter;
+    return matchesQ && matchesType;
+  });
+
+  const tbody = document.getElementById('actionsTableBody');
+  tbody.innerHTML = '';
+  document.getElementById('actionsEmptyState').style.display = filtered.length ? 'none' : 'block';
+
+  filtered.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.actionDate || '-'}</td>
+      <td>${escapeHtml(r.studentName)}</td>
+      <td>${escapeHtml(r.universityId)}</td>
+      <td>${escapeHtml(r.actionType)}</td>
+      <td>${escapeHtml(r.actionBy)||'-'}</td>
+      <td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ---- Student history ----
+function renderStudentHistory(){
+  const q = (document.getElementById('studentSearchInput').value || '').trim();
+  const resultEl = document.getElementById('studentHistoryResult');
+  if(!q){ resultEl.innerHTML = ''; return; }
+
+  const all = loadReports();
+  const byId = all.filter(r => String(r.universityId) === q);
+  const matches = byId.length ? byId : all.filter(r => (r.studentName||'').includes(q));
+
+  if(!matches.length){
+    resultEl.innerHTML = `<div class="card"><div class="empty">لا توجد أي مخالفات مسجّلة لهذه الطالبة</div></div>`;
+    return;
+  }
+
+  const sorted = matches.slice().sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+  const latest = sorted[0];
+  const actionsCount = matches.filter(r => r.status === 'تم اتخاذ إجراء').length;
+
+  resultEl.innerHTML = `
+    <div class="card">
+      <div class="student-profile">
+        <div>
+          <h2>${escapeHtml(latest.studentName)}</h2>
+          <p class="sub" style="margin-bottom:0">الرقم الجامعي: ${escapeHtml(latest.universityId)} — ${escapeHtml(collegeLabel(latest))}</p>
+        </div>
+        <div class="mini-stats">
+          <div><b>${matches.length}</b><span>إجمالي المخالفات</span></div>
+          <div><b>${actionsCount}</b><span>إجراءات متخذة</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="section-title">السجل الزمني</h3>
+      <div class="timeline">
+        ${sorted.map(r => `
+          <div class="timeline-item">
+            <div class="row1">
+              <span class="types">${escapeHtml(violationTypesLabel(r))}</span>
+              <span class="badge ${statusBadgeClass(r.status)}">${r.status}</span>
+            </div>
+            <div class="date">${new Date(r.createdAt).toLocaleDateString('ar-SA')} — ${escapeHtml(buildingGateLabel(r))}</div>
+            ${r.actionType ? `<div class="action-line">✔ ${escapeHtml(r.actionType)} — ${r.actionDate||''} (${escapeHtml(r.actionBy)||'غير محدد'})</div>` : ''}
+            <div style="margin-top:8px"><button class="btn secondary" style="padding:6px 14px; font-size:.78rem" onclick="openModal('${r.id}')">عرض التفاصيل</button></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ---- Print ----
+function printReport(){
+  if(!activeReportId) return;
+  const r = loadReports().find(x=>x.id===activeReportId);
+  if(!r) return;
+  const rows = [
+    ['رقم البلاغ', r.id],
+    ['تاريخ التقديم', new Date(r.createdAt).toLocaleString('ar-SA')],
+    ['اسم الطالبة', r.studentName],
+    ['الرقم الجامعي', r.universityId],
+    ['الكلية', collegeLabel(r)],
+    ['القسم', r.department],
+    ['المبنى/البوابة', buildingGateLabel(r)],
+    ['اسم من ضبط المخالفة', r.recorderName],
+    ['نوع المخالفة', violationTypesLabel(r)],
+    ['ملاحظات اضافية', r.notes || '-'],
+    ['حالة البلاغ', r.status],
+    ['قرار اللجنة / ملاحظات', r.committeeNotes || '-'],
+  ];
+  if(r.actionType){
+    rows.push(['نوع الإجراء', r.actionType]);
+    rows.push(['تاريخ الإجراء', r.actionDate || '-']);
+    rows.push(['المسؤول عن الإجراء', r.actionBy || '-']);
+  }
+  document.getElementById('printTable').innerHTML = rows.map(([k,v]) =>
+    `<tr><td class="k">${escapeHtml(k)}</td><td>${escapeHtml(String(v||'-'))}</td></tr>`
+  ).join('');
+  window.print();
+}
+
+// ---- Modal ----
+function toggleActionBox(){
+  const show = document.getElementById('statusSelect').value === 'تم اتخاذ إجراء';
+  document.getElementById('actionBox').classList.toggle('hidden', !show);
+}
+
+function openModal(id){
+  activeReportId = id;
+  const r = loadReports().find(x=>x.id===id);
+  if(!r) return;
+  document.getElementById('modalDetails').innerHTML = `
+    <div><div class="k">رقم البلاغ</div>${r.id}</div>
+    <div><div class="k">تاريخ التقديم</div>${new Date(r.createdAt).toLocaleString('ar-SA')}</div>
+    <div><div class="k">اسم الطالبة</div>${escapeHtml(r.studentName)}</div>
+    <div><div class="k">الرقم الجامعي</div>${escapeHtml(r.universityId)}</div>
+    <div><div class="k">الكلية</div>${escapeHtml(collegeLabel(r))}</div>
+    <div><div class="k">القسم</div>${escapeHtml(r.department)}</div>
+    <div><div class="k">المبنى/البوابة</div>${escapeHtml(buildingGateLabel(r))}</div>
+    <div><div class="k">اسم من ضبط المخالفة</div>${escapeHtml(r.recorderName)}</div>
+    <div class="full"><div class="k">نوع المخالفة</div>${escapeHtml(violationTypesLabel(r))}</div>
+    ${r.notes ? `<div class="full"><div class="k">ملاحظات اضافية</div>${escapeHtml(r.notes)}</div>` : ''}
+  `;
+  document.getElementById('committeeNotes').value = r.committeeNotes || '';
+  document.getElementById('statusSelect').value = r.status;
+  document.getElementById('actionTypeSelect').value = r.actionType || '';
+  document.getElementById('actionDateInput').value = r.actionDate || '';
+  document.getElementById('actionByInput').value = r.actionBy || (getCommitteeSession() ? getCommitteeSession().displayName : '');
+  toggleActionBox();
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  activeReportId = null;
+}
+function saveReport(){
+  if(!activeReportId) return;
+  const reports = loadReports();
+  const idx = reports.findIndex(x=>x.id===activeReportId);
+  if(idx===-1) return;
+  const status = document.getElementById('statusSelect').value;
+  reports[idx].status = status;
+  reports[idx].committeeNotes = document.getElementById('committeeNotes').value;
+  if(status === 'تم اتخاذ إجراء'){
+    reports[idx].actionType = document.getElementById('actionTypeSelect').value;
+    reports[idx].actionDate = document.getElementById('actionDateInput').value;
+    reports[idx].actionBy = document.getElementById('actionByInput').value;
+  } else {
+    reports[idx].actionType = ''; reports[idx].actionDate = ''; reports[idx].actionBy = '';
+  }
+  saveReports(reports);
+  closeModal();
+  renderOverview(); renderTable(); renderActionsTable();
+}
+function deleteReport(){
+  if(!activeReportId) return;
+  if(!confirm('هل أنت متأكد من حذف هذا البلاغ نهائياً؟')) return;
+  const reports = loadReports().filter(x=>x.id!==activeReportId);
+  saveReports(reports);
+  closeModal();
+  renderOverview(); renderTable(); renderActionsTable();
+}
+
+// ---- Exports ----
+function exportReportsCSV(){
+  const reports = loadReports();
+  const headers = ['رقم البلاغ','تاريخ التقديم','اسم الطالبة','الرقم الجامعي','الكلية','القسم','المبنى/البوابة','اسم من ضبط المخالفة','نوع المخالفة','ملاحظات اضافية','الحالة','ملاحظات اللجنة'];
+  const rows = reports.map(r=>[
+    r.id, r.createdAt, r.studentName, r.universityId, collegeLabel(r), r.department,
+    buildingGateLabel(r), r.recorderName, violationTypesLabel(r), r.notes, r.status, r.committeeNotes
+  ]);
+  downloadCSV(headers, rows, 'تقرير_المخالفات_');
+}
+function exportActionsCSV(){
+  const reports = loadReports().filter(r => r.status === 'تم اتخاذ إجراء' && r.actionType);
+  const headers = ['رقم البلاغ','اسم الطالبة','الرقم الجامعي','الكلية','نوع الإجراء','تاريخ الإجراء','المسؤول عن الإجراء'];
+  const rows = reports.map(r=>[r.id, r.studentName, r.universityId, collegeLabel(r), r.actionType, r.actionDate, r.actionBy]);
+  downloadCSV(headers, rows, 'سجل_الإجراءات_');
+}
+function downloadCSV(headers, rows, filenamePrefix){
+  let csv = '﻿' + headers.join(',') + '\n';
+  rows.forEach(row=>{
+    csv += row.map(cell => `"${String(cell||'').replace(/"/g,'""')}"`).join(',') + '\n';
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filenamePrefix + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('passInput').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+document.getElementById('committeeUsername').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+document.getElementById('recorderUsername').addEventListener('keydown', e => { if(e.key==='Enter') tryRecorderLogin(); });
+document.getElementById('recorderPassword').addEventListener('keydown', e => { if(e.key==='Enter') tryRecorderLogin(); });
+document.getElementById('studentSearchInput').addEventListener('keydown', e => { if(e.key==='Enter') renderStudentHistory(); });
+refreshRecorderGate();
+</script>
+
+</body>
+</html>
