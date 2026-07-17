@@ -634,12 +634,16 @@
 </div>
 
 <script>
-const STORAGE_KEY = 'lajnat_mukhalafat_reports_v2';
-const MEMBERS_KEY = 'lajnat_mukhalafat_members_v1';
-const RECORDER_SESSION_KEY = 'lajnat_recorder_session_v1';
-const COMMITTEE_SESSION_KEY = 'lajnat_committee_session_v1';
+// ═══ إعدادات الاتصال بقاعدة البيانات (Supabase) ═══
+const SUPABASE_URL  = 'https://bplxjiiauxeviqrvkygh.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwbHhqaWlhdXhldmlxcnZreWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTQwNTIsImV4cCI6MjA5OTg3MDA1Mn0.0pudvyqefVQ0w7McGud94TlEA7zLpAJB4HIJAa5gdnU';
+
+const RECORDER_SESSION_KEY = 'lajnat_recorder_session_v2';
+const COMMITTEE_SESSION_KEY = 'lajnat_committee_session_v2';
 let activeReportId = null;
 let editingMemberUsername = null;
+let reportsCache = [];
+let membersCache = [];
 
 const COLLEGES = [
   'كلية التربية','كلية الآداب','كلية الشريعة والأنظمة','كلية إدارة الأعمال','كلية العلوم',
@@ -649,35 +653,54 @@ const COLLEGES = [
 
 const ROLE_LABELS = {both:'تسجيل مخالفات + لوحة اللجنة', recorder:'تسجيل مخالفات فقط', committee:'لوحة اللجنة فقط'};
 
-// NOTE: this is a client-only access gate (no server) — good for tracking who logged
-// what within a trusted team, not real security against someone reading the page source.
-function loadMembers(){
-  let m;
-  try { m = JSON.parse(localStorage.getItem(MEMBERS_KEY)); } catch(e){ m = null; }
-  if(!m || !m.length){
-    m = [
-      {username:'admin',    password:'2580', displayName:'المشرفة العامة',      role:'both'},
-      {username:'lajna1',   password:'1111', displayName:'عضو اللجنة 1',        role:'committee'},
-      {username:'lajna2',   password:'2222', displayName:'عضو اللجنة 2',        role:'committee'},
-      {username:'tasjeel1', password:'3333', displayName:'مسجّلة المخالفات 1',   role:'recorder'},
-      {username:'tasjeel2', password:'4444', displayName:'مسجّلة المخالفات 2',   role:'recorder'}
-    ];
-    saveMembers(m);
-  }
-  return m;
+// ---- Supabase RPC helper ----
+async function sbCall(fn, args){
+  const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON,
+      'Authorization': 'Bearer ' + SUPABASE_ANON,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(args || {})
+  });
+  if(!res.ok){ throw new Error('HTTP ' + res.status); }
+  return res.json();
 }
-function saveMembers(list){ localStorage.setItem(MEMBERS_KEY, JSON.stringify(list)); }
-function findMember(username, password){
-  return loadMembers().find(m => m.username === username && m.password === password);
+
+function normalizeReport(r){
+  return {
+    id: r.id, createdAt: r.created_at,
+    studentName: r.student_name, universityId: r.university_id,
+    college: r.college, collegeOther: r.college_other || '',
+    department: r.department, buildingGate: r.building_gate,
+    buildingGateOther: r.building_gate_other || '', recorderName: r.recorder_name,
+    violationTypes: r.violation_types || [], violationTypeOther: r.violation_type_other || '',
+    notes: r.notes || '', status: r.status, committeeNotes: r.committee_notes || '',
+    actionType: r.action_type || '', actionDate: r.action_date || '', actionBy: r.action_by || ''
+  };
 }
+
+// ---- Sessions (token from server, stored per browser session) ----
 function getRecorderSession(){ try { return JSON.parse(sessionStorage.getItem(RECORDER_SESSION_KEY)); } catch(e){ return null; } }
 function getCommitteeSession(){ try { return JSON.parse(sessionStorage.getItem(COMMITTEE_SESSION_KEY)); } catch(e){ return null; } }
 
-function loadReports(){
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch(e){ return []; }
+// ---- Data caches (synced from the shared database) ----
+function loadReports(){ return reportsCache; }
+function loadMembers(){ return membersCache; }
+
+async function fetchReports(){
+  const s = getCommitteeSession();
+  if(!s){ reportsCache = []; return; }
+  const rows = await sbCall('app_list_reports', { p_token: s.token });
+  reportsCache = (rows || []).map(normalizeReport);
 }
-function saveReports(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+async function fetchMembers(){
+  const s = getCommitteeSession();
+  if(!s){ membersCache = []; return; }
+  const rows = await sbCall('app_list_members', { p_token: s.token });
+  membersCache = (rows || []).map(m => ({username: m.username, displayName: m.display_name, role: m.role}));
+}
 
 function switchView(name){
   document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
@@ -698,13 +721,17 @@ function switchSubView(name){
   if(name==='members') renderMembersTable();
 }
 
-function refreshDashboard(){
+async function refreshDashboard(){
   const session = getCommitteeSession();
   document.getElementById('gateBox').style.display = session ? 'none' : 'block';
   document.getElementById('dashboardContent').style.display = session ? 'block' : 'none';
   document.getElementById('logoutBtn').style.display = session ? 'inline-flex' : 'none';
   if(session){
     populateCollegeFilter();
+    try {
+      await fetchReports();
+      await fetchMembers();
+    } catch(e){ console.error(e); alert('تعذّر تحميل البيانات من قاعدة البيانات'); }
     renderOverview();
     renderTable();
     renderActionsTable();
@@ -712,20 +739,32 @@ function refreshDashboard(){
   }
 }
 
-function tryLogin(){
+async function tryLogin(){
   const u = document.getElementById('committeeUsername').value.trim();
   const p = document.getElementById('passInput').value;
-  const member = findMember(u, p);
-  if(member && (member.role === 'committee' || member.role === 'both')){
-    sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({username: member.username, displayName: member.displayName}));
-    document.getElementById('gateError').style.display='none';
-    refreshDashboard();
-  } else {
-    document.getElementById('gateError').style.display='block';
+  const err = document.getElementById('gateError');
+  try {
+    const res = await sbCall('app_login', { p_username: u, p_password: p });
+    if(res.ok && (res.role === 'committee' || res.role === 'both')){
+      sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({
+        token: res.token, username: res.username, displayName: res.display_name, role: res.role
+      }));
+      err.style.display='none';
+      await refreshDashboard();
+    } else {
+      err.textContent = 'اسم المستخدم أو كلمة السر غير صحيحة';
+      err.style.display='block';
+    }
+  } catch(e){
+    err.textContent = 'تعذّر الاتصال بقاعدة البيانات';
+    err.style.display='block';
   }
 }
 function logoutDashboard(){
+  const s = getCommitteeSession();
+  if(s){ sbCall('app_logout', { p_token: s.token }).catch(()=>{}); }
   sessionStorage.removeItem(COMMITTEE_SESSION_KEY);
+  reportsCache = []; membersCache = [];
   refreshDashboard();
 }
 
@@ -740,19 +779,30 @@ function refreshRecorderGate(){
     if(rf) rf.value = session.displayName;
   }
 }
-function tryRecorderLogin(){
+async function tryRecorderLogin(){
   const u = document.getElementById('recorderUsername').value.trim();
   const p = document.getElementById('recorderPassword').value;
-  const member = findMember(u, p);
-  if(member && (member.role === 'recorder' || member.role === 'both')){
-    sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({username: member.username, displayName: member.displayName}));
-    document.getElementById('recorderGateError').style.display='none';
-    refreshRecorderGate();
-  } else {
-    document.getElementById('recorderGateError').style.display='block';
+  const err = document.getElementById('recorderGateError');
+  try {
+    const res = await sbCall('app_login', { p_username: u, p_password: p });
+    if(res.ok && (res.role === 'recorder' || res.role === 'both')){
+      sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({
+        token: res.token, username: res.username, displayName: res.display_name, role: res.role
+      }));
+      err.style.display='none';
+      refreshRecorderGate();
+    } else {
+      err.textContent = 'اسم المستخدم أو كلمة السر غير صحيحة';
+      err.style.display='block';
+    }
+  } catch(e){
+    err.textContent = 'تعذّر الاتصال بقاعدة البيانات';
+    err.style.display='block';
   }
 }
 function logoutRecorder(){
+  const s = getRecorderSession();
+  if(s){ sbCall('app_logout', { p_token: s.token }).catch(()=>{}); }
   sessionStorage.removeItem(RECORDER_SESSION_KEY);
   refreshRecorderGate();
 }
@@ -773,43 +823,64 @@ function renderMembersTable(){
     </tr>
   `).join('');
 }
-function saveMemberForm(){
+async function saveMemberForm(){
   const username = document.getElementById('memberUsernameInput').value.trim();
   const password = document.getElementById('memberPasswordInput').value.trim();
   const displayName = document.getElementById('memberDisplayNameInput').value.trim();
   const role = document.getElementById('memberRoleInput').value;
-  if(!username || !password || !displayName){ alert('يرجى تعبئة كل الحقول'); return; }
+  if(!username || !displayName){ alert('يرجى تعبئة اسم المستخدم والاسم الظاهر'); return; }
+  if(!editingMemberUsername && !password){ alert('كلمة السر مطلوبة للعضو الجديد'); return; }
 
-  const members = loadMembers();
-  const targetUsername = editingMemberUsername || username;
-  const idx = members.findIndex(m => m.username === targetUsername);
-  const record = {username, password, displayName, role};
-  if(idx > -1) members[idx] = record; else members.push(record);
-  saveMembers(members);
-  resetMemberForm();
-  renderMembersTable();
+  const s = getCommitteeSession();
+  if(!s) return;
+  try {
+    const res = await sbCall('app_save_member', {
+      p_token: s.token, p_username: username, p_password: password,
+      p_display_name: displayName, p_role: role
+    });
+    if(!res.ok){
+      alert(res.error === 'password_required' ? 'كلمة السر مطلوبة للعضو الجديد' :
+            res.error === 'unauthorized' ? 'ليست لديك صلاحية' : 'تعذّر الحفظ');
+      return;
+    }
+    resetMemberForm();
+    await fetchMembers();
+    renderMembersTable();
+  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
 }
 function editMember(username){
   const m = loadMembers().find(x=>x.username===username);
   if(!m) return;
   editingMemberUsername = username;
-  document.getElementById('memberUsernameInput').value = m.username;
-  document.getElementById('memberPasswordInput').value = m.password;
+  const u = document.getElementById('memberUsernameInput');
+  u.value = m.username; u.readOnly = true; u.style.background = '#eef0f2';
+  const pw = document.getElementById('memberPasswordInput');
+  pw.value = ''; pw.placeholder = 'اتركيه فارغاً للإبقاء على كلمة السر الحالية';
   document.getElementById('memberDisplayNameInput').value = m.displayName;
   document.getElementById('memberRoleInput').value = m.role;
 }
 function resetMemberForm(){
   editingMemberUsername = null;
-  document.getElementById('memberUsernameInput').value = '';
-  document.getElementById('memberPasswordInput').value = '';
+  const u = document.getElementById('memberUsernameInput');
+  u.value = ''; u.readOnly = false; u.style.background = '';
+  const pw = document.getElementById('memberPasswordInput');
+  pw.value = ''; pw.placeholder = 'كلمة السر';
   document.getElementById('memberDisplayNameInput').value = '';
   document.getElementById('memberRoleInput').value = 'both';
 }
-function deleteMember(username){
+async function deleteMember(username){
   if(!confirm('هل تريدين حذف هذا العضو؟')) return;
-  const members = loadMembers().filter(m=>m.username!==username);
-  saveMembers(members);
-  renderMembersTable();
+  const s = getCommitteeSession();
+  if(!s) return;
+  try {
+    const res = await sbCall('app_delete_member', { p_token: s.token, p_username: username });
+    if(!res.ok){
+      alert(res.error === 'last_admin' ? 'لا يمكن حذف آخر مشرف' : 'تعذّر الحذف');
+      return;
+    }
+    await fetchMembers();
+    renderMembersTable();
+  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
 }
 
 // ---- Conditional "other" fields (submit form) ----
@@ -826,18 +897,17 @@ document.getElementById('violationTypeList').addEventListener('change', function
 });
 
 // ---- Submit form ----
-document.getElementById('reportForm').addEventListener('submit', function(e){
+document.getElementById('reportForm').addEventListener('submit', async function(e){
   e.preventDefault();
   const form = e.target;
   const fd = new FormData(form);
+  const session = getRecorderSession();
+  if(!session){ alert('يرجى تسجيل الدخول أولاً'); return; }
 
   const violationTypes = fd.getAll('violationType');
-
-  const reports = loadReports();
   const id = 'RPT-' + Date.now().toString(36).toUpperCase();
-  reports.unshift({
+  const report = {
     id,
-    createdAt: new Date().toISOString(),
     studentName: fd.get('studentName'),
     universityId: fd.get('universityId'),
     college: fd.get('college'),
@@ -845,23 +915,30 @@ document.getElementById('reportForm').addEventListener('submit', function(e){
     department: fd.get('department'),
     buildingGate: fd.get('buildingGate'),
     buildingGateOther: fd.get('buildingGateOther') || '',
-    recorderName: fd.get('recorderName'),
+    recorderName: session.displayName,
     violationTypes,
     violationTypeOther: fd.get('violationTypeOther') || '',
-    notes: fd.get('notes') || '',
-    status: 'جديد',
-    committeeNotes: '',
-    actionType: '', actionDate: '', actionBy: ''
-  });
-  saveReports(reports);
-  document.getElementById('successRef').textContent = id;
-  document.getElementById('successBanner').classList.add('show');
-  form.reset();
-  document.getElementById('collegeOtherWrap').classList.add('hidden');
-  document.getElementById('buildingGateOtherWrap').classList.add('hidden');
-  document.getElementById('violationOtherWrap').classList.add('hidden');
-  refreshRecorderGate();
-  window.scrollTo({top:0, behavior:'smooth'});
+    notes: fd.get('notes') || ''
+  };
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true; submitBtn.textContent = 'جارٍ الإرسال...';
+  try {
+    const res = await sbCall('app_submit_report', { p_token: session.token, p_report: report });
+    if(!res.ok){ alert('تعذّر حفظ البلاغ' + (res.error ? ' ('+res.error+')' : '')); return; }
+    document.getElementById('successRef').textContent = id;
+    document.getElementById('successBanner').classList.add('show');
+    form.reset();
+    document.getElementById('collegeOtherWrap').classList.add('hidden');
+    document.getElementById('buildingGateOtherWrap').classList.add('hidden');
+    document.getElementById('violationOtherWrap').classList.add('hidden');
+    refreshRecorderGate();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } catch(err){
+    alert('تعذّر الاتصال بقاعدة البيانات، حاولي مرة أخرى');
+  } finally {
+    submitBtn.disabled = false; submitBtn.textContent = 'إرسال';
+  }
 });
 
 // ---- Helpers ----
@@ -1122,32 +1199,38 @@ function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
   activeReportId = null;
 }
-function saveReport(){
+async function saveReport(){
   if(!activeReportId) return;
-  const reports = loadReports();
-  const idx = reports.findIndex(x=>x.id===activeReportId);
-  if(idx===-1) return;
+  const s = getCommitteeSession();
+  if(!s) return;
   const status = document.getElementById('statusSelect').value;
-  reports[idx].status = status;
-  reports[idx].committeeNotes = document.getElementById('committeeNotes').value;
-  if(status === 'تم اتخاذ إجراء'){
-    reports[idx].actionType = document.getElementById('actionTypeSelect').value;
-    reports[idx].actionDate = document.getElementById('actionDateInput').value;
-    reports[idx].actionBy = document.getElementById('actionByInput').value;
-  } else {
-    reports[idx].actionType = ''; reports[idx].actionDate = ''; reports[idx].actionBy = '';
-  }
-  saveReports(reports);
-  closeModal();
-  renderOverview(); renderTable(); renderActionsTable();
+  const isAction = status === 'تم اتخاذ إجراء';
+  try {
+    const res = await sbCall('app_update_report', {
+      p_token: s.token, p_id: activeReportId, p_status: status,
+      p_committee_notes: document.getElementById('committeeNotes').value,
+      p_action_type: isAction ? document.getElementById('actionTypeSelect').value : '',
+      p_action_date: isAction ? document.getElementById('actionDateInput').value : '',
+      p_action_by:   isAction ? document.getElementById('actionByInput').value : ''
+    });
+    if(!res.ok){ alert('تعذّر حفظ التعديل'); return; }
+    closeModal();
+    await fetchReports();
+    renderOverview(); renderTable(); renderActionsTable();
+  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
 }
-function deleteReport(){
+async function deleteReport(){
   if(!activeReportId) return;
   if(!confirm('هل أنت متأكد من حذف هذا البلاغ نهائياً؟')) return;
-  const reports = loadReports().filter(x=>x.id!==activeReportId);
-  saveReports(reports);
-  closeModal();
-  renderOverview(); renderTable(); renderActionsTable();
+  const s = getCommitteeSession();
+  if(!s) return;
+  try {
+    const res = await sbCall('app_delete_report', { p_token: s.token, p_id: activeReportId });
+    if(!res.ok){ alert('تعذّر الحذف'); return; }
+    closeModal();
+    await fetchReports();
+    renderOverview(); renderTable(); renderActionsTable();
+  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
 }
 
 // ---- Exports ----
