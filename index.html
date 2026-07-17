@@ -655,7 +655,13 @@ function loadMembers(){
   let m;
   try { m = JSON.parse(localStorage.getItem(MEMBERS_KEY)); } catch(e){ m = null; }
   if(!m || !m.length){
-    m = [{username:'admin', password:'2580', displayName:'المشرف العام', role:'both'}];
+    m = [
+      {username:'admin',    password:'2580', displayName:'المشرفة العامة',      role:'both'},
+      {username:'lajna1',   password:'1111', displayName:'عضو اللجنة 1',        role:'committee'},
+      {username:'lajna2',   password:'2222', displayName:'عضو اللجنة 2',        role:'committee'},
+      {username:'tasjeel1', password:'3333', displayName:'مسجّلة المخالفات 1',   role:'recorder'},
+      {username:'tasjeel2', password:'4444', displayName:'مسجّلة المخالفات 2',   role:'recorder'}
+    ];
     saveMembers(m);
   }
   return m;
@@ -1183,4 +1189,3 @@ refreshRecorderGate();
 
 </body>
 </html>
-
