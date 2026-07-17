@@ -2,636 +2,969 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>لجنة المخالفات — جامعة الطائف</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="description" content="المنصة الرقمية للجنة متابعة مخالفات الملبس والمظهر — جامعة الطائف. تسجيل ومتابعة البلاغات واتخاذ الإجراءات إلكترونياً."/>
+<meta name="theme-color" content="#0d5c46" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#0b1411" media="(prefers-color-scheme: dark)"/>
+<meta name="color-scheme" content="light dark"/>
+<title>لجنة متابعة المخالفات — جامعة الطائف</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230d5c46'/><text x='32' y='44' text-anchor='middle' font-size='34' font-weight='800' font-family='Arial' fill='%23d9b84a'>TU</text></svg>"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --primary:#be9647; --primary-dark:#9c7a35; --gold:#d5b254; --navy:#162b48;
-    --bg:#f5f7f9; --card:#ffffff; --border:#e5e7e9; --border2:#d8dde2;
-    --text:#333333; --muted:#6a6f75; --danger:#c0392b; --ok:#2f8f5b; --warn:#c98a1c;
-    --radius:14px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    font-family:'Alexandria',sans-serif; background:var(--bg); color:var(--text);
-    min-height:100vh; line-height:1.6;
-  }
-  header{
-    background:#ffffff;
-    padding:22px 20px 0; position:sticky; top:0; z-index:50;
-    box-shadow:0 2px 10px rgba(22,43,72,.08);
-  }
-  .header-top{display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; flex-wrap:wrap; gap:16px;}
-  .brand{display:flex; align-items:center; gap:14px; direction:ltr;}
-  .brand .wordmark{display:flex; flex-direction:column; align-items:flex-start;}
-  .brand .rule{width:100%; height:2px; background:var(--gold); border:none;}
-  .brand .wordmark .ar{
-    font-size:1.5rem; font-weight:800; color:var(--gold); margin:4px 0 2px; direction:rtl;
-    font-family:'Alexandria',sans-serif; white-space:nowrap;
-  }
-  .brand .wordmark .en{
-    font-size:.85rem; font-weight:800; color:var(--gold); letter-spacing:2px; text-transform:uppercase; white-space:nowrap;
-  }
-  .brand .tu{
-    font-size:3.4rem; font-weight:900; color:var(--gold); line-height:.8; letter-spacing:-2px;
-    font-family:'Alexandria',sans-serif;
-  }
-  .committee-tag{font-size:.78rem; color:var(--navy); font-weight:600; display:block; margin-top:6px;}
-  .notice{max-width:1200px; margin:10px auto 0; font-size:.78rem; color:var(--muted); padding-bottom:14px; border-bottom:1px solid var(--border);}
-  nav.tabs{display:flex; gap:6px; max-width:1200px; margin:14px auto 0; overflow-x:auto;}
-  nav.tabs button{
-    flex:1; min-width:110px; padding:12px 14px; background:transparent; border:none; border-bottom:3px solid transparent;
-    color:var(--muted); font-family:inherit; font-size:.92rem; font-weight:600; cursor:pointer;
-    transition:.2s; white-space:nowrap;
-  }
-  nav.tabs button.active{color:var(--navy); border-bottom-color:var(--primary);}
-  nav.tabs button:hover{color:var(--navy);}
-  main{max-width:1200px; margin:0 auto; padding:26px 18px 60px;}
-  .view{display:none; animation:fadeIn .25s ease;}
-  .view.active{display:block;}
-  @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+/* ═══════════════════════════════════════════════════════════
+   نظام التصميم — لجنة متابعة المخالفات، جامعة الطائف
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --green:#0d5c46; --green-600:#0a4a38; --green-700:#083a2c; --green-050:#e9f2ee;
+  --gold:#c9a227; --gold-2:#d9b84a; --gold-050:#faf4e0;
+  --ink:#12261f; --muted:#5f6f68; --faint:#8a9a92;
+  --bg:#f4f7f5; --surface:#ffffff; --surface-2:#fbfdfc;
+  --border:#e5ece8; --border-2:#d7e2dc;
+  --danger:#c0392b; --danger-bg:#fbeae8;
+  --ok:#1e8a5c; --ok-bg:#e6f4ec;
+  --warn:#c98a1c; --warn-bg:#fbf1dc;
+  --info:#2f6bb0; --info-bg:#e8f0f9;
 
-  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:0 2px 10px rgba(179,57,42,.05);}
-  .card + .card{margin-top:18px;}
-  .card h2{font-size:1.05rem; color:var(--primary-dark); margin-bottom:4px; position:relative; display:inline-block; padding-bottom:8px;}
-  .card h2::after{content:""; position:absolute; bottom:0; right:0; width:56px; height:2px; background:var(--gold); box-shadow:0 4px 0 var(--gold);}
-  .card h3.section-title{font-size:.95rem; color:var(--primary-dark); margin-bottom:14px; position:relative; display:inline-block; padding-bottom:7px;}
-  .card h3.section-title::after{content:""; position:absolute; bottom:0; right:0; width:40px; height:1.5px; background:var(--gold); box-shadow:0 3px 0 var(--gold);}
-  .card .sub{color:var(--muted); font-size:.85rem; margin-bottom:18px;}
+  --glass:rgba(255,255,255,.72); --glass-brd:rgba(255,255,255,.6);
+  --shadow-sm:0 1px 2px rgba(16,40,32,.05), 0 1px 3px rgba(16,40,32,.06);
+  --shadow:0 4px 12px rgba(16,40,32,.07), 0 2px 4px rgba(16,40,32,.05);
+  --shadow-lg:0 18px 45px rgba(10,58,44,.14);
+  --r-sm:10px; --r:16px; --r-lg:22px; --r-xl:28px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --maxw:1180px;
+  --nav-h:68px;
+}
+:root[data-theme="dark"]{
+  --green:#2e9e79; --green-600:#37b088; --green-700:#248063; --green-050:#12241d;
+  --gold:#d9b84a; --gold-2:#e6cd6f; --gold-050:#241f10;
+  --ink:#e9f1 ed; --ink:#e9f1ed; --muted:#a2b3ab; --faint:#7d8f87;
+  --bg:#0b1411; --surface:#111d18; --surface-2:#14231d;
+  --border:#1f2f28; --border-2:#28382f;
+  --danger:#e8776a; --danger-bg:#2a1613;
+  --ok:#4cbe89; --ok-bg:#12271c;
+  --warn:#e0b458; --warn-bg:#271f10;
+  --info:#6ba3de; --info-bg:#111d2b;
+  --glass:rgba(17,29,24,.68); --glass-brd:rgba(255,255,255,.08);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 6px 18px rgba(0,0,0,.35);
+  --shadow-lg:0 20px 50px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'IBM Plex Sans Arabic',system-ui,sans-serif; background:var(--bg); color:var(--ink);
+  min-height:100vh; line-height:1.7; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  transition:background .4s var(--ease), color .3s var(--ease);
+}
+::selection{background:var(--gold-050); color:var(--green-700);}
+a{color:inherit; text-decoration:none;}
+img{max-width:100%;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px; border-radius:4px;}
+.skip{position:absolute; right:-999px; top:8px; background:var(--green); color:#fff; padding:10px 18px; border-radius:8px; z-index:200;}
+.skip:focus{right:12px;}
+.hidden{display:none !important;}
 
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
-  @media (max-width:680px){.grid{grid-template-columns:1fr;}}
-  .field{display:flex; flex-direction:column; gap:6px;}
-  .field.full{grid-column:1/-1;}
-  .field label{font-size:.85rem; color:var(--text); font-weight:600;}
-  .field label .req{color:var(--danger);}
-  input,select,textarea{
-    background:var(--bg); border:1px solid var(--border2); color:var(--text);
-    border-radius:10px; padding:11px 12px; font-family:inherit; font-size:.92rem; width:100%;
-  }
-  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--primary);}
-  textarea{resize:vertical; min-height:90px;}
-  input[type="file"]{padding:8px; background:#fff;}
-  .option-list{display:flex; flex-direction:column; gap:10px;}
-  .option-row{display:flex; align-items:center; gap:8px; font-size:.9rem;}
-  .option-row input{width:auto; accent-color:var(--primary);}
-  .option-row.other input[type="text"]{width:100%; margin-inline-start:8px;}
-  .checkbox-row{display:flex; align-items:flex-start; gap:8px; font-size:.85rem; color:var(--muted);}
-  .checkbox-row input{width:auto; margin-top:3px; accent-color:var(--primary);}
+/* ─── Nav ─── */
+.nav{
+  position:sticky; top:0; z-index:100; height:var(--nav-h);
+  background:var(--glass); backdrop-filter:saturate(180%) blur(16px); -webkit-backdrop-filter:saturate(180%) blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-in{max-width:var(--maxw); margin:0 auto; height:100%; padding:0 20px; display:flex; align-items:center; gap:18px;}
+.brand{display:flex; align-items:center; gap:11px; cursor:pointer;}
+.brand .mark{
+  width:42px; height:42px; border-radius:12px; flex-shrink:0;
+  background:linear-gradient(140deg,var(--green),var(--green-700)); color:var(--gold-2);
+  display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.05rem; letter-spacing:-1px;
+  box-shadow:inset 0 0 0 1.5px rgba(217,184,74,.5);
+}
+.brand .txt strong{display:block; font-size:.95rem; font-weight:700; line-height:1.2;}
+.brand .txt span{display:block; font-size:.7rem; color:var(--muted);}
+.nav-links{display:flex; gap:4px; margin-inline-start:12px;}
+.nav-links button{
+  background:none; border:none; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--muted);
+  padding:9px 15px; border-radius:10px; cursor:pointer; transition:.2s var(--ease); position:relative;
+}
+.nav-links button:hover{color:var(--ink); background:color-mix(in srgb, var(--green) 8%, transparent);}
+.nav-links button.active{color:var(--green);}
+.nav-links button.active::after{content:""; position:absolute; bottom:2px; right:15px; left:15px; height:2.5px; background:var(--gold); border-radius:3px;}
+.nav-actions{margin-inline-start:auto; display:flex; align-items:center; gap:8px;}
+.icon-btn{
+  width:40px; height:40px; border-radius:11px; border:1px solid var(--border); background:var(--surface);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); transition:.2s var(--ease); position:relative;
+}
+.icon-btn:hover{border-color:var(--green); color:var(--green); transform:translateY(-1px);}
+.icon-btn svg{width:19px; height:19px;}
+.dot{position:absolute; top:8px; inset-inline-start:9px; width:8px; height:8px; border-radius:50%; background:var(--danger); border:2px solid var(--surface);}
+.nav-toggle{display:none;}
 
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    background:var(--primary); color:#fff; border:none; border-radius:10px;
-    padding:12px 22px; font-family:inherit; font-weight:700; font-size:.92rem; cursor:pointer;
-    transition:.2s;
-  }
-  .btn:hover{background:var(--primary-dark);}
-  .btn.secondary{background:transparent; color:var(--text); border:1px solid var(--border2);}
-  .btn.secondary:hover{border-color:var(--primary); color:var(--primary);}
-  .btn.danger{background:var(--danger); color:#fff;}
-  .btn:disabled{opacity:.5; cursor:not-allowed;}
-  .btn-row{display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;}
+/* ─── Buttons ─── */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:inherit;
+  font-weight:600; font-size:.92rem; padding:12px 22px; border-radius:12px; border:none; cursor:pointer;
+  transition:.22s var(--ease); white-space:nowrap;
+}
+.btn.primary{background:var(--green); color:#fff; box-shadow:0 6px 16px -6px color-mix(in srgb,var(--green) 70%, transparent);}
+.btn.primary:hover{background:var(--green-600); transform:translateY(-2px); box-shadow:0 12px 24px -8px color-mix(in srgb,var(--green) 70%, transparent);}
+.btn.gold{background:var(--gold); color:#231a02;}
+.btn.gold:hover{background:var(--gold-2); transform:translateY(-2px);}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--border-2);}
+.btn.ghost:hover{border-color:var(--green); color:var(--green);}
+.btn.danger{background:var(--danger); color:#fff;}
+.btn:disabled{opacity:.55; cursor:not-allowed; transform:none !important;}
+.btn.sm{padding:8px 14px; font-size:.82rem; border-radius:9px;}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap;}
 
-  .success-banner{
-    background:rgba(47,143,91,.1); border:1px solid var(--ok); color:var(--ok);
-    border-radius:10px; padding:14px 16px; margin-bottom:18px; font-size:.9rem; display:none;
-  }
-  .success-banner.show{display:block;}
+/* ─── Layout ─── */
+main{min-height:calc(100vh - var(--nav-h));}
+.view{display:none; animation:fade .5s var(--ease);}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:34px 20px;}
+.eyebrow{color:var(--gold); font-weight:700; font-size:.8rem; letter-spacing:1px; margin-bottom:8px; display:flex; align-items:center; gap:8px;}
+.eyebrow::before{content:""; width:22px; height:2px; background:var(--gold); display:inline-block;}
+h1,h2,h3{line-height:1.3; font-weight:700;}
+.h-sec{font-size:1.55rem; margin-bottom:6px;}
+.h-sub{color:var(--muted); font-size:.98rem; margin-bottom:26px; max-width:640px;}
 
-  /* Committee area */
-  .gate{max-width:400px; margin:60px auto; text-align:center;}
-  .gate .icon-lg{font-size:2.4rem; margin-bottom:10px;}
+.card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow-sm); transition:.25s var(--ease);}
+.card.pad{padding:24px;}
+.card + .card{margin-top:16px;}
 
-  .subnav{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
-  .subnav button{
-    background:var(--card); border:1px solid var(--border2); color:var(--muted);
-    padding:9px 16px; border-radius:20px; font-family:inherit; font-size:.85rem; font-weight:600; cursor:pointer;
-    transition:.2s;
-  }
-  .subnav button.active{background:var(--primary); border-color:var(--primary); color:#fff;}
-  .subview{display:none;}
-  .subview.active{display:block;}
+/* ─── Reveal on scroll ─── */
+.reveal{opacity:0; transform:translateY(22px); transition:.7s var(--ease);}
+.reveal.in{opacity:1; transform:none;}
 
-  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;}
-  @media (max-width:680px){.stat-row{grid-template-columns:repeat(2,1fr);}}
-  .stat{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center;}
-  .stat b{display:block; font-size:1.6rem; color:var(--primary-dark);}
-  .stat span{font-size:.78rem; color:var(--muted);}
+/* ═══ HERO ═══ */
+.hero{position:relative; overflow:hidden; background:linear-gradient(135deg,var(--green-700),var(--green) 60%,var(--green-600)); color:#fff;}
+.hero::before{content:""; position:absolute; inset:0; opacity:.5;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(217,184,74,.28), transparent 42%),
+    radial-gradient(circle at 12% 90%, rgba(217,184,74,.15), transparent 40%);}
+.hero-pat{position:absolute; inset:0; opacity:.13; background-size:52px 52px;
+  background-image:linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px);
+  -webkit-mask-image:radial-gradient(circle at 80% 20%, #000, transparent 70%); mask-image:radial-gradient(circle at 80% 20%, #000, transparent 70%);}
+.hero-in{max-width:var(--maxw); margin:0 auto; padding:76px 20px 84px; position:relative; display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center;}
+.hero h1{font-size:2.7rem; font-weight:700; line-height:1.25; margin-bottom:18px; letter-spacing:-.5px;}
+.hero h1 .hl{color:var(--gold-2);}
+.hero p{font-size:1.08rem; color:rgba(255,255,255,.9); max-width:520px; margin-bottom:30px;}
+.hero .badge-line{display:inline-flex; align-items:center; gap:9px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); padding:7px 15px; border-radius:100px; font-size:.82rem; margin-bottom:22px;}
+.hero .badge-line .pulse{width:8px; height:8px; border-radius:50%; background:var(--gold-2); box-shadow:0 0 0 0 rgba(217,184,74,.6); animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,184,74,.55);} 70%{box-shadow:0 0 0 10px rgba(217,184,74,0);} 100%{box-shadow:0 0 0 0 rgba(217,184,74,0);}}
+.hero-cta{display:flex; gap:12px; flex-wrap:wrap;}
+.hero-art{position:relative; display:flex; align-items:center; justify-content:center;}
+.hero-emblem{width:100%; max-width:360px; aspect-ratio:1; position:relative;}
+.hero-emblem .ring{position:absolute; inset:0; border-radius:50%; border:1.5px dashed rgba(217,184,74,.4); animation:spin 40s linear infinite;}
+.hero-emblem .ring2{inset:34px; border-color:rgba(255,255,255,.18); animation-duration:28s; animation-direction:reverse;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hero-emblem .core{position:absolute; inset:70px; border-radius:32px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); backdrop-filter:blur(6px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;}
+.hero-emblem .core .tu{font-size:3.6rem; font-weight:800; color:var(--gold-2); letter-spacing:-3px; line-height:.9;}
+.hero-emblem .core small{font-size:.72rem; color:rgba(255,255,255,.75); letter-spacing:1px;}
+.hero-wave{display:block; width:100%; height:auto; margin-bottom:-6px; color:var(--bg);}
 
-  .breakdown-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
-  @media (max-width:780px){.breakdown-grid{grid-template-columns:1fr;}}
-  .bar-row{display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:.85rem;}
-  .bar-row .label{width:150px; flex-shrink:0; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .bar-row .track{flex:1; background:var(--bg); border-radius:6px; height:10px; overflow:hidden;}
-  .bar-row .fill{height:100%; background:var(--primary); border-radius:6px;}
-  .bar-row .count{width:26px; text-align:left; color:var(--muted); font-weight:700;}
+/* ═══ Stats strip ═══ */
+.stats-strip{max-width:var(--maxw); margin:-46px auto 0; padding:0 20px; position:relative; z-index:5;}
+.stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.stat-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:22px 20px; box-shadow:var(--shadow); text-align:center;}
+.stat-card .ic{width:44px; height:44px; margin:0 auto 12px; border-radius:12px; background:var(--green-050); color:var(--green); display:flex; align-items:center; justify-content:center;}
+.stat-card .ic svg{width:22px; height:22px;}
+.stat-card .num{font-size:2rem; font-weight:700; color:var(--green); line-height:1;}
+.stat-card .lbl{font-size:.82rem; color:var(--muted); margin-top:6px;}
 
-  .recent-list{display:flex; flex-direction:column; gap:0;}
-  .recent-item{display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border); font-size:.87rem;}
-  .recent-item:last-child{border-bottom:none;}
-  .recent-item .who{font-weight:600;}
-  .recent-item .meta{color:var(--muted); font-size:.78rem;}
+/* ═══ Service cards ═══ */
+.svc-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+.svc{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:26px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; transition:.28s var(--ease); cursor:pointer;}
+.svc::after{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--green),var(--gold)); transform:scaleX(0); transform-origin:right; transition:.3s var(--ease);}
+.svc:hover{transform:translateY(-6px); box-shadow:var(--shadow-lg); border-color:var(--border-2);}
+.svc:hover::after{transform:scaleX(1);}
+.svc .svc-ic{width:54px; height:54px; border-radius:15px; background:linear-gradient(140deg,var(--green-050),transparent); color:var(--green); display:flex; align-items:center; justify-content:center; margin-bottom:16px; border:1px solid var(--border);}
+.svc .svc-ic svg{width:26px; height:26px;}
+.svc h3{font-size:1.12rem; margin-bottom:7px;}
+.svc p{color:var(--muted); font-size:.9rem; margin-bottom:16px; min-height:44px;}
+.svc .svc-foot{display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border);}
+.svc .users{font-size:.8rem; color:var(--faint); display:flex; align-items:center; gap:6px;}
+.svc .go{color:var(--green); font-weight:700; font-size:.85rem; display:inline-flex; align-items:center; gap:5px; transition:.2s var(--ease);}
+.svc:hover .go{gap:9px;}
 
-  .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;}
-  .toolbar input, .toolbar select{width:auto; flex:1; min-width:140px;}
+/* ═══ Two-col (announcements / updates) ═══ */
+.two{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+.feed-item{display:flex; gap:14px; padding:15px 0; border-bottom:1px solid var(--border);}
+.feed-item:last-child{border-bottom:none;}
+.feed-item .fic{width:40px; height:40px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:var(--gold-050); color:var(--gold);}
+.feed-item .fic svg{width:19px; height:19px;}
+.feed-item.g .fic{background:var(--green-050); color:var(--green);}
+.feed-item h4{font-size:.94rem; font-weight:600; margin-bottom:2px;}
+.feed-item p{font-size:.83rem; color:var(--muted);}
+.feed-item .ago{font-size:.74rem; color:var(--faint); margin-top:3px;}
 
-  table{width:100%; border-collapse:collapse; font-size:.86rem;}
-  th,td{padding:10px 8px; text-align:right; border-bottom:1px solid var(--border);}
-  th{color:var(--muted); font-weight:600; font-size:.78rem;}
-  tr:hover td{background:rgba(179,57,42,.03);}
-  .badge{
-    display:inline-block; padding:4px 10px; border-radius:20px; font-size:.74rem; font-weight:700;
-  }
-  .badge.new{background:rgba(201,138,28,.15); color:var(--warn);}
-  .badge.review{background:rgba(70,110,200,.12); color:#3f5fb0;}
-  .badge.action{background:rgba(47,143,91,.15); color:var(--ok);}
-  .badge.closed{background:rgba(138,111,102,.15); color:var(--muted);}
-  .row-actions button{background:none; border:none; color:var(--primary); cursor:pointer; font-family:inherit; font-size:.82rem; text-decoration:underline;}
-  .empty{text-align:center; color:var(--muted); padding:40px 0;}
+/* ═══ Vision / mission / values ═══ */
+.vmv{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+.vmv .card{padding:28px; position:relative;}
+.vmv .vic{width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:16px; background:var(--green); color:var(--gold-2);}
+.vmv .vic svg{width:25px; height:25px;}
+.vmv h3{font-size:1.1rem; margin-bottom:8px;}
+.vmv p{color:var(--muted); font-size:.9rem;}
+.values-list{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px;}
+.chip{background:var(--green-050); color:var(--green); border:1px solid var(--border); padding:6px 14px; border-radius:100px; font-size:.82rem; font-weight:600;}
 
-  /* Modal */
-  .overlay{
-    position:fixed; inset:0; background:rgba(36,36,36,.55); display:none;
-    align-items:center; justify-content:center; z-index:100; padding:20px;
-  }
-  .overlay.show{display:flex;}
-  .modal{
-    background:var(--card); border:1px solid var(--border); border-radius:16px;
-    max-width:640px; width:100%; max-height:88vh; overflow-y:auto; padding:24px;
-  }
-  .modal h3{color:var(--primary-dark); margin-bottom:14px; font-size:1.05rem;}
-  .detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; margin-bottom:16px; font-size:.88rem;}
-  .detail-grid .k{color:var(--muted); font-size:.76rem;}
-  .detail-grid .full{grid-column:1/-1;}
-  .modal-close{position:absolute; left:20px; top:16px;}
-  .action-box{background:var(--bg); border:1px dashed var(--border2); border-radius:10px; padding:14px; margin-top:14px;}
+/* ═══ FAQ ═══ */
+.faq details{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); margin-bottom:10px; overflow:hidden; transition:.2s var(--ease);}
+.faq details[open]{box-shadow:var(--shadow-sm); border-color:var(--border-2);}
+.faq summary{padding:18px 20px; font-weight:600; cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:.96rem;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary .plus{width:24px; height:24px; flex-shrink:0; border-radius:7px; background:var(--green-050); color:var(--green); display:flex; align-items:center; justify-content:center; font-size:1.2rem; transition:.25s var(--ease);}
+.faq details[open] summary .plus{transform:rotate(45deg); background:var(--green); color:#fff;}
+.faq .ans{padding:0 20px 18px; color:var(--muted); font-size:.9rem;}
 
-  ::placeholder{color:#b79b8f;}
-  .hidden{display:none !important;}
+/* ═══ Footer ═══ */
+.footer{background:var(--green-700); color:rgba(255,255,255,.82); margin-top:60px;}
+.footer-in{max-width:var(--maxw); margin:0 auto; padding:52px 20px 26px; display:grid; grid-template-columns:1.6fr 1fr 1fr 1.2fr; gap:36px;}
+.footer h5{color:#fff; font-size:.95rem; margin-bottom:16px; font-weight:700;}
+.footer .fbrand{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+.footer .fbrand .mark{width:46px; height:46px; border-radius:12px; background:rgba(255,255,255,.1); color:var(--gold-2); display:flex; align-items:center; justify-content:center; font-weight:800; letter-spacing:-1px; border:1px solid rgba(217,184,74,.4);}
+.footer p{font-size:.86rem; line-height:1.8;}
+.footer ul{list-style:none;}
+.footer ul li{margin-bottom:9px;}
+.footer ul a{font-size:.86rem; color:rgba(255,255,255,.78); transition:.2s var(--ease); cursor:pointer;}
+.footer ul a:hover{color:var(--gold-2); padding-inline-start:4px;}
+.social{display:flex; gap:10px; margin-top:6px;}
+.social a{width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; color:#fff; transition:.2s var(--ease);}
+.social a:hover{background:var(--gold); color:var(--green-700); transform:translateY(-2px);}
+.social svg{width:18px; height:18px;}
+.footer-bar{border-top:1px solid rgba(255,255,255,.12); padding:18px 20px; text-align:center; font-size:.8rem; color:rgba(255,255,255,.6); max-width:var(--maxw); margin:0 auto;}
 
-  /* Student history */
-  .student-profile{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:6px;}
-  .student-profile h2{margin-bottom:0;}
-  .student-profile .mini-stats{display:flex; gap:18px;}
-  .student-profile .mini-stats div{text-align:center;}
-  .student-profile .mini-stats b{display:block; font-size:1.3rem; color:var(--primary-dark);}
-  .student-profile .mini-stats span{font-size:.74rem; color:var(--muted);}
-  .timeline{margin-top:10px;}
-  .timeline-item{border-right:3px solid var(--primary); padding:10px 16px; margin-bottom:12px; background:var(--bg); border-radius:0 10px 10px 0;}
-  .timeline-item .row1{display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;}
-  .timeline-item .date{font-size:.76rem; color:var(--muted);}
-  .timeline-item .types{font-size:.88rem; font-weight:600;}
-  .timeline-item .action-line{font-size:.8rem; color:var(--ok); margin-top:4px;}
+/* ═══ Forms ═══ */
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.field{display:flex; flex-direction:column; gap:7px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:.86rem; font-weight:600;}
+.field label .req{color:var(--danger);}
+input,select,textarea{
+  background:var(--surface-2); border:1.5px solid var(--border-2); color:var(--ink);
+  border-radius:11px; padding:12px 14px; font-family:inherit; font-size:.93rem; width:100%; transition:.2s var(--ease);
+}
+input:hover,select:hover,textarea:hover{border-color:var(--faint);}
+input:focus,select:focus,textarea:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 4px color-mix(in srgb,var(--green) 14%, transparent);}
+textarea{resize:vertical; min-height:96px;}
+::placeholder{color:var(--faint);}
+.opt-list{display:flex; flex-direction:column; gap:11px;}
+.opt{display:flex; align-items:center; gap:10px; font-size:.92rem; padding:11px 14px; border:1.5px solid var(--border); border-radius:11px; cursor:pointer; transition:.18s var(--ease);}
+.opt:hover{border-color:var(--green); background:var(--green-050);}
+.opt input{width:auto; accent-color:var(--green); cursor:pointer;}
+.opt.other input[type="text"]{margin-inline-start:6px;}
+.check-line{display:flex; align-items:flex-start; gap:10px; font-size:.86rem; color:var(--muted);}
+.check-line input{width:auto; margin-top:4px; accent-color:var(--green);}
 
-  /* Print area: hidden on screen, only shown for printing */
-  #printArea{display:none;}
-  @media print{
-    body *{visibility:hidden;}
-    #printArea, #printArea *{visibility:visible;}
-    #printArea{
-      display:block; position:absolute; top:0; right:0; left:0; margin:0 auto; padding:24px; width:100%;
-    }
-    .print-header{display:flex; justify-content:space-between; align-items:center; direction:ltr; border-bottom:3px solid var(--gold); padding-bottom:10px;}
-    .print-wordmark{display:flex; flex-direction:column;}
-    .print-wordmark hr{border:none; height:2px; background:var(--primary);}
-    .print-wordmark .ar{font-size:1.3rem; font-weight:800; color:var(--primary); margin:3px 0;}
-    .print-wordmark .en{font-size:.75rem; font-weight:800; letter-spacing:2px; color:var(--primary); text-transform:uppercase;}
-    .print-tu{font-size:2.6rem; font-weight:900; color:var(--primary); line-height:.8;}
-    .print-committee{direction:rtl; text-align:center; color:var(--muted); font-size:.85rem; margin:10px 0;}
-    .print-title{direction:rtl; text-align:center; color:var(--primary-dark); margin:14px 0; font-size:1.2rem;}
-    .print-table{direction:rtl; width:100%; border-collapse:collapse; margin-top:10px;}
-    .print-table td{border:1px solid #ccc; padding:8px 10px; font-size:.88rem;}
-    .print-table td.k{background:#f6efe9; font-weight:700; width:32%;}
-    .print-signatures{direction:rtl; display:flex; justify-content:space-between; margin-top:60px; gap:20px;}
-    .print-signatures div{flex:1; text-align:center; font-size:.85rem;}
-    .print-signatures hr{margin-top:40px; border:none; border-top:1px solid #999;}
-  }
+/* ═══ Gate (login) ═══ */
+.gate{max-width:430px; margin:56px auto;}
+.gate .card{padding:36px 30px; text-align:center;}
+.gate .lock{width:66px; height:66px; margin:0 auto 18px; border-radius:20px; background:linear-gradient(140deg,var(--green-050),transparent); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--green);}
+.gate .lock svg{width:30px; height:30px;}
+.gate h2{font-size:1.3rem; margin-bottom:6px;}
+.gate .sub{color:var(--muted); font-size:.9rem; margin-bottom:22px;}
+.gate .field{text-align:start; margin-bottom:14px;}
+.err{color:var(--danger); font-size:.85rem; margin-top:12px; display:none; background:var(--danger-bg); padding:10px; border-radius:9px;}
+
+/* ═══ Success banner ═══ */
+.success-banner{display:none; background:var(--ok-bg); border:1px solid color-mix(in srgb,var(--ok) 40%,transparent); color:var(--ok); border-radius:var(--r); padding:22px; margin-bottom:20px; text-align:center; animation:pop .4s var(--ease);}
+.success-banner.show{display:block;}
+.success-banner .ic{width:56px; height:56px; margin:0 auto 12px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center;}
+.success-banner .ic svg{width:30px; height:30px;}
+.success-banner h3{color:var(--ink); margin-bottom:4px;}
+@keyframes pop{from{opacity:0; transform:scale(.94);} to{opacity:1; transform:none;}}
+
+/* ═══ Dashboard ═══ */
+.dash-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:22px;}
+.dash-head .welcome{font-size:.85rem; color:var(--muted);}
+.dash-head h2{font-size:1.4rem;}
+.subnav{display:flex; gap:6px; margin-bottom:24px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); padding:6px; border-radius:15px; box-shadow:var(--shadow-sm); overflow-x:auto;}
+.subnav button{background:none; border:none; font-family:inherit; font-size:.87rem; font-weight:600; color:var(--muted); padding:10px 18px; border-radius:11px; cursor:pointer; transition:.2s var(--ease); white-space:nowrap; display:flex; align-items:center; gap:7px;}
+.subnav button svg{width:16px; height:16px;}
+.subnav button:hover{color:var(--ink);}
+.subnav button.active{background:var(--green); color:#fff; box-shadow:0 4px 12px -4px color-mix(in srgb,var(--green) 60%,transparent);}
+.subview{display:none;}
+.subview.active{display:block; animation:fade .4s var(--ease);}
+
+.kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;}
+.kpi{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:20px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; transition:.25s var(--ease);}
+.kpi:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
+.kpi .kic{width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;}
+.kpi .kic svg{width:21px; height:21px;}
+.kpi.total .kic{background:var(--green-050); color:var(--green);}
+.kpi.new .kic{background:var(--warn-bg); color:var(--warn);}
+.kpi.review .kic{background:var(--info-bg); color:var(--info);}
+.kpi.done .kic{background:var(--ok-bg); color:var(--ok);}
+.kpi b{font-size:2rem; font-weight:700; display:block; line-height:1;}
+.kpi span{font-size:.83rem; color:var(--muted);}
+
+.charts-row{display:grid; grid-template-columns:1fr 1.2fr; gap:16px; margin-bottom:16px;}
+.chart-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:22px; box-shadow:var(--shadow-sm);}
+.chart-card h3, .section-title{font-size:1rem; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:8px;}
+.section-title::before, .chart-card h3::before{content:""; width:4px; height:16px; background:var(--gold); border-radius:3px;}
+.donut-wrap{display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:center;}
+.donut-legend{display:flex; flex-direction:column; gap:9px;}
+.donut-legend .lg{display:flex; align-items:center; gap:9px; font-size:.85rem;}
+.donut-legend .sw{width:12px; height:12px; border-radius:4px; flex-shrink:0;}
+.donut-legend .lg b{margin-inline-start:auto;}
+.trend-svg{width:100%; height:150px; overflow:visible;}
+.breakdown-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+.bar-row{display:flex; align-items:center; gap:11px; margin-bottom:11px; font-size:.85rem;}
+.bar-row .label{width:135px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.bar-row .track{flex:1; background:var(--bg); border-radius:7px; height:9px; overflow:hidden;}
+.bar-row .fill{height:100%; background:linear-gradient(90deg,var(--green),var(--gold)); border-radius:7px; width:0; transition:width .9s var(--ease);}
+.bar-row .count{width:26px; text-align:end; color:var(--muted); font-weight:700;}
+
+.recent-item{display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); font-size:.88rem; gap:10px;}
+.recent-item:last-child{border-bottom:none;}
+.recent-item .who{font-weight:600;}
+.recent-item .meta{color:var(--muted); font-size:.78rem;}
+
+.toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+.toolbar .search-box{position:relative; flex:1; min-width:200px;}
+.toolbar .search-box svg{position:absolute; inset-inline-start:13px; top:50%; transform:translateY(-50%); width:17px; height:17px; color:var(--faint); pointer-events:none;}
+.toolbar .search-box input{padding-inline-start:40px;}
+.toolbar select{width:auto; min-width:150px; flex:0 0 auto;}
+.sug{position:absolute; top:calc(100% + 6px); inset-inline:0; background:var(--surface); border:1px solid var(--border-2); border-radius:12px; box-shadow:var(--shadow-lg); z-index:30; overflow:hidden; display:none;}
+.sug.show{display:block;}
+.sug button{width:100%; text-align:start; background:none; border:none; font-family:inherit; padding:11px 15px; cursor:pointer; font-size:.86rem; color:var(--ink); display:flex; justify-content:space-between; gap:10px; border-bottom:1px solid var(--border);}
+.sug button:last-child{border-bottom:none;}
+.sug button:hover{background:var(--green-050);}
+.sug button small{color:var(--faint);}
+
+.tbl-wrap{overflow-x:auto; border-radius:var(--r); border:1px solid var(--border);}
+table{width:100%; border-collapse:collapse; font-size:.87rem; background:var(--surface);}
+thead th{background:var(--surface-2); color:var(--muted); font-weight:600; font-size:.78rem; text-align:start; padding:13px 14px; border-bottom:1px solid var(--border); white-space:nowrap;}
+tbody td{padding:13px 14px; border-bottom:1px solid var(--border); text-align:start;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{transition:.15s var(--ease);}
+tbody tr:hover td{background:var(--green-050);}
+.badge{display:inline-block; padding:5px 12px; border-radius:100px; font-size:.74rem; font-weight:700; white-space:nowrap;}
+.badge.new{background:var(--warn-bg); color:var(--warn);}
+.badge.review{background:var(--info-bg); color:var(--info);}
+.badge.action{background:var(--ok-bg); color:var(--ok);}
+.badge.closed{background:var(--bg); color:var(--muted);}
+.row-actions button{background:none; border:1px solid var(--border-2); color:var(--green); cursor:pointer; font-family:inherit; font-size:.8rem; font-weight:600; padding:6px 13px; border-radius:8px; transition:.18s var(--ease);}
+.row-actions button:hover{background:var(--green); color:#fff; border-color:var(--green);}
+
+/* empty state */
+.empty{text-align:center; padding:48px 20px; color:var(--muted);}
+.empty .eic{width:66px; height:66px; margin:0 auto 14px; border-radius:20px; background:var(--bg); display:flex; align-items:center; justify-content:center; color:var(--faint);}
+.empty .eic svg{width:32px; height:32px;}
+.empty h4{color:var(--ink); font-weight:600; margin-bottom:4px;}
+.empty p{font-size:.86rem;}
+
+/* skeleton */
+.sk{background:linear-gradient(100deg,var(--border) 30%,var(--surface-2) 50%,var(--border) 70%); background-size:200% 100%; animation:sh 1.3s infinite; border-radius:8px;}
+@keyframes sh{to{background-position:-200% 0;}}
+.sk-kpi{height:118px; border-radius:var(--r);}
+.sk-line{height:14px; margin-bottom:10px;}
+
+/* student history */
+.student-profile{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+.student-profile .who-lg{display:flex; align-items:center; gap:14px;}
+.student-profile .avatar{width:56px; height:56px; border-radius:16px; background:var(--green); color:var(--gold-2); display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700;}
+.student-profile h2{font-size:1.25rem; margin-bottom:2px;}
+.student-profile .sub{color:var(--muted); font-size:.85rem;}
+.mini-stats{display:flex; gap:24px;}
+.mini-stats div{text-align:center;}
+.mini-stats b{display:block; font-size:1.5rem; color:var(--green); font-weight:700;}
+.mini-stats span{font-size:.75rem; color:var(--muted);}
+.timeline{position:relative; padding-inline-start:8px;}
+.timeline-item{border-inline-start:2px solid var(--border-2); padding:6px 20px 20px; position:relative;}
+.timeline-item::before{content:""; position:absolute; inset-inline-start:-7px; top:8px; width:12px; height:12px; border-radius:50%; background:var(--green); border:3px solid var(--surface);}
+.timeline-item:last-child{border-inline-start-color:transparent;}
+.timeline-item .row1{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:4px;}
+.timeline-item .types{font-weight:600; font-size:.92rem;}
+.timeline-item .date{font-size:.78rem; color:var(--muted);}
+.timeline-item .action-line{font-size:.82rem; color:var(--ok); margin-top:5px;}
+
+/* profile */
+.profile-head{background:linear-gradient(135deg,var(--green-700),var(--green)); border-radius:var(--r-lg); padding:34px; color:#fff; display:flex; align-items:center; gap:22px; flex-wrap:wrap; position:relative; overflow:hidden;}
+.profile-head::after{content:""; position:absolute; inset:0; opacity:.4; background:radial-gradient(circle at 90% 10%, rgba(217,184,74,.3), transparent 45%);}
+.profile-head .p-avatar{width:88px; height:88px; border-radius:26px; background:rgba(255,255,255,.14); border:2px solid rgba(217,184,74,.5); display:flex; align-items:center; justify-content:center; font-size:2.2rem; font-weight:700; color:var(--gold-2); position:relative; z-index:1;}
+.profile-head .p-info{position:relative; z-index:1;}
+.profile-head h2{font-size:1.5rem; margin-bottom:4px;}
+.profile-head .role-pill{display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.16); padding:6px 15px; border-radius:100px; font-size:.83rem; margin-top:6px;}
+.profile-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;}
+.info-row{display:flex; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--border); font-size:.9rem;}
+.info-row:last-child{border-bottom:none;}
+.info-row .k{color:var(--muted);}
+.info-row .v{font-weight:600;}
+
+/* ═══ Modal ═══ */
+.overlay{position:fixed; inset:0; background:rgba(9,20,16,.5); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; z-index:150; padding:20px;}
+.overlay.show{display:flex; animation:fade .25s var(--ease);}
+.modal{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); max-width:640px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-lg); animation:pop .3s var(--ease);}
+.modal-head{display:flex; align-items:center; justify-content:space-between; padding:22px 24px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:2;}
+.modal-head h3{font-size:1.1rem;}
+.modal-body{padding:24px;}
+.close-x{width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface-2); cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:.2s var(--ease);}
+.close-x:hover{background:var(--danger-bg); color:var(--danger); border-color:var(--danger);}
+.detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; margin-bottom:18px; font-size:.9rem;}
+.detail-grid > div{background:var(--surface-2); border:1px solid var(--border); border-radius:11px; padding:11px 13px;}
+.detail-grid .k{color:var(--faint); font-size:.75rem; margin-bottom:3px;}
+.detail-grid .full{grid-column:1/-1;}
+.action-box{background:var(--gold-050); border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent); border-radius:var(--r); padding:18px; margin-top:16px;}
+
+/* ═══ Notifications panel ═══ */
+.panel-overlay{position:fixed; inset:0; background:rgba(9,20,16,.4); z-index:160; display:none;}
+.panel-overlay.show{display:block; animation:fade .25s var(--ease);}
+.notif-panel{position:fixed; top:0; inset-inline-end:0; height:100%; width:390px; max-width:90vw; background:var(--surface); box-shadow:var(--shadow-lg); z-index:170; transform:translateX(102%); transition:transform .35s var(--ease), visibility .35s; display:flex; flex-direction:column; visibility:hidden; pointer-events:none;}
+.notif-panel.show{transform:translateX(0); visibility:visible; pointer-events:auto;}
+.notif-head{padding:20px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;}
+.notif-head h3{font-size:1.1rem;}
+.notif-tabs{display:flex; gap:5px; padding:12px 16px; border-bottom:1px solid var(--border); overflow-x:auto;}
+.notif-tabs button{background:var(--bg); border:1px solid var(--border); font-family:inherit; font-size:.78rem; font-weight:600; color:var(--muted); padding:7px 13px; border-radius:100px; cursor:pointer; white-space:nowrap; transition:.18s var(--ease);}
+.notif-tabs button.active{background:var(--green); color:#fff; border-color:var(--green);}
+.notif-list{flex:1; overflow-y:auto; padding:8px 0;}
+.notif{display:flex; gap:12px; padding:14px 20px; border-bottom:1px solid var(--border); transition:.15s var(--ease);}
+.notif:hover{background:var(--surface-2);}
+.notif .nic{width:38px; height:38px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+.notif .nic svg{width:18px; height:18px;}
+.notif.unread{background:color-mix(in srgb,var(--green) 4%,transparent);}
+.notif.unread .ntitle::after{content:""; width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; margin-inline-start:7px;}
+.notif .ntitle{font-weight:600; font-size:.9rem;}
+.notif .ntext{font-size:.82rem; color:var(--muted);}
+.notif .nago{font-size:.72rem; color:var(--faint); margin-top:3px;}
+
+/* ═══ Toasts ═══ */
+.toasts{position:fixed; bottom:22px; inset-inline-start:22px; z-index:300; display:flex; flex-direction:column; gap:10px;}
+.toast{background:var(--surface); border:1px solid var(--border-2); border-inline-start:4px solid var(--green); border-radius:12px; box-shadow:var(--shadow-lg); padding:14px 18px; display:flex; align-items:center; gap:12px; min-width:280px; max-width:380px; animation:toastIn .35s var(--ease); font-size:.88rem;}
+.toast.ok{border-inline-start-color:var(--ok);}
+.toast.err{border-inline-start-color:var(--danger);}
+.toast.warn{border-inline-start-color:var(--warn);}
+.toast .tic{width:32px; height:32px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+.toast.ok .tic{background:var(--ok-bg); color:var(--ok);} .toast.err .tic{background:var(--danger-bg); color:var(--danger);} .toast.warn .tic{background:var(--warn-bg); color:var(--warn);} .toast .tic{background:var(--green-050); color:var(--green);}
+.toast .tic svg{width:18px; height:18px;}
+@keyframes toastIn{from{opacity:0; transform:translateY(16px) scale(.96);} to{opacity:1; transform:none;}}
+.toast.out{animation:toastOut .3s var(--ease) forwards;}
+@keyframes toastOut{to{opacity:0; transform:translateX(-30px);}}
+
+/* ═══ Responsive ═══ */
+@media (max-width:940px){
+  .hero-in{grid-template-columns:1fr; text-align:center;}
+  .hero p{margin-inline:auto;}
+  .hero .badge-line, .hero-cta{justify-content:center;}
+  .hero-art{order:-1; margin-bottom:10px;}
+  .hero-emblem{max-width:230px;}
+  .hero h1{font-size:2.1rem;}
+  .charts-row{grid-template-columns:1fr;}
+  .footer-in{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:760px){
+  .nav-links{display:none; position:absolute; top:var(--nav-h); inset-inline:0; flex-direction:column; background:var(--surface); border-bottom:1px solid var(--border); padding:10px; gap:2px; box-shadow:var(--shadow);}
+  .nav-links.open{display:flex;}
+  .nav-links button{text-align:start; padding:13px 16px;}
+  .nav-links button.active::after{display:none;}
+  .nav-toggle{display:flex;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .svc-grid, .vmv{grid-template-columns:1fr;}
+  .two, .kpi-grid, .breakdown-grid, .grid2, .detail-grid, .profile-grid{grid-template-columns:1fr;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .h-sec{font-size:1.35rem;}
+  .brand .txt span{display:none;}
+}
+@media (max-width:430px){
+  .stats-grid, .kpi-grid{grid-template-columns:1fr 1fr;}
+  .footer-in{grid-template-columns:1fr;}
+  .wrap{padding:26px 16px;}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms !important; transition-duration:.001ms !important;} html{scroll-behavior:auto;}}
+
+/* ═══ Print ═══ */
+#printArea{display:none;}
+@media print{
+  body *{visibility:hidden;}
+  #printArea, #printArea *{visibility:visible;}
+  #printArea{display:block; position:absolute; top:0; inset-inline:0; margin:0 auto; padding:24px; width:100%;}
+  .print-header{display:flex; justify-content:space-between; align-items:center; direction:ltr; border-bottom:3px solid var(--gold); padding-bottom:10px;}
+  .print-wordmark{display:flex; flex-direction:column;}
+  .print-wordmark hr{border:none; height:2px; background:var(--green);}
+  .print-wordmark .ar{font-size:1.3rem; font-weight:800; color:var(--green); margin:3px 0;}
+  .print-wordmark .en{font-size:.72rem; font-weight:800; letter-spacing:2px; color:var(--green); text-transform:uppercase;}
+  .print-tu{font-size:2.6rem; font-weight:900; color:var(--green); line-height:.8;}
+  .print-committee{direction:rtl; text-align:center; color:#555; font-size:.85rem; margin:10px 0;}
+  .print-title{direction:rtl; text-align:center; color:var(--green-700); margin:14px 0; font-size:1.2rem;}
+  .print-table{direction:rtl; width:100%; border-collapse:collapse; margin-top:10px;}
+  .print-table td{border:1px solid #ccc; padding:8px 10px; font-size:.88rem;}
+  .print-table td.k{background:#f0f5f2; font-weight:700; width:32%;}
+  .print-signatures{direction:rtl; display:flex; justify-content:space-between; margin-top:60px; gap:20px;}
+  .print-signatures div{flex:1; text-align:center; font-size:.85rem;}
+  .print-signatures hr{margin-top:40px; border:none; border-top:1px solid #999;}
+}
 </style>
 </head>
 <body>
+<a href="#main" class="skip">تخطَّ إلى المحتوى</a>
 
-<header>
-  <div class="header-top">
-    <div class="brand">
-      <div class="wordmark">
-        <hr class="rule"/>
-        <span class="ar">جامعة الطائف</span>
-        <span class="en">Taif University</span>
-        <hr class="rule"/>
-      </div>
-      <div class="tu">TU</div>
+<!-- ═══════════ NAV ═══════════ -->
+<header class="nav">
+  <div class="nav-in">
+    <div class="brand" onclick="go('home')" role="button" tabindex="0" aria-label="الصفحة الرئيسية">
+      <div class="mark">TU</div>
+      <div class="txt"><strong>جامعة الطائف</strong><span>لجنة متابعة المخالفات</span></div>
     </div>
-    <button class="btn secondary" id="logoutBtn" style="display:none;" onclick="logoutDashboard()">تسجيل الخروج</button>
+    <nav class="nav-links" id="navLinks" aria-label="التنقل الرئيسي">
+      <button class="active" data-view="home" onclick="go('home')">الرئيسية</button>
+      <button data-view="submit" onclick="go('submit')">تقديم بلاغ</button>
+      <button data-view="dashboard" onclick="go('dashboard')">لوحة اللجنة</button>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="تبديل المظهر" title="تبديل المظهر"></button>
+      <button class="icon-btn" onclick="openNotifs()" aria-label="الإشعارات" title="الإشعارات">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="dot" id="notifDot"></span>
+      </button>
+      <button class="icon-btn" id="profileBtn" onclick="go('profile')" aria-label="الملف الشخصي" title="الملف الشخصي">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button class="btn ghost sm" id="logoutBtn" style="display:none" onclick="logoutDashboard()">خروج</button>
+      <button class="icon-btn nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="القائمة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
   </div>
-  <p class="committee-tag" style="max-width:1200px; margin:0 auto;">لجنة متابعة مخالفات الملبس والمظهر</p>
-  <p class="notice">هذا النموذج خاص بإدخال المخالفات الخاصة بالملبس والمظهر فقط.</p>
-  <nav class="tabs">
-    <button class="active" data-view="submit" onclick="switchView('submit')">تقديم بلاغ</button>
-    <button data-view="dashboard" onclick="switchView('dashboard')">لوحة اللجنة</button>
-  </nav>
 </header>
 
-<main>
+<main id="main">
 
-  <!-- ============ SUBMIT VIEW ============ -->
-  <section class="view active" id="view-submit">
+<!-- ═══════════ HOME ═══════════ -->
+<section class="view active" id="view-home">
+  <div class="hero">
+    <div class="hero-pat"></div>
+    <div class="hero-in">
+      <div>
+        <span class="badge-line"><span class="pulse"></span> منصة رقمية رسمية · متوفرة على مدار الساعة</span>
+        <h1>منصة لجنة متابعة<br><span class="hl">مخالفات الملبس والمظهر</span></h1>
+        <p>نظام إلكتروني متكامل لتسجيل بلاغات المخالفات ومتابعتها واتخاذ الإجراءات النظامية بشفافية ودقة، خدمةً لبيئة جامعية منضبطة في جامعة الطائف.</p>
+        <div class="hero-cta">
+          <button class="btn gold" onclick="go('submit')">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            تسجيل بلاغ جديد
+          </button>
+          <button class="btn ghost" style="color:#fff; border-color:rgba(255,255,255,.35)" onclick="go('dashboard')">دخول اللجنة</button>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-emblem">
+          <div class="ring"></div><div class="ring ring2"></div>
+          <div class="core"><div class="tu">TU</div><small>TAIF UNIVERSITY</small></div>
+        </div>
+      </div>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 1440 60" preserveAspectRatio="none"><path fill="currentColor" d="M0,40 C360,70 1080,10 1440,40 L1440,60 L0,60 Z"/></svg>
+  </div>
+
+  <!-- stats strip -->
+  <div class="stats-strip">
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <div class="num" data-counter="13">0</div><div class="lbl">كلية مشمولة</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div class="num" data-counter="8">0</div><div class="lbl">مبنى وبوابة</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <div class="num" data-counter="3">0</div><div class="lbl">خدمات رقمية</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="num">24/7</div><div class="lbl">توفر الخدمة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- services -->
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">خدمات المنصة</div><h2 class="h-sec">الخدمات الرقمية</h2><p class="h-sub">مجموعة متكاملة من الخدمات الإلكترونية تخدم أعضاء اللجنة والمسجّلات.</p></div>
+    <div class="svc-grid">
+      <div class="svc reveal" onclick="go('submit')">
+        <div class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <h3>تسجيل بلاغ مخالفة</h3>
+        <p>نموذج إلكتروني لتوثيق مخالفات الملبس والمظهر وإرسالها فوراً للجنة المختصة.</p>
+        <div class="svc-foot"><span class="users"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> للمسجّلات</span><span class="go">دخول ←</span></div>
+      </div>
+      <div class="svc reveal" onclick="go('dashboard')">
+        <div class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></div>
+        <h3>لوحة تحكم اللجنة</h3>
+        <p>متابعة البلاغات، اتخاذ الإجراءات، الإحصائيات، وسجلات الطالبات في مكان واحد.</p>
+        <div class="svc-foot"><span class="users"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> لأعضاء اللجنة</span><span class="go">دخول ←</span></div>
+      </div>
+      <div class="svc reveal" onclick="requireCommittee('student')">
+        <div class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3 3-2-2"/></svg></div>
+        <h3>سجل الطالبة</h3>
+        <p>استعراض السجل التراكمي لأي طالبة عبر الرقم الجامعي: كل المخالفات والإجراءات.</p>
+        <div class="svc-foot"><span class="users"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> لأعضاء اللجنة</span><span class="go">دخول ←</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- announcements + updates -->
+  <div class="wrap" style="padding-top:8px">
+    <div class="two">
+      <div class="card pad reveal">
+        <h3 class="section-title">آخر الإعلانات</h3>
+        <div class="feed-item"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-5v12L3 14v-3zM11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div><div><h4>تفعيل المنصة الرقمية للجنة</h4><p>الاعتماد الرسمي لتسجيل ومتابعة المخالفات إلكترونياً بدلاً من النماذج الورقية.</p></div></div>
+        <div class="feed-item g"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg></div><div><h4>ربط جميع الكليات والبوابات</h4><p>شمول (١٣) كلية و(٨) مبانٍ وبوابات ضمن نطاق التغطية.</p></div></div>
+        <div class="feed-item"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>تعزيز خصوصية البيانات</h4><p>حفظ البيانات في قاعدة بيانات محمية مع صلاحيات دخول مخصّصة لكل عضو.</p></div></div>
+      </div>
+      <div class="card pad reveal">
+        <h3 class="section-title">آخر التحديثات</h3>
+        <div class="feed-item g"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div><div><h4>تصميم جديد كليّاً</h4><p>واجهة حديثة بمظهر ليلي/نهاري ورسوم بيانية تفاعلية.</p><div class="ago">تحديث حديث</div></div></div>
+        <div class="feed-item"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div><h4>طباعة محضر رسمي</h4><p>إصدار محضر مخالفة قابل للطباعة بترويسة الجامعة وحقول التوقيع.</p><div class="ago">متاح الآن</div></div></div>
+        <div class="feed-item g"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><h4>سجل الإجراءات والتنبيهات</h4><p>تتبع القرارات، والتنبيه للطالبات متكررات المخالفة.</p><div class="ago">متاح الآن</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- vision / mission / values -->
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">الهوية المؤسسية</div><h2 class="h-sec">رؤيتنا ورسالتنا وقيمنا</h2></div>
+    <div class="vmv">
+      <div class="card reveal">
+        <div class="vic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div>
+        <h3>الرؤية</h3><p>بيئة جامعية منضبطة ومحترمة تعكس هوية جامعة الطائف وقيمها، مدعومة بأنظمة رقمية موثوقة.</p>
+      </div>
+      <div class="card reveal">
+        <div class="vic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></div>
+        <h3>الرسالة</h3><p>توثيق مخالفات الملبس والمظهر ومعالجتها بعدالة وشفافية عبر إجراءات نظامية موحّدة وسرية.</p>
+      </div>
+      <div class="card reveal">
+        <div class="vic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>قيمنا</h3>
+        <div class="values-list"><span class="chip">العدالة</span><span class="chip">الشفافية</span><span class="chip">السرية</span><span class="chip">الاحترافية</span><span class="chip">الانضباط</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="wrap faq">
+    <div class="reveal"><div class="eyebrow">مساعدة</div><h2 class="h-sec">الأسئلة الشائعة</h2></div>
+    <div class="reveal">
+      <details><summary>من يستطيع تسجيل بلاغ مخالفة؟ <span class="plus">+</span></summary><div class="ans">المسجّلات المخوّلات فقط، عبر حساب خاص باسم مستخدم وكلمة سر تمنحه لهنّ إدارة اللجنة.</div></details>
+      <details><summary>هل بيانات الطالبات آمنة؟ <span class="plus">+</span></summary><div class="ans">نعم، تُحفظ في قاعدة بيانات محمية، ولا يمكن الاطلاع عليها إلا عبر تسجيل دخول صحيح بالصلاحية المناسبة. كلمات السر مشفّرة بالكامل.</div></details>
+      <details><summary>كيف تتخذ اللجنة الإجراء على المخالفة؟ <span class="plus">+</span></summary><div class="ans">من لوحة التحكم، يفتح العضو البلاغ ويحدّد حالته (قيد المراجعة / تم اتخاذ إجراء) مع تسجيل نوع الإجراء وتاريخه والمسؤول عنه.</div></details>
+      <details><summary>هل يمكن استخراج محضر رسمي؟ <span class="plus">+</span></summary><div class="ans">نعم، لكل بلاغ زر «طباعة المحضر» يصدر مستنداً رسمياً بترويسة الجامعة وحقول توقيع اللجنة والطالبة.</div></details>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-in">
+      <div>
+        <div class="fbrand"><div class="mark">TU</div><div><strong style="color:#fff; display:block">جامعة الطائف</strong><span style="font-size:.8rem">لجنة متابعة مخالفات الملبس والمظهر</span></div></div>
+        <p>منصة رقمية داخلية لخدمة أعمال اللجنة، تهدف لتنظيم وتوثيق المخالفات ومعالجتها إلكترونياً بكفاءة وسرية.</p>
+        <div class="social">
+          <a onclick="toast('حساب رسمي — يُضاف لاحقاً','info')" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7 8 8.2 12h-6.4l-5-6.6L6 22H2.9l7.5-8.6L2.5 2H9l4.5 6z"/></svg></a>
+          <a onclick="toast('حساب رسمي — يُضاف لاحقاً','info')" aria-label="بريد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></a>
+          <a onclick="toast('حساب رسمي — يُضاف لاحقاً','info')" aria-label="موقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></a>
+        </div>
+      </div>
+      <div><h5>روابط سريعة</h5><ul><li><a onclick="go('home')">الرئيسية</a></li><li><a onclick="go('submit')">تسجيل بلاغ</a></li><li><a onclick="go('dashboard')">لوحة اللجنة</a></li></ul></div>
+      <div><h5>الخدمات</h5><ul><li><a onclick="go('submit')">تسجيل مخالفة</a></li><li><a onclick="requireCommittee('reports')">متابعة البلاغات</a></li><li><a onclick="requireCommittee('student')">سجل الطالبة</a></li></ul></div>
+      <div><h5>الجهات ذات العلاقة</h5><ul><li><a>عمادة شؤون الطلاب</a></li><li><a>وكالة الشؤون التعليمية</a></li><li><a>لجنة الانضباط الطلابي</a></li></ul></div>
+    </div>
+    <div class="footer-bar">© جامعة الطائف — لجنة متابعة مخالفات الملبس والمظهر. جميع الحقوق محفوظة.</div>
+  </footer>
+</section>
+
+<!-- ═══════════ SUBMIT ═══════════ -->
+<section class="view" id="view-submit">
+  <div class="wrap" style="max-width:820px">
 
     <div class="gate" id="recorderGateBox">
-      <div class="icon-lg">🔒</div>
       <div class="card">
+        <div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         <h2>دخول تسجيل المخالفات</h2>
-        <p class="sub">الرجاء تسجيل الدخول باسم العضو وكلمة السر لتسجيل مخالفة</p>
-        <div class="field">
-          <label>اسم العضو</label>
-          <input type="text" id="recorderUsername" placeholder="اسم المستخدم"/>
-        </div>
-        <div class="field" style="margin-top:10px">
-          <label>كلمة السر</label>
-          <input type="password" id="recorderPassword" placeholder="كلمة السر"/>
-        </div>
-        <div class="btn-row" style="justify-content:center">
-          <button class="btn" onclick="tryRecorderLogin()">دخول</button>
-        </div>
-        <p class="sub" id="recorderGateError" style="color:var(--danger); display:none; margin-top:10px;">اسم المستخدم أو كلمة السر غير صحيحة</p>
+        <p class="sub">سجّلي الدخول باسم العضو وكلمة السر لتسجيل مخالفة</p>
+        <div class="field"><label>اسم العضو</label><input type="text" id="recorderUsername" placeholder="اسم المستخدم" autocomplete="username"/></div>
+        <div class="field"><label>كلمة السر</label><input type="password" id="recorderPassword" placeholder="كلمة السر" autocomplete="current-password"/></div>
+        <button class="btn primary" style="width:100%; margin-top:8px" onclick="tryRecorderLogin()">تسجيل الدخول</button>
+        <p class="err" id="recorderGateError">اسم المستخدم أو كلمة السر غير صحيحة</p>
       </div>
     </div>
 
     <div id="recorderFormWrap" style="display:none">
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
-        <h2>نموذج جمع بيانات الطالبات المخالفات</h2>
-        <button class="btn secondary" onclick="logoutRecorder()">تسجيل الخروج</button>
+      <div class="dash-head">
+        <div><div class="eyebrow">نموذج إلكتروني</div><h2 class="h-sec">تسجيل بلاغ مخالفة</h2><p class="welcome">مسجّلة الدخول: <b id="recorderNameDisplay"></b></p></div>
+        <button class="btn ghost sm" onclick="logoutRecorder()">خروج</button>
       </div>
-      <p class="sub" style="margin-bottom:4px">مسجّلة الدخول باسم: <b id="recorderNameDisplay"></b></p>
-      <p class="sub">عند إرسال هذا النموذج، لن تُجمع تفاصيلك تلقائياً مثل الاسم وعنوان البريد الإلكتروني إلا إذا قدمتها بنفسك.</p>
 
       <div class="success-banner" id="successBanner">
-        ✅ تم استلام البلاغ بنجاح، رقم المتابعة: <b id="successRef"></b>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h3>تم استلام البلاغ بنجاح</h3>
+        <div>رقم المتابعة: <b id="successRef"></b></div>
+        <button class="btn ghost sm" style="margin-top:14px" onclick="document.getElementById('successBanner').classList.remove('show')">تسجيل بلاغ آخر</button>
       </div>
 
-      <form id="reportForm">
-        <div class="grid">
-          <div class="field full">
-            <label>1. اسم الطالبة <span class="req">*</span></label>
-            <input type="text" name="studentName" required placeholder="أدخل إجابتك"/>
-          </div>
-
-          <div class="field">
-            <label>2. الرقم الجامعي <span class="req">*</span></label>
-            <input type="number" inputmode="numeric" name="universityId" required placeholder="يجب أن تكون القيمة رقماً"/>
-          </div>
-          <div class="field">
-            <label>3. الكلية <span class="req">*</span></label>
+      <form id="reportForm" class="card pad">
+        <div class="grid2">
+          <div class="field full"><label>١. اسم الطالبة <span class="req">*</span></label><input type="text" name="studentName" required placeholder="الاسم الكامل"/></div>
+          <div class="field"><label>٢. الرقم الجامعي <span class="req">*</span></label><input type="number" inputmode="numeric" name="universityId" required placeholder="رقم صحيح"/></div>
+          <div class="field"><label>٣. الكلية <span class="req">*</span></label>
             <select name="college" id="collegeSelect" required>
-              <option value="">حدد إجابتك</option>
-              <option>كلية التربية</option>
-              <option>كلية الآداب</option>
-              <option>كلية الشريعة والأنظمة</option>
-              <option>كلية إدارة الأعمال</option>
-              <option>كلية العلوم</option>
-              <option>كلية الحاسبات</option>
-              <option>كلية التصاميم والفنون التطبيقية</option>
-              <option>كلية الطب</option>
-              <option>كلية الصيدلة</option>
-              <option>كلية الهندسة</option>
-              <option>كلية التمريض</option>
-              <option>الكلية التطبيقية / الدبلوم</option>
-              <option>كلية العلوم الطبية التطبيقية</option>
-              <option value="غير ذلك">غير ذلك</option>
+              <option value="">حدد الكلية</option>
+              <option>كلية التربية</option><option>كلية الآداب</option><option>كلية الشريعة والأنظمة</option>
+              <option>كلية إدارة الأعمال</option><option>كلية العلوم</option><option>كلية الحاسبات</option>
+              <option>كلية التصاميم والفنون التطبيقية</option><option>كلية الطب</option><option>كلية الصيدلة</option>
+              <option>كلية الهندسة</option><option>كلية التمريض</option><option>الكلية التطبيقية / الدبلوم</option>
+              <option>كلية العلوم الطبية التطبيقية</option><option value="غير ذلك">غير ذلك</option>
             </select>
           </div>
-          <div class="field full hidden" id="collegeOtherWrap">
-            <label>يرجى تحديد الكلية</label>
-            <input type="text" name="collegeOther" placeholder="أدخل إجابتك"/>
-          </div>
-
-          <div class="field full">
-            <label>4. القسم <span class="req">*</span></label>
-            <input type="text" name="department" required placeholder="أدخل إجابتك"/>
-          </div>
-
-          <div class="field full">
-            <label>5. المبنى/البوابة <span class="req">*</span></label>
-            <div class="option-list" id="buildingGateList">
-              <label class="option-row"><input type="radio" name="buildingGate" value="بوابة 16" required/> بوابة 16</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="بوابة 2"/> بوابة 2</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="بوابة 27"/> بوابة 27</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="مبنى 18"/> مبنى 18</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="مبنى 9"/> مبنى 9</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="مبنى 13"/> مبنى 13</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="الكلية الصحية"/> الكلية الصحية</label>
-              <label class="option-row"><input type="radio" name="buildingGate" value="كليه العلوم الطبية التطبيقية"/> كليه العلوم الطبية التطبيقية</label>
-              <label class="option-row other"><input type="radio" name="buildingGate" value="غير ذلك" id="buildingGateOtherRadio"/> غير ذلك</label>
+          <div class="field full hidden" id="collegeOtherWrap"><label>يرجى تحديد الكلية</label><input type="text" name="collegeOther" placeholder="اسم الكلية"/></div>
+          <div class="field full"><label>٤. القسم <span class="req">*</span></label><input type="text" name="department" required placeholder="اسم القسم"/></div>
+          <div class="field full"><label>٥. المبنى / البوابة <span class="req">*</span></label>
+            <div class="opt-list" id="buildingGateList">
+              <label class="opt"><input type="radio" name="buildingGate" value="بوابة 16" required/> بوابة 16</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="بوابة 2"/> بوابة 2</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="بوابة 27"/> بوابة 27</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="مبنى 18"/> مبنى 18</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="مبنى 9"/> مبنى 9</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="مبنى 13"/> مبنى 13</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="الكلية الصحية"/> الكلية الصحية</label>
+              <label class="opt"><input type="radio" name="buildingGate" value="كليه العلوم الطبية التطبيقية"/> كليه العلوم الطبية التطبيقية</label>
+              <label class="opt other"><input type="radio" name="buildingGate" value="غير ذلك" id="buildingGateOtherRadio"/> غير ذلك</label>
             </div>
           </div>
-          <div class="field full hidden" id="buildingGateOtherWrap">
-            <label>يرجى تحديد المبنى/البوابة</label>
-            <input type="text" name="buildingGateOther" placeholder="أدخل إجابتك"/>
-          </div>
-
-          <div class="field full">
-            <label>6. اسم من ضبط المخالفة <span class="req">*</span></label>
-            <input type="text" name="recorderName" id="recorderNameField" required readonly style="background:#eef0f2; cursor:not-allowed;"/>
-          </div>
-
-          <div class="field full">
-            <label>7. نوع المخالفة <span class="req">*</span></label>
-            <div class="option-list" id="violationTypeList">
-              <label class="option-row"><input type="checkbox" name="violationType" value="لبس مخالف"/> لبس مخالف</label>
-              <label class="option-row"><input type="checkbox" name="violationType" value="ذوق عام"/> ذوق عام</label>
-              <label class="option-row"><input type="checkbox" name="violationType" value="تخريم"/> تخريم</label>
-              <label class="option-row"><input type="checkbox" name="violationType" value="عباية ملونة"/> عباية ملونة</label>
-              <label class="option-row other"><input type="checkbox" name="violationType" value="غير ذلك" id="violationOtherCheck"/> غير ذلك</label>
+          <div class="field full hidden" id="buildingGateOtherWrap"><label>يرجى تحديد المبنى/البوابة</label><input type="text" name="buildingGateOther" placeholder="المبنى/البوابة"/></div>
+          <div class="field full"><label>٦. اسم من ضبط المخالفة <span class="req">*</span></label><input type="text" name="recorderName" id="recorderNameField" required readonly style="background:var(--bg); cursor:not-allowed"/></div>
+          <div class="field full"><label>٧. نوع المخالفة <span class="req">*</span></label>
+            <div class="opt-list" id="violationTypeList">
+              <label class="opt"><input type="checkbox" name="violationType" value="لبس مخالف"/> لبس مخالف</label>
+              <label class="opt"><input type="checkbox" name="violationType" value="ذوق عام"/> ذوق عام</label>
+              <label class="opt"><input type="checkbox" name="violationType" value="تخريم"/> تخريم</label>
+              <label class="opt"><input type="checkbox" name="violationType" value="عباية ملونة"/> عباية ملونة</label>
+              <label class="opt other"><input type="checkbox" name="violationType" value="غير ذلك" id="violationOtherCheck"/> غير ذلك</label>
             </div>
           </div>
-          <div class="field full hidden" id="violationOtherWrap">
-            <label>يرجى تحديد نوع المخالفة</label>
-            <input type="text" name="violationTypeOther" placeholder="أدخل إجابتك"/>
-          </div>
-
-          <div class="field full">
-            <label>8. ملاحظات اضافية</label>
-            <textarea name="notes" placeholder="أدخل إجابتك"></textarea>
-          </div>
+          <div class="field full hidden" id="violationOtherWrap"><label>يرجى تحديد نوع المخالفة</label><input type="text" name="violationTypeOther" placeholder="نوع المخالفة"/></div>
+          <div class="field full"><label>٨. ملاحظات إضافية</label><textarea name="notes" placeholder="أي تفاصيل إضافية (اختياري)"></textarea></div>
         </div>
-
-        <div class="btn-row">
-          <button type="submit" class="btn">إرسال</button>
-          <button type="reset" class="btn secondary">تفريغ الحقول</button>
+        <div class="btn-row" style="margin-top:22px">
+          <button type="submit" class="btn primary">إرسال البلاغ</button>
+          <button type="reset" class="btn ghost">تفريغ الحقول</button>
         </div>
       </form>
     </div>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ============ COMMITTEE PLATFORM VIEW ============ -->
-  <section class="view" id="view-dashboard">
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<section class="view" id="view-dashboard">
+  <div class="wrap">
 
     <div class="gate" id="gateBox">
-      <div class="icon-lg">🔒</div>
       <div class="card">
+        <div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         <h2>دخول أعضاء اللجنة</h2>
-        <p class="sub">الرجاء تسجيل الدخول باسم العضو وكلمة السر</p>
-        <div class="field">
-          <label>اسم العضو</label>
-          <input type="text" id="committeeUsername" placeholder="اسم المستخدم"/>
-        </div>
-        <div class="field" style="margin-top:10px">
-          <label>كلمة السر</label>
-          <input type="password" id="passInput" placeholder="كلمة السر"/>
-        </div>
-        <div class="btn-row" style="justify-content:center">
-          <button class="btn" onclick="tryLogin()">دخول</button>
-        </div>
-        <p class="sub" id="gateError" style="color:var(--danger); display:none; margin-top:10px;">اسم المستخدم أو كلمة السر غير صحيحة</p>
+        <p class="sub">سجّلي الدخول باسم العضو وكلمة السر</p>
+        <div class="field"><label>اسم العضو</label><input type="text" id="committeeUsername" placeholder="اسم المستخدم" autocomplete="username"/></div>
+        <div class="field"><label>كلمة السر</label><input type="password" id="passInput" placeholder="كلمة السر" autocomplete="current-password"/></div>
+        <button class="btn primary" style="width:100%; margin-top:8px" onclick="tryLogin()">تسجيل الدخول</button>
+        <p class="err" id="gateError">اسم المستخدم أو كلمة السر غير صحيحة</p>
       </div>
     </div>
 
     <div id="dashboardContent" style="display:none">
+      <div class="dash-head">
+        <div><div class="eyebrow">لوحة التحكم</div><h2>مرحباً بعودتك</h2><div class="welcome" id="dashWelcome"></div></div>
+        <button class="btn ghost sm" onclick="exportReportsCSV()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          تصدير البيانات
+        </button>
+      </div>
 
       <div class="subnav">
-        <button class="active" data-sub="overview" onclick="switchSubView('overview')">نظرة عامة</button>
-        <button data-sub="reports" onclick="switchSubView('reports')">البلاغات</button>
-        <button data-sub="actions" onclick="switchSubView('actions')">الإجراءات</button>
-        <button data-sub="student" onclick="switchSubView('student')">سجل الطالبة</button>
-        <button data-sub="members" onclick="switchSubView('members')">الأعضاء</button>
+        <button class="active" data-sub="overview" onclick="switchSubView('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>نظرة عامة</button>
+        <button data-sub="reports" onclick="switchSubView('reports')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>البلاغات</button>
+        <button data-sub="actions" onclick="switchSubView('actions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>الإجراءات</button>
+        <button data-sub="student" onclick="switchSubView('student')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>سجل الطالبة</button>
+        <button data-sub="members" onclick="switchSubView('members')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>الأعضاء</button>
       </div>
 
-      <!-- ---- Overview sub-view ---- -->
+      <!-- overview -->
       <div class="subview active" id="sub-overview">
-        <div class="stat-row">
-          <div class="stat"><b id="statTotal">0</b><span>إجمالي البلاغات</span></div>
-          <div class="stat"><b id="statNew">0</b><span>جديدة</span></div>
-          <div class="stat"><b id="statReview">0</b><span>قيد المراجعة</span></div>
-          <div class="stat"><b id="statDone">0</b><span>تم اتخاذ إجراء</span></div>
+        <div id="dashSkeleton" style="display:none">
+          <div class="kpi-grid"><div class="sk sk-kpi"></div><div class="sk sk-kpi"></div><div class="sk sk-kpi"></div><div class="sk sk-kpi"></div></div>
+          <div class="card pad"><div class="sk sk-line" style="width:40%"></div><div class="sk sk-line"></div><div class="sk sk-line" style="width:80%"></div><div class="sk sk-line" style="width:60%"></div></div>
         </div>
+        <div id="dashReal">
+          <div class="kpi-grid">
+            <div class="kpi total"><div class="kic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><b id="statTotal">0</b><span>إجمالي البلاغات</span></div>
+            <div class="kpi new"><div class="kic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg></div><b id="statNew">0</b><span>جديدة</span></div>
+            <div class="kpi review"><div class="kic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div><b id="statReview">0</b><span>قيد المراجعة</span></div>
+            <div class="kpi done"><div class="kic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg></div><b id="statDone">0</b><span>تم اتخاذ إجراء</span></div>
+          </div>
 
-        <div class="card">
-          <div class="breakdown-grid">
-            <div>
-              <h3 class="section-title">الأكثر تكراراً — نوع المخالفة</h3>
-              <div id="violationBreakdown"></div>
-            </div>
-            <div>
-              <h3 class="section-title">توزيع البلاغات — حسب الكلية</h3>
-              <div id="collegeBreakdown"></div>
+          <div class="charts-row">
+            <div class="chart-card"><h3>توزيع الحالات</h3><div class="donut-wrap"><div id="statusDonut"></div><div class="donut-legend" id="donutLegend"></div></div></div>
+            <div class="chart-card"><h3>البلاغات عبر الأشهر</h3><div id="trendChart"></div></div>
+          </div>
+
+          <div class="card pad" style="margin-bottom:16px">
+            <div class="breakdown-grid">
+              <div><h3 class="section-title">الأكثر تكراراً — نوع المخالفة</h3><div id="violationBreakdown"></div></div>
+              <div><h3 class="section-title">التوزيع حسب الكلية</h3><div id="collegeBreakdown"></div></div>
             </div>
           </div>
-        </div>
 
-        <div class="card">
-          <h3 class="section-title">أحدث البلاغات</h3>
-          <div class="recent-list" id="recentList"></div>
+          <div class="card pad"><h3 class="section-title">أحدث البلاغات</h3><div id="recentList"></div></div>
         </div>
       </div>
 
-      <!-- ---- Reports sub-view ---- -->
+      <!-- reports -->
       <div class="subview" id="sub-reports">
-        <div class="card">
+        <div class="card pad">
           <div class="toolbar">
-            <input type="text" id="searchInput" placeholder="بحث عن الطالبة بالاسم أو الرقم الجامعي..." oninput="renderTable()"/>
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" id="searchInput" placeholder="بحث بالاسم أو الرقم الجامعي..." oninput="renderTable(); showSuggestions()" onblur="setTimeout(()=>hideSuggestions(),150)" autocomplete="off"/>
+              <div class="sug" id="searchSug"></div>
+            </div>
             <select id="statusFilter" onchange="renderTable()">
-              <option value="">كل الحالات</option>
-              <option value="جديد">جديد</option>
-              <option value="قيد المراجعة">قيد المراجعة</option>
-              <option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option>
-              <option value="إغلاق دون إجراء">إغلاق دون إجراء</option>
+              <option value="">كل الحالات</option><option value="جديد">جديد</option><option value="قيد المراجعة">قيد المراجعة</option><option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option><option value="إغلاق دون إجراء">إغلاق دون إجراء</option>
             </select>
-            <select id="collegeFilter" onchange="renderTable()">
-              <option value="">كل الكليات</option>
-            </select>
-            <button class="btn secondary" onclick="exportReportsCSV()">تصدير CSV</button>
+            <select id="collegeFilter" onchange="renderTable()"><option value="">كل الكليات</option></select>
           </div>
-
-          <div style="overflow-x:auto">
+          <div class="tbl-wrap">
             <table>
-              <thead>
-                <tr>
-                  <th>التاريخ</th><th>اسم الطالبة</th><th>الرقم الجامعي</th><th>الكلية</th><th>نوع المخالفة</th><th>الحالة</th><th></th>
-                </tr>
-              </thead>
+              <thead><tr><th>التاريخ</th><th>اسم الطالبة</th><th>الرقم الجامعي</th><th>الكلية</th><th>نوع المخالفة</th><th>الحالة</th><th></th></tr></thead>
               <tbody id="tableBody"></tbody>
             </table>
           </div>
-          <div class="empty" id="emptyState" style="display:none">لا توجد بلاغات مطابقة</div>
+          <div class="empty" id="emptyState" style="display:none">
+            <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <h4>لا توجد بلاغات مطابقة</h4><p>جرّبي تعديل كلمات البحث أو الفلاتر</p>
+          </div>
         </div>
       </div>
 
-      <!-- ---- Actions sub-view ---- -->
+      <!-- actions -->
       <div class="subview" id="sub-actions">
-        <div class="card">
+        <div class="card pad">
           <div class="toolbar">
-            <input type="text" id="actionSearchInput" placeholder="بحث بالاسم أو نوع الإجراء..." oninput="renderActionsTable()"/>
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" id="actionSearchInput" placeholder="بحث بالاسم أو نوع الإجراء..." oninput="renderActionsTable()" autocomplete="off"/>
+            </div>
             <select id="actionTypeFilter" onchange="renderActionsTable()">
-              <option value="">كل الإجراءات</option>
-              <option>توجيه شفهي</option>
-              <option>إنذار كتابي أول</option>
-              <option>إنذار كتابي ثاني</option>
-              <option>إنذار نهائي</option>
-              <option>خصم من درجة المواظبة</option>
-              <option>إحالة إلى عمادة شؤون الطلاب</option>
-              <option>إحالة إلى لجنة الانضباط</option>
-              <option>فصل مؤقت</option>
-              <option value="أخرى">أخرى</option>
+              <option value="">كل الإجراءات</option><option>توجيه شفهي</option><option>إنذار كتابي أول</option><option>إنذار كتابي ثاني</option><option>إنذار نهائي</option><option>خصم من درجة المواظبة</option><option>إحالة إلى عمادة شؤون الطلاب</option><option>إحالة إلى لجنة الانضباط</option><option>فصل مؤقت</option><option value="أخرى">أخرى</option>
             </select>
-            <button class="btn secondary" onclick="exportActionsCSV()">تصدير CSV</button>
+            <button class="btn ghost sm" onclick="exportActionsCSV()">تصدير</button>
           </div>
-
-          <div style="overflow-x:auto">
+          <div class="tbl-wrap">
             <table>
-              <thead>
-                <tr>
-                  <th>تاريخ الإجراء</th><th>اسم الطالبة</th><th>الرقم الجامعي</th><th>نوع الإجراء</th><th>المسؤول عن الإجراء</th><th></th>
-                </tr>
-              </thead>
+              <thead><tr><th>تاريخ الإجراء</th><th>اسم الطالبة</th><th>الرقم الجامعي</th><th>نوع الإجراء</th><th>المسؤول</th><th></th></tr></thead>
               <tbody id="actionsTableBody"></tbody>
             </table>
           </div>
-          <div class="empty" id="actionsEmptyState" style="display:none">لا توجد إجراءات مسجّلة بعد</div>
+          <div class="empty" id="actionsEmptyState" style="display:none">
+            <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg></div>
+            <h4>لا توجد إجراءات مسجّلة بعد</h4><p>ستظهر هنا الإجراءات فور اتخاذها من صفحة البلاغات</p>
+          </div>
         </div>
       </div>
 
-      <!-- ---- Student history sub-view ---- -->
+      <!-- student -->
       <div class="subview" id="sub-student">
-        <div class="card">
-          <h2>سجل الطالبة</h2>
-          <p class="sub">ابحثي بالرقم الجامعي (الأدق) أو باسم الطالبة لعرض كل مخالفاتها وإجراءاتها السابقة مجمّعة.</p>
+        <div class="card pad">
+          <div class="eyebrow">بحث تراكمي</div><h2 class="h-sec">سجل الطالبة</h2>
+          <p class="h-sub">ابحثي بالرقم الجامعي (الأدق) أو باسم الطالبة لعرض كل مخالفاتها وإجراءاتها.</p>
           <div class="toolbar">
-            <input type="text" id="studentSearchInput" placeholder="الرقم الجامعي أو اسم الطالبة..."/>
-            <button class="btn" onclick="renderStudentHistory()">بحث</button>
+            <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" id="studentSearchInput" placeholder="الرقم الجامعي أو اسم الطالبة..." autocomplete="off"/></div>
+            <button class="btn primary" onclick="renderStudentHistory()">بحث</button>
           </div>
         </div>
         <div id="studentHistoryResult"></div>
       </div>
 
-      <!-- ---- Members management sub-view ---- -->
+      <!-- members -->
       <div class="subview" id="sub-members">
-        <div class="card">
-          <h2>إدارة حسابات الأعضاء</h2>
-          <p class="sub">أضيفي أو عدّلي حسابات الأعضاء المخوّلين بتسجيل المخالفات و/أو الدخول للوحة اللجنة.</p>
-          <div class="grid">
-            <div class="field">
-              <label>اسم المستخدم</label>
-              <input type="text" id="memberUsernameInput" placeholder="username"/>
-            </div>
-            <div class="field">
-              <label>كلمة السر</label>
-              <input type="text" id="memberPasswordInput" placeholder="كلمة السر"/>
-            </div>
-            <div class="field">
-              <label>الاسم الظاهر</label>
-              <input type="text" id="memberDisplayNameInput" placeholder="مثال: أ. سارة القحطاني"/>
-            </div>
-            <div class="field">
-              <label>الصلاحية</label>
-              <select id="memberRoleInput">
-                <option value="both">تسجيل مخالفات + لوحة اللجنة</option>
-                <option value="recorder">تسجيل مخالفات فقط</option>
-                <option value="committee">لوحة اللجنة فقط</option>
-              </select>
-            </div>
+        <div class="card pad">
+          <div class="eyebrow">الإدارة</div><h2 class="h-sec">إدارة حسابات الأعضاء</h2>
+          <p class="h-sub">أضيفي أو عدّلي حسابات الأعضاء وصلاحياتهم (متاح للمشرفة العامة).</p>
+          <div class="grid2">
+            <div class="field"><label>اسم المستخدم</label><input type="text" id="memberUsernameInput" placeholder="username" dir="ltr"/></div>
+            <div class="field"><label>كلمة السر</label><input type="text" id="memberPasswordInput" placeholder="كلمة السر"/></div>
+            <div class="field"><label>الاسم الظاهر</label><input type="text" id="memberDisplayNameInput" placeholder="مثال: أ. سارة القحطاني"/></div>
+            <div class="field"><label>الصلاحية</label><select id="memberRoleInput"><option value="both">تسجيل مخالفات + لوحة اللجنة</option><option value="recorder">تسجيل مخالفات فقط</option><option value="committee">لوحة اللجنة فقط</option></select></div>
           </div>
-          <div class="btn-row">
-            <button class="btn" onclick="saveMemberForm()">إضافة / حفظ العضو</button>
-            <button class="btn secondary" onclick="resetMemberForm()">تفريغ الحقول</button>
-          </div>
+          <div class="btn-row" style="margin-top:18px"><button class="btn primary" onclick="saveMemberForm()">إضافة / حفظ العضو</button><button class="btn ghost" onclick="resetMemberForm()">تفريغ الحقول</button></div>
         </div>
-        <div class="card">
+        <div class="card pad">
           <h3 class="section-title">الأعضاء الحاليون</h3>
-          <div style="overflow-x:auto">
-            <table>
-              <thead><tr><th>اسم المستخدم</th><th>الاسم الظاهر</th><th>الصلاحية</th><th></th></tr></thead>
-              <tbody id="membersTableBody"></tbody>
-            </table>
-          </div>
+          <div class="tbl-wrap"><table><thead><tr><th>اسم المستخدم</th><th>الاسم الظاهر</th><th>الصلاحية</th><th></th></tr></thead><tbody id="membersTableBody"></tbody></table></div>
         </div>
       </div>
 
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- ═══════════ PROFILE ═══════════ -->
+<section class="view" id="view-profile">
+  <div class="wrap" style="max-width:900px">
+    <div id="profileContent"></div>
+  </div>
+</section>
 
 </main>
 
-<!-- Detail modal -->
+<!-- ═══════════ Notifications panel ═══════════ -->
+<div class="panel-overlay" id="panelOverlay" onclick="closeNotifs()"></div>
+<aside class="notif-panel" id="notifPanel" aria-label="مركز الإشعارات">
+  <div class="notif-head"><h3>مركز الإشعارات</h3><button class="close-x" onclick="closeNotifs()" aria-label="إغلاق">✕</button></div>
+  <div class="notif-tabs" id="notifTabs">
+    <button class="active" data-nt="unread" onclick="switchNotifTab('unread')">غير مقروء</button>
+    <button data-nt="read" onclick="switchNotifTab('read')">مقروء</button>
+    <button data-nt="important" onclick="switchNotifTab('important')">مهم</button>
+    <button data-nt="system" onclick="switchNotifTab('system')">النظام</button>
+  </div>
+  <div class="notif-list" id="notifList"></div>
+</aside>
+
+<!-- ═══════════ Report modal ═══════════ -->
 <div class="overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
-  <div class="modal" style="position:relative">
-    <button class="btn secondary modal-close" onclick="closeModal()">إغلاق ✕</button>
-    <h3>تفاصيل البلاغ</h3>
-    <div class="detail-grid" id="modalDetails"></div>
-
-    <div class="field full">
-      <label>قرار اللجنة / ملاحظات</label>
-      <textarea id="committeeNotes"></textarea>
-    </div>
-    <div class="field full" style="margin-top:12px;">
-      <label>الحالة</label>
-      <select id="statusSelect" onchange="toggleActionBox()">
-        <option value="جديد">جديد</option>
-        <option value="قيد المراجعة">قيد المراجعة</option>
-        <option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option>
-        <option value="إغلاق دون إجراء">إغلاق دون إجراء</option>
-      </select>
-    </div>
-
-    <div class="action-box hidden" id="actionBox">
-      <div class="grid">
-        <div class="field">
-          <label>نوع الإجراء</label>
-          <select id="actionTypeSelect">
-            <option value="">اختر النوع</option>
-            <option>توجيه شفهي</option>
-            <option>إنذار كتابي أول</option>
-            <option>إنذار كتابي ثاني</option>
-            <option>إنذار نهائي</option>
-            <option>خصم من درجة المواظبة</option>
-            <option>إحالة إلى عمادة شؤون الطلاب</option>
-            <option>إحالة إلى لجنة الانضباط</option>
-            <option>فصل مؤقت</option>
-            <option value="أخرى">أخرى</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>تاريخ الإجراء</label>
-          <input type="date" id="actionDateInput"/>
-        </div>
-        <div class="field full">
-          <label>اسم عضو اللجنة المسؤول</label>
-          <input type="text" id="actionByInput" placeholder="أدخل الاسم"/>
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head"><h3>تفاصيل البلاغ</h3><button class="close-x" onclick="closeModal()" aria-label="إغلاق">✕</button></div>
+    <div class="modal-body">
+      <div class="detail-grid" id="modalDetails"></div>
+      <div class="field full"><label>قرار اللجنة / ملاحظات</label><textarea id="committeeNotes"></textarea></div>
+      <div class="field full" style="margin-top:14px"><label>الحالة</label>
+        <select id="statusSelect" onchange="toggleActionBox()"><option value="جديد">جديد</option><option value="قيد المراجعة">قيد المراجعة</option><option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option><option value="إغلاق دون إجراء">إغلاق دون إجراء</option></select>
+      </div>
+      <div class="action-box hidden" id="actionBox">
+        <div class="grid2">
+          <div class="field"><label>نوع الإجراء</label><select id="actionTypeSelect"><option value="">اختر النوع</option><option>توجيه شفهي</option><option>إنذار كتابي أول</option><option>إنذار كتابي ثاني</option><option>إنذار نهائي</option><option>خصم من درجة المواظبة</option><option>إحالة إلى عمادة شؤون الطلاب</option><option>إحالة إلى لجنة الانضباط</option><option>فصل مؤقت</option><option value="أخرى">أخرى</option></select></div>
+          <div class="field"><label>تاريخ الإجراء</label><input type="date" id="actionDateInput"/></div>
+          <div class="field full"><label>اسم عضو اللجنة المسؤول</label><input type="text" id="actionByInput" placeholder="أدخل الاسم"/></div>
         </div>
       </div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn" onclick="saveReport()">حفظ</button>
-      <button class="btn secondary" onclick="printReport()">🖨️ طباعة المحضر</button>
-      <button class="btn danger" onclick="deleteReport()">حذف البلاغ</button>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn primary" onclick="saveReport()">حفظ</button>
+        <button class="btn ghost" onclick="printReport()">🖨️ طباعة المحضر</button>
+        <button class="btn danger" onclick="deleteReport()">حذف</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Printable official case report (hidden on screen, shown only via print) -->
+<!-- Printable report -->
 <div id="printArea">
-  <div class="print-header">
-    <div class="print-wordmark">
-      <hr/>
-      <span class="ar">جامعة الطائف</span>
-      <span class="en">Taif University</span>
-      <hr/>
-    </div>
-    <div class="print-tu">TU</div>
-  </div>
+  <div class="print-header"><div class="print-wordmark"><hr/><span class="ar">جامعة الطائف</span><span class="en">Taif University</span><hr/></div><div class="print-tu">TU</div></div>
   <p class="print-committee">لجنة متابعة مخالفات الملبس والمظهر</p>
   <h2 class="print-title">محضر بلاغ مخالفة</h2>
   <table class="print-table" id="printTable"></table>
-  <div class="print-signatures">
-    <div><span>رئيسة اللجنة</span><hr/></div>
-    <div><span>عضو اللجنة</span><hr/></div>
-    <div><span>الطالبة (بالعلم)</span><hr/></div>
-  </div>
+  <div class="print-signatures"><div><span>رئيسة اللجنة</span><hr/></div><div><span>عضو اللجنة</span><hr/></div><div><span>الطالبة (بالعلم)</span><hr/></div></div>
 </div>
+
+<div class="toasts" id="toasts"></div>
 
 <script>
 // ═══ إعدادات الاتصال بقاعدة البيانات (Supabase) ═══
@@ -644,71 +977,80 @@ let activeReportId = null;
 let editingMemberUsername = null;
 let reportsCache = [];
 let membersCache = [];
+let notifTab = 'unread';
 
-const COLLEGES = [
-  'كلية التربية','كلية الآداب','كلية الشريعة والأنظمة','كلية إدارة الأعمال','كلية العلوم',
-  'كلية الحاسبات','كلية التصاميم والفنون التطبيقية','كلية الطب','كلية الصيدلة','كلية الهندسة',
-  'كلية التمريض','الكلية التطبيقية / الدبلوم','كلية العلوم الطبية التطبيقية'
-];
-
+const COLLEGES = ['كلية التربية','كلية الآداب','كلية الشريعة والأنظمة','كلية إدارة الأعمال','كلية العلوم','كلية الحاسبات','كلية التصاميم والفنون التطبيقية','كلية الطب','كلية الصيدلة','كلية الهندسة','كلية التمريض','الكلية التطبيقية / الدبلوم','كلية العلوم الطبية التطبيقية'];
 const ROLE_LABELS = {both:'تسجيل مخالفات + لوحة اللجنة', recorder:'تسجيل مخالفات فقط', committee:'لوحة اللجنة فقط'};
+const STATUS_META = {'جديد':{c:'#c98a1c'},'قيد المراجعة':{c:'#2f6bb0'},'تم اتخاذ إجراء':{c:'#1e8a5c'},'إغلاق دون إجراء':{c:'#8a9a92'}};
 
 // ---- Supabase RPC helper ----
 async function sbCall(fn, args){
   const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {
     method: 'POST',
-    headers: {
-      'apikey': SUPABASE_ANON,
-      'Authorization': 'Bearer ' + SUPABASE_ANON,
-      'Content-Type': 'application/json'
-    },
+    headers: {'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json'},
     body: JSON.stringify(args || {})
   });
   if(!res.ok){ throw new Error('HTTP ' + res.status); }
   return res.json();
 }
-
 function normalizeReport(r){
-  return {
-    id: r.id, createdAt: r.created_at,
-    studentName: r.student_name, universityId: r.university_id,
-    college: r.college, collegeOther: r.college_other || '',
-    department: r.department, buildingGate: r.building_gate,
-    buildingGateOther: r.building_gate_other || '', recorderName: r.recorder_name,
-    violationTypes: r.violation_types || [], violationTypeOther: r.violation_type_other || '',
-    notes: r.notes || '', status: r.status, committeeNotes: r.committee_notes || '',
-    actionType: r.action_type || '', actionDate: r.action_date || '', actionBy: r.action_by || ''
-  };
+  return {id:r.id, createdAt:r.created_at, studentName:r.student_name, universityId:r.university_id,
+    college:r.college, collegeOther:r.college_other||'', department:r.department, buildingGate:r.building_gate,
+    buildingGateOther:r.building_gate_other||'', recorderName:r.recorder_name, violationTypes:r.violation_types||[],
+    violationTypeOther:r.violation_type_other||'', notes:r.notes||'', status:r.status, committeeNotes:r.committee_notes||'',
+    actionType:r.action_type||'', actionDate:r.action_date||'', actionBy:r.action_by||''};
 }
-
-// ---- Sessions (token from server, stored per browser session) ----
 function getRecorderSession(){ try { return JSON.parse(sessionStorage.getItem(RECORDER_SESSION_KEY)); } catch(e){ return null; } }
 function getCommitteeSession(){ try { return JSON.parse(sessionStorage.getItem(COMMITTEE_SESSION_KEY)); } catch(e){ return null; } }
-
-// ---- Data caches (synced from the shared database) ----
 function loadReports(){ return reportsCache; }
 function loadMembers(){ return membersCache; }
+async function fetchReports(){ const s=getCommitteeSession(); if(!s){reportsCache=[];return;} const rows=await sbCall('app_list_reports',{p_token:s.token}); reportsCache=(rows||[]).map(normalizeReport); }
+async function fetchMembers(){ const s=getCommitteeSession(); if(!s){membersCache=[];return;} const rows=await sbCall('app_list_members',{p_token:s.token}); membersCache=(rows||[]).map(m=>({username:m.username,displayName:m.display_name,role:m.role})); }
 
-async function fetchReports(){
-  const s = getCommitteeSession();
-  if(!s){ reportsCache = []; return; }
-  const rows = await sbCall('app_list_reports', { p_token: s.token });
-  reportsCache = (rows || []).map(normalizeReport);
+// ═══ Theme ═══
+const SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>';
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').innerHTML = t==='dark' ? SUN : MOON;
 }
-async function fetchMembers(){
-  const s = getCommitteeSession();
-  if(!s){ membersCache = []; return; }
-  const rows = await sbCall('app_list_members', { p_token: s.token });
-  membersCache = (rows || []).map(m => ({username: m.username, displayName: m.display_name, role: m.role}));
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur==='dark' ? 'light' : 'dark';
+  localStorage.setItem('tu_theme', next); applyTheme(next);
+}
+(function initTheme(){
+  const saved = localStorage.getItem('tu_theme');
+  const sys = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(saved || sys);
+  if(window.matchMedia){ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => { if(!localStorage.getItem('tu_theme')) applyTheme(e.matches?'dark':'light'); }); }
+})();
+
+// ═══ Toasts ═══
+const TICONS={ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>',err:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>',warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>'};
+function toast(msg, type='info', ms=3600){
+  const el=document.createElement('div'); el.className='toast '+type;
+  el.innerHTML=`<div class="tic">${TICONS[type]||TICONS.info}</div><div>${msg}</div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),300); }, ms);
 }
 
-function switchView(name){
-  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+// ═══ Navigation ═══
+function go(name){
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
+  document.getElementById('navLinks').classList.remove('open');
   document.getElementById('logoutBtn').style.display = (name==='dashboard' && getCommitteeSession()) ? 'inline-flex' : 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
   if(name==='dashboard') refreshDashboard();
   if(name==='submit') refreshRecorderGate();
+  if(name==='profile') renderProfile();
+  if(name==='home') requestAnimationFrame(runCounters);
+}
+function requireCommittee(sub){
+  if(getCommitteeSession()){ go('dashboard'); switchSubView(sub); }
+  else { go('dashboard'); toast('يرجى تسجيل الدخول للوصول لهذه الخدمة','info'); }
 }
 
 function switchSubView(name){
@@ -727,455 +1069,264 @@ async function refreshDashboard(){
   document.getElementById('dashboardContent').style.display = session ? 'block' : 'none';
   document.getElementById('logoutBtn').style.display = session ? 'inline-flex' : 'none';
   if(session){
+    document.getElementById('dashWelcome').textContent = session.displayName + ' — ' + (ROLE_LABELS[session.role]||'');
     populateCollegeFilter();
-    try {
-      await fetchReports();
-      await fetchMembers();
-    } catch(e){ console.error(e); alert('تعذّر تحميل البيانات من قاعدة البيانات'); }
-    renderOverview();
-    renderTable();
-    renderActionsTable();
-    renderMembersTable();
+    document.getElementById('dashSkeleton').style.display='block';
+    document.getElementById('dashReal').style.display='none';
+    try { await fetchReports(); await fetchMembers(); }
+    catch(e){ console.error(e); toast('تعذّر تحميل البيانات من قاعدة البيانات','err'); }
+    document.getElementById('dashSkeleton').style.display='none';
+    document.getElementById('dashReal').style.display='block';
+    renderOverview(); renderTable(); renderActionsTable(); renderMembersTable();
+    updateNotifDot();
   }
 }
 
 async function tryLogin(){
-  const u = document.getElementById('committeeUsername').value.trim();
-  const p = document.getElementById('passInput').value;
-  const err = document.getElementById('gateError');
-  try {
-    const res = await sbCall('app_login', { p_username: u, p_password: p });
-    if(res.ok && (res.role === 'committee' || res.role === 'both')){
-      sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({
-        token: res.token, username: res.username, displayName: res.display_name, role: res.role
-      }));
-      err.style.display='none';
-      await refreshDashboard();
-    } else {
-      err.textContent = 'اسم المستخدم أو كلمة السر غير صحيحة';
-      err.style.display='block';
-    }
-  } catch(e){
-    err.textContent = 'تعذّر الاتصال بقاعدة البيانات';
-    err.style.display='block';
-  }
+  const u=document.getElementById('committeeUsername').value.trim();
+  const p=document.getElementById('passInput').value;
+  const err=document.getElementById('gateError');
+  try{
+    const res=await sbCall('app_login',{p_username:u,p_password:p});
+    if(res.ok && (res.role==='committee'||res.role==='both')){
+      sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
+      err.style.display='none'; toast('مرحباً '+res.display_name,'ok'); await refreshDashboard();
+    } else { err.textContent='اسم المستخدم أو كلمة السر غير صحيحة'; err.style.display='block'; }
+  }catch(e){ err.textContent='تعذّر الاتصال بقاعدة البيانات'; err.style.display='block'; }
 }
 function logoutDashboard(){
-  const s = getCommitteeSession();
-  if(s){ sbCall('app_logout', { p_token: s.token }).catch(()=>{}); }
-  sessionStorage.removeItem(COMMITTEE_SESSION_KEY);
-  reportsCache = []; membersCache = [];
-  refreshDashboard();
+  const s=getCommitteeSession(); if(s){ sbCall('app_logout',{p_token:s.token}).catch(()=>{}); }
+  sessionStorage.removeItem(COMMITTEE_SESSION_KEY); reportsCache=[]; membersCache=[];
+  toast('تم تسجيل الخروج','info'); go('home'); refreshDashboard();
 }
 
-// ---- Recorder (submit-form) login ----
+// ---- Recorder login ----
 function refreshRecorderGate(){
-  const session = getRecorderSession();
-  document.getElementById('recorderGateBox').style.display = session ? 'none' : 'block';
-  document.getElementById('recorderFormWrap').style.display = session ? 'block' : 'none';
-  if(session){
-    document.getElementById('recorderNameDisplay').textContent = session.displayName;
-    const rf = document.getElementById('recorderNameField');
-    if(rf) rf.value = session.displayName;
-  }
+  const s=getRecorderSession();
+  document.getElementById('recorderGateBox').style.display = s ? 'none':'block';
+  document.getElementById('recorderFormWrap').style.display = s ? 'block':'none';
+  if(s){ document.getElementById('recorderNameDisplay').textContent=s.displayName; const rf=document.getElementById('recorderNameField'); if(rf) rf.value=s.displayName; }
 }
 async function tryRecorderLogin(){
-  const u = document.getElementById('recorderUsername').value.trim();
-  const p = document.getElementById('recorderPassword').value;
-  const err = document.getElementById('recorderGateError');
-  try {
-    const res = await sbCall('app_login', { p_username: u, p_password: p });
-    if(res.ok && (res.role === 'recorder' || res.role === 'both')){
-      sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({
-        token: res.token, username: res.username, displayName: res.display_name, role: res.role
-      }));
-      err.style.display='none';
-      refreshRecorderGate();
-    } else {
-      err.textContent = 'اسم المستخدم أو كلمة السر غير صحيحة';
-      err.style.display='block';
-    }
-  } catch(e){
-    err.textContent = 'تعذّر الاتصال بقاعدة البيانات';
-    err.style.display='block';
-  }
+  const u=document.getElementById('recorderUsername').value.trim();
+  const p=document.getElementById('recorderPassword').value;
+  const err=document.getElementById('recorderGateError');
+  try{
+    const res=await sbCall('app_login',{p_username:u,p_password:p});
+    if(res.ok && (res.role==='recorder'||res.role==='both')){
+      sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
+      err.style.display='none'; toast('مرحباً '+res.display_name,'ok'); refreshRecorderGate();
+    } else { err.textContent='اسم المستخدم أو كلمة السر غير صحيحة'; err.style.display='block'; }
+  }catch(e){ err.textContent='تعذّر الاتصال بقاعدة البيانات'; err.style.display='block'; }
 }
 function logoutRecorder(){
-  const s = getRecorderSession();
-  if(s){ sbCall('app_logout', { p_token: s.token }).catch(()=>{}); }
-  sessionStorage.removeItem(RECORDER_SESSION_KEY);
-  refreshRecorderGate();
+  const s=getRecorderSession(); if(s){ sbCall('app_logout',{p_token:s.token}).catch(()=>{}); }
+  sessionStorage.removeItem(RECORDER_SESSION_KEY); toast('تم تسجيل الخروج','info'); refreshRecorderGate();
 }
 
-// ---- Member accounts management ----
+// ---- Members ----
 function renderMembersTable(){
-  const tbody = document.getElementById('membersTableBody');
-  if(!tbody) return;
-  tbody.innerHTML = loadMembers().map(m => `
-    <tr>
-      <td>${escapeHtml(m.username)}</td>
-      <td>${escapeHtml(m.displayName)}</td>
-      <td>${ROLE_LABELS[m.role] || m.role}</td>
-      <td class="row-actions">
-        <button onclick="editMember('${m.username}')">تعديل</button>
-        <button onclick="deleteMember('${m.username}')">حذف</button>
-      </td>
-    </tr>
-  `).join('');
+  const tbody=document.getElementById('membersTableBody'); if(!tbody) return;
+  const ms=loadMembers();
+  if(!ms.length){ tbody.innerHTML='<tr><td colspan="4"><div class="empty" style="padding:26px"><p>لا توجد صلاحية لعرض الأعضاء (متاح للمشرفة العامة فقط)</p></div></td></tr>'; return; }
+  tbody.innerHTML=ms.map(m=>`<tr><td dir="ltr" style="text-align:start">${escapeHtml(m.username)}</td><td>${escapeHtml(m.displayName)}</td><td><span class="badge ${m.role==='both'?'action':m.role==='committee'?'review':'new'}">${ROLE_LABELS[m.role]||m.role}</span></td><td class="row-actions"><button onclick="editMember('${m.username}')">تعديل</button> <button onclick="deleteMember('${m.username}')">حذف</button></td></tr>`).join('');
 }
 async function saveMemberForm(){
-  const username = document.getElementById('memberUsernameInput').value.trim();
-  const password = document.getElementById('memberPasswordInput').value.trim();
-  const displayName = document.getElementById('memberDisplayNameInput').value.trim();
-  const role = document.getElementById('memberRoleInput').value;
-  if(!username || !displayName){ alert('يرجى تعبئة اسم المستخدم والاسم الظاهر'); return; }
-  if(!editingMemberUsername && !password){ alert('كلمة السر مطلوبة للعضو الجديد'); return; }
-
-  const s = getCommitteeSession();
-  if(!s) return;
-  try {
-    const res = await sbCall('app_save_member', {
-      p_token: s.token, p_username: username, p_password: password,
-      p_display_name: displayName, p_role: role
-    });
-    if(!res.ok){
-      alert(res.error === 'password_required' ? 'كلمة السر مطلوبة للعضو الجديد' :
-            res.error === 'unauthorized' ? 'ليست لديك صلاحية' : 'تعذّر الحفظ');
-      return;
-    }
-    resetMemberForm();
-    await fetchMembers();
-    renderMembersTable();
-  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
+  const username=document.getElementById('memberUsernameInput').value.trim();
+  const password=document.getElementById('memberPasswordInput').value.trim();
+  const displayName=document.getElementById('memberDisplayNameInput').value.trim();
+  const role=document.getElementById('memberRoleInput').value;
+  if(!username||!displayName){ toast('يرجى تعبئة اسم المستخدم والاسم الظاهر','warn'); return; }
+  if(!editingMemberUsername && !password){ toast('كلمة السر مطلوبة للعضو الجديد','warn'); return; }
+  const s=getCommitteeSession(); if(!s) return;
+  try{
+    const res=await sbCall('app_save_member',{p_token:s.token,p_username:username,p_password:password,p_display_name:displayName,p_role:role});
+    if(!res.ok){ toast(res.error==='password_required'?'كلمة السر مطلوبة':res.error==='unauthorized'?'ليست لديك صلاحية':'تعذّر الحفظ','err'); return; }
+    resetMemberForm(); await fetchMembers(); renderMembersTable(); toast('تم حفظ العضو','ok');
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
 function editMember(username){
-  const m = loadMembers().find(x=>x.username===username);
-  if(!m) return;
-  editingMemberUsername = username;
-  const u = document.getElementById('memberUsernameInput');
-  u.value = m.username; u.readOnly = true; u.style.background = '#eef0f2';
-  const pw = document.getElementById('memberPasswordInput');
-  pw.value = ''; pw.placeholder = 'اتركيه فارغاً للإبقاء على كلمة السر الحالية';
-  document.getElementById('memberDisplayNameInput').value = m.displayName;
-  document.getElementById('memberRoleInput').value = m.role;
+  const m=loadMembers().find(x=>x.username===username); if(!m) return;
+  editingMemberUsername=username;
+  const u=document.getElementById('memberUsernameInput'); u.value=m.username; u.readOnly=true; u.style.background='var(--bg)';
+  const pw=document.getElementById('memberPasswordInput'); pw.value=''; pw.placeholder='اتركيه فارغاً للإبقاء على الحالية';
+  document.getElementById('memberDisplayNameInput').value=m.displayName;
+  document.getElementById('memberRoleInput').value=m.role;
+  document.getElementById('memberUsernameInput').scrollIntoView({behavior:'smooth',block:'center'});
 }
 function resetMemberForm(){
-  editingMemberUsername = null;
-  const u = document.getElementById('memberUsernameInput');
-  u.value = ''; u.readOnly = false; u.style.background = '';
-  const pw = document.getElementById('memberPasswordInput');
-  pw.value = ''; pw.placeholder = 'كلمة السر';
-  document.getElementById('memberDisplayNameInput').value = '';
-  document.getElementById('memberRoleInput').value = 'both';
+  editingMemberUsername=null;
+  const u=document.getElementById('memberUsernameInput'); u.value=''; u.readOnly=false; u.style.background='';
+  const pw=document.getElementById('memberPasswordInput'); pw.value=''; pw.placeholder='كلمة السر';
+  document.getElementById('memberDisplayNameInput').value=''; document.getElementById('memberRoleInput').value='both';
 }
 async function deleteMember(username){
   if(!confirm('هل تريدين حذف هذا العضو؟')) return;
-  const s = getCommitteeSession();
-  if(!s) return;
-  try {
-    const res = await sbCall('app_delete_member', { p_token: s.token, p_username: username });
-    if(!res.ok){
-      alert(res.error === 'last_admin' ? 'لا يمكن حذف آخر مشرف' : 'تعذّر الحذف');
-      return;
-    }
-    await fetchMembers();
-    renderMembersTable();
-  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
+  const s=getCommitteeSession(); if(!s) return;
+  try{
+    const res=await sbCall('app_delete_member',{p_token:s.token,p_username:username});
+    if(!res.ok){ toast(res.error==='last_admin'?'لا يمكن حذف آخر مشرف':'تعذّر الحذف','err'); return; }
+    await fetchMembers(); renderMembersTable(); toast('تم حذف العضو','ok');
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
 
-// ---- Conditional "other" fields (submit form) ----
-document.getElementById('collegeSelect').addEventListener('change', function(){
-  document.getElementById('collegeOtherWrap').classList.toggle('hidden', this.value !== 'غير ذلك');
-});
-document.getElementById('buildingGateList').addEventListener('change', function(){
-  const other = document.getElementById('buildingGateOtherRadio').checked;
-  document.getElementById('buildingGateOtherWrap').classList.toggle('hidden', !other);
-});
-document.getElementById('violationTypeList').addEventListener('change', function(){
-  const other = document.getElementById('violationOtherCheck').checked;
-  document.getElementById('violationOtherWrap').classList.toggle('hidden', !other);
-});
+// ---- Conditional "other" fields ----
+document.getElementById('collegeSelect').addEventListener('change', function(){ document.getElementById('collegeOtherWrap').classList.toggle('hidden', this.value!=='غير ذلك'); });
+document.getElementById('buildingGateList').addEventListener('change', function(){ document.getElementById('buildingGateOtherWrap').classList.toggle('hidden', !document.getElementById('buildingGateOtherRadio').checked); });
+document.getElementById('violationTypeList').addEventListener('change', function(){ document.getElementById('violationOtherWrap').classList.toggle('hidden', !document.getElementById('violationOtherCheck').checked); });
 
 // ---- Submit form ----
 document.getElementById('reportForm').addEventListener('submit', async function(e){
   e.preventDefault();
-  const form = e.target;
-  const fd = new FormData(form);
-  const session = getRecorderSession();
-  if(!session){ alert('يرجى تسجيل الدخول أولاً'); return; }
-
-  const violationTypes = fd.getAll('violationType');
-  const id = 'RPT-' + Date.now().toString(36).toUpperCase();
-  const report = {
-    id,
-    studentName: fd.get('studentName'),
-    universityId: fd.get('universityId'),
-    college: fd.get('college'),
-    collegeOther: fd.get('collegeOther') || '',
-    department: fd.get('department'),
-    buildingGate: fd.get('buildingGate'),
-    buildingGateOther: fd.get('buildingGateOther') || '',
-    recorderName: session.displayName,
-    violationTypes,
-    violationTypeOther: fd.get('violationTypeOther') || '',
-    notes: fd.get('notes') || ''
-  };
-
-  const submitBtn = form.querySelector('button[type="submit"]');
-  submitBtn.disabled = true; submitBtn.textContent = 'جارٍ الإرسال...';
-  try {
-    const res = await sbCall('app_submit_report', { p_token: session.token, p_report: report });
-    if(!res.ok){ alert('تعذّر حفظ البلاغ' + (res.error ? ' ('+res.error+')' : '')); return; }
-    document.getElementById('successRef').textContent = id;
+  const form=e.target; const fd=new FormData(form); const session=getRecorderSession();
+  if(!session){ toast('يرجى تسجيل الدخول أولاً','warn'); return; }
+  const violationTypes=fd.getAll('violationType');
+  if(!violationTypes.length){ toast('يرجى اختيار نوع المخالفة','warn'); return; }
+  const id='RPT-'+Date.now().toString(36).toUpperCase();
+  const report={id, studentName:fd.get('studentName'), universityId:fd.get('universityId'), college:fd.get('college'),
+    collegeOther:fd.get('collegeOther')||'', department:fd.get('department'), buildingGate:fd.get('buildingGate'),
+    buildingGateOther:fd.get('buildingGateOther')||'', recorderName:session.displayName, violationTypes,
+    violationTypeOther:fd.get('violationTypeOther')||'', notes:fd.get('notes')||''};
+  const submitBtn=form.querySelector('button[type="submit"]'); submitBtn.disabled=true; submitBtn.textContent='جارٍ الإرسال...';
+  try{
+    const res=await sbCall('app_submit_report',{p_token:session.token,p_report:report});
+    if(!res.ok){ toast('تعذّر حفظ البلاغ','err'); return; }
+    document.getElementById('successRef').textContent=id;
     document.getElementById('successBanner').classList.add('show');
     form.reset();
     document.getElementById('collegeOtherWrap').classList.add('hidden');
     document.getElementById('buildingGateOtherWrap').classList.add('hidden');
     document.getElementById('violationOtherWrap').classList.add('hidden');
-    refreshRecorderGate();
-    window.scrollTo({top:0, behavior:'smooth'});
-  } catch(err){
-    alert('تعذّر الاتصال بقاعدة البيانات، حاولي مرة أخرى');
-  } finally {
-    submitBtn.disabled = false; submitBtn.textContent = 'إرسال';
-  }
+    refreshRecorderGate(); toast('تم تسجيل البلاغ بنجاح','ok');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(err){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
+  finally{ submitBtn.disabled=false; submitBtn.textContent='إرسال البلاغ'; }
 });
 
 // ---- Helpers ----
-function statusBadgeClass(status){
-  return {'جديد':'new','قيد المراجعة':'review','تم اتخاذ إجراء':'action','إغلاق دون إجراء':'closed'}[status] || 'new';
-}
-function collegeLabel(r){
-  return r.college === 'غير ذلك' ? (r.collegeOther || 'غير ذلك') : r.college;
-}
-function buildingGateLabel(r){
-  return r.buildingGate === 'غير ذلك' ? (r.buildingGateOther || 'غير ذلك') : r.buildingGate;
-}
-function violationTypesLabel(r){
-  const list = (r.violationTypes || []).map(v => v === 'غير ذلك' ? (r.violationTypeOther || 'غير ذلك') : v);
-  return list.join('، ');
-}
-function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str || '';
-  return div.innerHTML;
-}
-function populateCollegeFilter(){
-  const sel = document.getElementById('collegeFilter');
-  const current = sel.value;
-  sel.innerHTML = '<option value="">كل الكليات</option>' + COLLEGES.map(c=>`<option>${c}</option>`).join('');
-  sel.value = current;
-}
+function statusBadgeClass(s){ return {'جديد':'new','قيد المراجعة':'review','تم اتخاذ إجراء':'action','إغلاق دون إجراء':'closed'}[s]||'new'; }
+function collegeLabel(r){ return r.college==='غير ذلك'?(r.collegeOther||'غير ذلك'):r.college; }
+function buildingGateLabel(r){ return r.buildingGate==='غير ذلك'?(r.buildingGateOther||'غير ذلك'):r.buildingGate; }
+function violationTypesLabel(r){ return (r.violationTypes||[]).map(v=>v==='غير ذلك'?(r.violationTypeOther||'غير ذلك'):v).join('، '); }
+function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str||''; return d.innerHTML; }
+function initials(name){ const p=(name||'').trim().split(/\s+/); return ((p[0]||'')[0]||'')+((p[1]||'')[0]||''); }
+function populateCollegeFilter(){ const sel=document.getElementById('collegeFilter'); const cur=sel.value; sel.innerHTML='<option value="">كل الكليات</option>'+COLLEGES.map(c=>`<option>${c}</option>`).join(''); sel.value=cur; }
 
-// ---- Overview ----
+// ---- Overview + charts ----
 function renderOverview(){
-  const reports = loadReports();
-  document.getElementById('statTotal').textContent = reports.length;
-  document.getElementById('statNew').textContent = reports.filter(r=>r.status==='جديد').length;
-  document.getElementById('statReview').textContent = reports.filter(r=>r.status==='قيد المراجعة').length;
-  document.getElementById('statDone').textContent = reports.filter(r=>r.status==='تم اتخاذ إجراء').length;
+  const reports=loadReports();
+  document.getElementById('statTotal').textContent=reports.length;
+  document.getElementById('statNew').textContent=reports.filter(r=>r.status==='جديد').length;
+  document.getElementById('statReview').textContent=reports.filter(r=>r.status==='قيد المراجعة').length;
+  document.getElementById('statDone').textContent=reports.filter(r=>r.status==='تم اتخاذ إجراء').length;
 
-  // violation type breakdown
-  const vCounts = {};
-  reports.forEach(r=>{
-    (r.violationTypes||[]).forEach(v=>{
-      const label = v === 'غير ذلك' ? (r.violationTypeOther || 'غير ذلك') : v;
-      vCounts[label] = (vCounts[label]||0) + 1;
-    });
-  });
+  const vCounts={}; reports.forEach(r=>(r.violationTypes||[]).forEach(v=>{ const l=v==='غير ذلك'?(r.violationTypeOther||'غير ذلك'):v; vCounts[l]=(vCounts[l]||0)+1; }));
   renderBarList('violationBreakdown', vCounts);
-
-  // college breakdown
-  const cCounts = {};
-  reports.forEach(r=>{
-    const label = collegeLabel(r) || 'غير محدد';
-    cCounts[label] = (cCounts[label]||0) + 1;
-  });
+  const cCounts={}; reports.forEach(r=>{ const l=collegeLabel(r)||'غير محدد'; cCounts[l]=(cCounts[l]||0)+1; });
   renderBarList('collegeBreakdown', cCounts);
 
-  // recent list
-  const recentEl = document.getElementById('recentList');
-  const recent = reports.slice(0,5);
-  recentEl.innerHTML = recent.length ? recent.map(r=>`
-    <div class="recent-item">
-      <div>
-        <div class="who">${escapeHtml(r.studentName)}</div>
-        <div class="meta">${escapeHtml(collegeLabel(r))} — ${new Date(r.createdAt).toLocaleDateString('ar-SA')}</div>
-      </div>
-      <span class="badge ${statusBadgeClass(r.status)}">${r.status}</span>
-    </div>
-  `).join('') : '<div class="empty">لا توجد بلاغات بعد</div>';
+  renderDonut(reports); renderTrend(reports);
+
+  const recentEl=document.getElementById('recentList'); const recent=reports.slice(0,5);
+  recentEl.innerHTML=recent.length ? recent.map(r=>`<div class="recent-item"><div><div class="who">${escapeHtml(r.studentName)}</div><div class="meta">${escapeHtml(collegeLabel(r))} — ${new Date(r.createdAt).toLocaleDateString('ar-SA')}</div></div><span class="badge ${statusBadgeClass(r.status)}">${r.status}</span></div>`).join('') : emptyBlock('لا توجد بلاغات بعد');
+  requestAnimationFrame(()=>document.querySelectorAll('#dashReal .fill').forEach(f=>f.style.width=f.dataset.w));
+}
+function emptyBlock(msg){ return `<div class="empty" style="padding:30px"><div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><p>${msg}</p></div>`; }
+function renderBarList(id, counts){
+  const el=document.getElementById(id); const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if(!entries.length){ el.innerHTML='<div class="empty" style="padding:14px 0"><p>لا توجد بيانات</p></div>'; return; }
+  const max=Math.max(...entries.map(e=>e[1]));
+  el.innerHTML=entries.map(([l,c])=>`<div class="bar-row"><div class="label" title="${escapeHtml(l)}">${escapeHtml(l)}</div><div class="track"><div class="fill" data-w="${(c/max*100).toFixed(0)}%"></div></div><div class="count">${c}</div></div>`).join('');
+}
+function renderDonut(reports){
+  const order=['جديد','قيد المراجعة','تم اتخاذ إجراء','إغلاق دون إجراء'];
+  const counts=order.map(s=>reports.filter(r=>r.status===s).length);
+  const total=counts.reduce((a,b)=>a+b,0);
+  const wrap=document.getElementById('statusDonut'); const legend=document.getElementById('donutLegend');
+  if(!total){ wrap.innerHTML='<div class="empty" style="padding:20px"><p>لا توجد بيانات</p></div>'; legend.innerHTML=''; return; }
+  const R=54, C=2*Math.PI*R; let off=0;
+  const segs=order.map((s,i)=>{ if(!counts[i]) return ''; const frac=counts[i]/total; const len=frac*C; const dash=`${len} ${C-len}`; const el=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${STATUS_META[s].c}" stroke-width="18" stroke-dasharray="${dash}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)" style="transition:stroke-dasharray .8s var(--ease)"/>`; off+=len; return el; }).join('');
+  wrap.innerHTML=`<svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="توزيع الحالات">${segs}<text x="70" y="66" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)">${total}</text><text x="70" y="86" text-anchor="middle" font-size="11" fill="var(--muted)">بلاغ</text></svg>`;
+  legend.innerHTML=order.map((s,i)=>`<div class="lg"><span class="sw" style="background:${STATUS_META[s].c}"></span>${s}<b>${counts[i]}</b></div>`).join('');
+}
+function renderTrend(reports){
+  const el=document.getElementById('trendChart');
+  const months=[]; const now=new Date();
+  for(let i=5;i>=0;i--){ const d=new Date(now.getFullYear(), now.getMonth()-i, 1); months.push({key:d.getFullYear()+'-'+d.getMonth(), label:d.toLocaleDateString('ar-SA',{month:'short'}), n:0}); }
+  reports.forEach(r=>{ const d=new Date(r.createdAt); const k=d.getFullYear()+'-'+d.getMonth(); const m=months.find(x=>x.key===k); if(m) m.n++; });
+  const max=Math.max(1,...months.map(m=>m.n)); const W=520,H=150,pad=26,bw=(W-pad*2)/months.length;
+  const pts=months.map((m,i)=>{ const x=pad+bw*i+bw/2; const y=H-24-(m.n/max)*(H-50); return {x,y,m}; });
+  const line=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
+  const area=`M${pts[0].x} ${H-24} `+pts.map(p=>'L'+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+` L${pts[pts.length-1].x} ${H-24} Z`;
+  el.innerHTML=`<svg class="trend-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="البلاغات عبر الأشهر">
+    <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--green)" stop-opacity=".28"/><stop offset="1" stop-color="var(--green)" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#tg)"/><path d="${line}" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--surface)" stroke="var(--green)" stroke-width="2.5"/><text x="${p.x}" y="${p.y-10}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">${p.m.n||''}</text><text x="${p.x}" y="${H-6}" text-anchor="middle" font-size="11" fill="var(--muted)">${p.m.label}</text>`).join('')}
+  </svg>`;
 }
 
-function renderBarList(containerId, counts){
-  const el = document.getElementById(containerId);
-  const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  if(!entries.length){ el.innerHTML = '<div class="empty" style="padding:10px 0">لا توجد بيانات</div>'; return; }
-  const max = Math.max(...entries.map(e=>e[1]));
-  el.innerHTML = entries.map(([label,count])=>`
-    <div class="bar-row">
-      <div class="label">${escapeHtml(label)}</div>
-      <div class="track"><div class="fill" style="width:${(count/max*100).toFixed(0)}%"></div></div>
-      <div class="count">${count}</div>
-    </div>
-  `).join('');
+// ---- Reports table + suggestions ----
+function filteredReports(){
+  const q=(document.getElementById('searchInput').value||'').trim();
+  const sf=document.getElementById('statusFilter').value; const cf=document.getElementById('collegeFilter').value;
+  return loadReports().filter(r=>{
+    const mq=!q||(r.studentName+r.universityId).includes(q);
+    const ms=!sf||r.status===sf; const mc=!cf||collegeLabel(r)===cf; return mq&&ms&&mc;
+  });
 }
-
-// ---- Reports table ----
 function renderTable(){
-  const reports = loadReports();
-  const q = (document.getElementById('searchInput').value || '').trim();
-  const statusFilter = document.getElementById('statusFilter').value;
-  const collegeFilter = document.getElementById('collegeFilter').value;
-
-  const filtered = reports.filter(r=>{
-    const matchesQ = !q || (r.studentName + r.universityId).includes(q);
-    const matchesStatus = !statusFilter || r.status === statusFilter;
-    const matchesCollege = !collegeFilter || collegeLabel(r) === collegeFilter;
-    return matchesQ && matchesStatus && matchesCollege;
-  });
-
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = '';
-  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
-
-  filtered.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${new Date(r.createdAt).toLocaleDateString('ar-SA')}</td>
-      <td>${escapeHtml(r.studentName)}</td>
-      <td>${escapeHtml(r.universityId)}</td>
-      <td>${escapeHtml(collegeLabel(r))}</td>
-      <td>${escapeHtml(violationTypesLabel(r))}</td>
-      <td><span class="badge ${statusBadgeClass(r.status)}">${r.status}</span></td>
-      <td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
+  const filtered=filteredReports(); const tbody=document.getElementById('tableBody'); tbody.innerHTML='';
+  document.getElementById('emptyState').style.display=filtered.length?'none':'block';
+  filtered.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${new Date(r.createdAt).toLocaleDateString('ar-SA')}</td><td>${escapeHtml(r.studentName)}</td><td dir="ltr" style="text-align:start">${escapeHtml(r.universityId)}</td><td>${escapeHtml(collegeLabel(r))}</td><td>${escapeHtml(violationTypesLabel(r))}</td><td><span class="badge ${statusBadgeClass(r.status)}">${r.status}</span></td><td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>`; tbody.appendChild(tr); });
 }
+function showSuggestions(){
+  const q=(document.getElementById('searchInput').value||'').trim(); const box=document.getElementById('searchSug');
+  if(q.length<2){ box.classList.remove('show'); return; }
+  const seen={}; const matches=[];
+  loadReports().forEach(r=>{ if((r.studentName+r.universityId).includes(q) && !seen[r.universityId]){ seen[r.universityId]=1; matches.push(r); } });
+  if(!matches.length){ box.classList.remove('show'); return; }
+  box.innerHTML=matches.slice(0,6).map(r=>`<button onmousedown="pickSuggestion('${escapeHtml(r.studentName).replace(/'/g,"")}')">${escapeHtml(r.studentName)} <small>${escapeHtml(r.universityId)}</small></button>`).join('');
+  box.classList.add('show');
+}
+function pickSuggestion(name){ document.getElementById('searchInput').value=name; hideSuggestions(); renderTable(); }
+function hideSuggestions(){ document.getElementById('searchSug').classList.remove('show'); }
 
 // ---- Actions table ----
 function renderActionsTable(){
-  const reports = loadReports().filter(r => r.status === 'تم اتخاذ إجراء' && r.actionType);
-  const q = (document.getElementById('actionSearchInput').value || '').trim();
-  const typeFilter = document.getElementById('actionTypeFilter').value;
-
-  const filtered = reports.filter(r=>{
-    const matchesQ = !q || (r.studentName + r.universityId + r.actionType).includes(q);
-    const matchesType = !typeFilter || r.actionType === typeFilter;
-    return matchesQ && matchesType;
-  });
-
-  const tbody = document.getElementById('actionsTableBody');
-  tbody.innerHTML = '';
-  document.getElementById('actionsEmptyState').style.display = filtered.length ? 'none' : 'block';
-
-  filtered.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${r.actionDate || '-'}</td>
-      <td>${escapeHtml(r.studentName)}</td>
-      <td>${escapeHtml(r.universityId)}</td>
-      <td>${escapeHtml(r.actionType)}</td>
-      <td>${escapeHtml(r.actionBy)||'-'}</td>
-      <td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
+  const base=loadReports().filter(r=>r.status==='تم اتخاذ إجراء'&&r.actionType);
+  const q=(document.getElementById('actionSearchInput').value||'').trim(); const tf=document.getElementById('actionTypeFilter').value;
+  const filtered=base.filter(r=>{ const mq=!q||(r.studentName+r.universityId+r.actionType).includes(q); const mt=!tf||r.actionType===tf; return mq&&mt; });
+  const tbody=document.getElementById('actionsTableBody'); tbody.innerHTML='';
+  document.getElementById('actionsEmptyState').style.display=filtered.length?'none':'block';
+  filtered.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.actionDate||'-'}</td><td>${escapeHtml(r.studentName)}</td><td dir="ltr" style="text-align:start">${escapeHtml(r.universityId)}</td><td><span class="badge action">${escapeHtml(r.actionType)}</span></td><td>${escapeHtml(r.actionBy)||'-'}</td><td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>`; tbody.appendChild(tr); });
 }
 
 // ---- Student history ----
 function renderStudentHistory(){
-  const q = (document.getElementById('studentSearchInput').value || '').trim();
-  const resultEl = document.getElementById('studentHistoryResult');
-  if(!q){ resultEl.innerHTML = ''; return; }
-
-  const all = loadReports();
-  const byId = all.filter(r => String(r.universityId) === q);
-  const matches = byId.length ? byId : all.filter(r => (r.studentName||'').includes(q));
-
-  if(!matches.length){
-    resultEl.innerHTML = `<div class="card"><div class="empty">لا توجد أي مخالفات مسجّلة لهذه الطالبة</div></div>`;
-    return;
-  }
-
-  const sorted = matches.slice().sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
-  const latest = sorted[0];
-  const actionsCount = matches.filter(r => r.status === 'تم اتخاذ إجراء').length;
-
-  resultEl.innerHTML = `
-    <div class="card">
-      <div class="student-profile">
-        <div>
-          <h2>${escapeHtml(latest.studentName)}</h2>
-          <p class="sub" style="margin-bottom:0">الرقم الجامعي: ${escapeHtml(latest.universityId)} — ${escapeHtml(collegeLabel(latest))}</p>
-        </div>
-        <div class="mini-stats">
-          <div><b>${matches.length}</b><span>إجمالي المخالفات</span></div>
-          <div><b>${actionsCount}</b><span>إجراءات متخذة</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <h3 class="section-title">السجل الزمني</h3>
-      <div class="timeline">
-        ${sorted.map(r => `
-          <div class="timeline-item">
-            <div class="row1">
-              <span class="types">${escapeHtml(violationTypesLabel(r))}</span>
-              <span class="badge ${statusBadgeClass(r.status)}">${r.status}</span>
-            </div>
-            <div class="date">${new Date(r.createdAt).toLocaleDateString('ar-SA')} — ${escapeHtml(buildingGateLabel(r))}</div>
-            ${r.actionType ? `<div class="action-line">✔ ${escapeHtml(r.actionType)} — ${r.actionDate||''} (${escapeHtml(r.actionBy)||'غير محدد'})</div>` : ''}
-            <div style="margin-top:8px"><button class="btn secondary" style="padding:6px 14px; font-size:.78rem" onclick="openModal('${r.id}')">عرض التفاصيل</button></div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
+  const q=(document.getElementById('studentSearchInput').value||'').trim(); const el=document.getElementById('studentHistoryResult');
+  if(!q){ el.innerHTML=''; return; }
+  const all=loadReports(); const byId=all.filter(r=>String(r.universityId)===q); const matches=byId.length?byId:all.filter(r=>(r.studentName||'').includes(q));
+  if(!matches.length){ el.innerHTML=`<div class="card pad"><div class="empty" style="padding:30px"><div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div><h4>لا توجد نتائج</h4><p>لا توجد أي مخالفات مسجّلة بهذا البحث</p></div></div>`; return; }
+  const sorted=matches.slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)); const latest=sorted[0];
+  const actionsCount=matches.filter(r=>r.status==='تم اتخاذ إجراء').length;
+  el.innerHTML=`<div class="card pad"><div class="student-profile"><div class="who-lg"><div class="avatar">${escapeHtml(initials(latest.studentName))||'ط'}</div><div><h2>${escapeHtml(latest.studentName)}</h2><div class="sub">الرقم الجامعي: ${escapeHtml(latest.universityId)} — ${escapeHtml(collegeLabel(latest))}</div></div></div><div class="mini-stats"><div><b>${matches.length}</b><span>إجمالي المخالفات</span></div><div><b>${actionsCount}</b><span>إجراءات متخذة</span></div></div></div></div>
+  <div class="card pad"><h3 class="section-title">السجل الزمني</h3><div class="timeline">${sorted.map(r=>`<div class="timeline-item"><div class="row1"><span class="types">${escapeHtml(violationTypesLabel(r))}</span><span class="badge ${statusBadgeClass(r.status)}">${r.status}</span></div><div class="date">${new Date(r.createdAt).toLocaleDateString('ar-SA')} — ${escapeHtml(buildingGateLabel(r))}</div>${r.actionType?`<div class="action-line">✔ ${escapeHtml(r.actionType)} — ${r.actionDate||''} (${escapeHtml(r.actionBy)||'غير محدد'})</div>`:''}<div style="margin-top:8px"><button class="btn ghost sm" onclick="openModal('${r.id}')">عرض التفاصيل</button></div></div>`).join('')}</div></div>`;
 }
 
 // ---- Print ----
 function printReport(){
-  if(!activeReportId) return;
-  const r = loadReports().find(x=>x.id===activeReportId);
-  if(!r) return;
-  const rows = [
-    ['رقم البلاغ', r.id],
-    ['تاريخ التقديم', new Date(r.createdAt).toLocaleString('ar-SA')],
-    ['اسم الطالبة', r.studentName],
-    ['الرقم الجامعي', r.universityId],
-    ['الكلية', collegeLabel(r)],
-    ['القسم', r.department],
-    ['المبنى/البوابة', buildingGateLabel(r)],
-    ['اسم من ضبط المخالفة', r.recorderName],
-    ['نوع المخالفة', violationTypesLabel(r)],
-    ['ملاحظات اضافية', r.notes || '-'],
-    ['حالة البلاغ', r.status],
-    ['قرار اللجنة / ملاحظات', r.committeeNotes || '-'],
-  ];
-  if(r.actionType){
-    rows.push(['نوع الإجراء', r.actionType]);
-    rows.push(['تاريخ الإجراء', r.actionDate || '-']);
-    rows.push(['المسؤول عن الإجراء', r.actionBy || '-']);
-  }
-  document.getElementById('printTable').innerHTML = rows.map(([k,v]) =>
-    `<tr><td class="k">${escapeHtml(k)}</td><td>${escapeHtml(String(v||'-'))}</td></tr>`
-  ).join('');
+  if(!activeReportId) return; const r=loadReports().find(x=>x.id===activeReportId); if(!r) return;
+  const rows=[['رقم البلاغ',r.id],['تاريخ التقديم',new Date(r.createdAt).toLocaleString('ar-SA')],['اسم الطالبة',r.studentName],['الرقم الجامعي',r.universityId],['الكلية',collegeLabel(r)],['القسم',r.department],['المبنى/البوابة',buildingGateLabel(r)],['اسم من ضبط المخالفة',r.recorderName],['نوع المخالفة',violationTypesLabel(r)],['ملاحظات اضافية',r.notes||'-'],['حالة البلاغ',r.status],['قرار اللجنة / ملاحظات',r.committeeNotes||'-']];
+  if(r.actionType){ rows.push(['نوع الإجراء',r.actionType]); rows.push(['تاريخ الإجراء',r.actionDate||'-']); rows.push(['المسؤول عن الإجراء',r.actionBy||'-']); }
+  document.getElementById('printTable').innerHTML=rows.map(([k,v])=>`<tr><td class="k">${escapeHtml(k)}</td><td>${escapeHtml(String(v||'-'))}</td></tr>`).join('');
   window.print();
 }
 
 // ---- Modal ----
-function toggleActionBox(){
-  const show = document.getElementById('statusSelect').value === 'تم اتخاذ إجراء';
-  document.getElementById('actionBox').classList.toggle('hidden', !show);
-}
-
+function toggleActionBox(){ document.getElementById('actionBox').classList.toggle('hidden', document.getElementById('statusSelect').value!=='تم اتخاذ إجراء'); }
 function openModal(id){
-  activeReportId = id;
-  const r = loadReports().find(x=>x.id===id);
-  if(!r) return;
-  document.getElementById('modalDetails').innerHTML = `
+  activeReportId=id; const r=loadReports().find(x=>x.id===id); if(!r) return;
+  document.getElementById('modalDetails').innerHTML=`
     <div><div class="k">رقم البلاغ</div>${r.id}</div>
     <div><div class="k">تاريخ التقديم</div>${new Date(r.createdAt).toLocaleString('ar-SA')}</div>
     <div><div class="k">اسم الطالبة</div>${escapeHtml(r.studentName)}</div>
@@ -1185,90 +1336,143 @@ function openModal(id){
     <div><div class="k">المبنى/البوابة</div>${escapeHtml(buildingGateLabel(r))}</div>
     <div><div class="k">اسم من ضبط المخالفة</div>${escapeHtml(r.recorderName)}</div>
     <div class="full"><div class="k">نوع المخالفة</div>${escapeHtml(violationTypesLabel(r))}</div>
-    ${r.notes ? `<div class="full"><div class="k">ملاحظات اضافية</div>${escapeHtml(r.notes)}</div>` : ''}
-  `;
-  document.getElementById('committeeNotes').value = r.committeeNotes || '';
-  document.getElementById('statusSelect').value = r.status;
-  document.getElementById('actionTypeSelect').value = r.actionType || '';
-  document.getElementById('actionDateInput').value = r.actionDate || '';
-  document.getElementById('actionByInput').value = r.actionBy || (getCommitteeSession() ? getCommitteeSession().displayName : '');
-  toggleActionBox();
-  document.getElementById('modalOverlay').classList.add('show');
+    ${r.notes?`<div class="full"><div class="k">ملاحظات اضافية</div>${escapeHtml(r.notes)}</div>`:''}`;
+  document.getElementById('committeeNotes').value=r.committeeNotes||'';
+  document.getElementById('statusSelect').value=r.status;
+  document.getElementById('actionTypeSelect').value=r.actionType||'';
+  document.getElementById('actionDateInput').value=r.actionDate||'';
+  document.getElementById('actionByInput').value=r.actionBy||(getCommitteeSession()?getCommitteeSession().displayName:'');
+  toggleActionBox(); document.getElementById('modalOverlay').classList.add('show');
 }
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('show');
-  activeReportId = null;
-}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); activeReportId=null; }
 async function saveReport(){
-  if(!activeReportId) return;
-  const s = getCommitteeSession();
-  if(!s) return;
-  const status = document.getElementById('statusSelect').value;
-  const isAction = status === 'تم اتخاذ إجراء';
-  try {
-    const res = await sbCall('app_update_report', {
-      p_token: s.token, p_id: activeReportId, p_status: status,
-      p_committee_notes: document.getElementById('committeeNotes').value,
-      p_action_type: isAction ? document.getElementById('actionTypeSelect').value : '',
-      p_action_date: isAction ? document.getElementById('actionDateInput').value : '',
-      p_action_by:   isAction ? document.getElementById('actionByInput').value : ''
-    });
-    if(!res.ok){ alert('تعذّر حفظ التعديل'); return; }
-    closeModal();
-    await fetchReports();
-    renderOverview(); renderTable(); renderActionsTable();
-  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
+  if(!activeReportId) return; const s=getCommitteeSession(); if(!s) return;
+  const status=document.getElementById('statusSelect').value; const isAction=status==='تم اتخاذ إجراء';
+  try{
+    const res=await sbCall('app_update_report',{p_token:s.token,p_id:activeReportId,p_status:status,p_committee_notes:document.getElementById('committeeNotes').value,p_action_type:isAction?document.getElementById('actionTypeSelect').value:'',p_action_date:isAction?document.getElementById('actionDateInput').value:'',p_action_by:isAction?document.getElementById('actionByInput').value:''});
+    if(!res.ok){ toast('تعذّر حفظ التعديل','err'); return; }
+    closeModal(); await fetchReports(); renderOverview(); renderTable(); renderActionsTable(); updateNotifDot(); toast('تم حفظ التعديل','ok');
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
 async function deleteReport(){
-  if(!activeReportId) return;
-  if(!confirm('هل أنت متأكد من حذف هذا البلاغ نهائياً؟')) return;
-  const s = getCommitteeSession();
-  if(!s) return;
-  try {
-    const res = await sbCall('app_delete_report', { p_token: s.token, p_id: activeReportId });
-    if(!res.ok){ alert('تعذّر الحذف'); return; }
-    closeModal();
-    await fetchReports();
-    renderOverview(); renderTable(); renderActionsTable();
-  } catch(e){ alert('تعذّر الاتصال بقاعدة البيانات'); }
+  if(!activeReportId) return; if(!confirm('هل أنت متأكد من حذف هذا البلاغ نهائياً؟')) return;
+  const s=getCommitteeSession(); if(!s) return;
+  try{
+    const res=await sbCall('app_delete_report',{p_token:s.token,p_id:activeReportId});
+    if(!res.ok){ toast('تعذّر الحذف','err'); return; }
+    closeModal(); await fetchReports(); renderOverview(); renderTable(); renderActionsTable(); toast('تم حذف البلاغ','ok');
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
 
 // ---- Exports ----
 function exportReportsCSV(){
-  const reports = loadReports();
-  const headers = ['رقم البلاغ','تاريخ التقديم','اسم الطالبة','الرقم الجامعي','الكلية','القسم','المبنى/البوابة','اسم من ضبط المخالفة','نوع المخالفة','ملاحظات اضافية','الحالة','ملاحظات اللجنة'];
-  const rows = reports.map(r=>[
-    r.id, r.createdAt, r.studentName, r.universityId, collegeLabel(r), r.department,
-    buildingGateLabel(r), r.recorderName, violationTypesLabel(r), r.notes, r.status, r.committeeNotes
-  ]);
-  downloadCSV(headers, rows, 'تقرير_المخالفات_');
+  const reports=loadReports();
+  if(!reports.length){ toast('لا توجد بيانات للتصدير','warn'); return; }
+  const headers=['رقم البلاغ','تاريخ التقديم','اسم الطالبة','الرقم الجامعي','الكلية','القسم','المبنى/البوابة','اسم من ضبط المخالفة','نوع المخالفة','ملاحظات اضافية','الحالة','ملاحظات اللجنة'];
+  const rows=reports.map(r=>[r.id,r.createdAt,r.studentName,r.universityId,collegeLabel(r),r.department,buildingGateLabel(r),r.recorderName,violationTypesLabel(r),r.notes,r.status,r.committeeNotes]);
+  downloadCSV(headers,rows,'تقرير_المخالفات_'); toast('تم تصدير الملف','ok');
 }
 function exportActionsCSV(){
-  const reports = loadReports().filter(r => r.status === 'تم اتخاذ إجراء' && r.actionType);
-  const headers = ['رقم البلاغ','اسم الطالبة','الرقم الجامعي','الكلية','نوع الإجراء','تاريخ الإجراء','المسؤول عن الإجراء'];
-  const rows = reports.map(r=>[r.id, r.studentName, r.universityId, collegeLabel(r), r.actionType, r.actionDate, r.actionBy]);
-  downloadCSV(headers, rows, 'سجل_الإجراءات_');
+  const reports=loadReports().filter(r=>r.status==='تم اتخاذ إجراء'&&r.actionType);
+  if(!reports.length){ toast('لا توجد إجراءات للتصدير','warn'); return; }
+  const headers=['رقم البلاغ','اسم الطالبة','الرقم الجامعي','الكلية','نوع الإجراء','تاريخ الإجراء','المسؤول عن الإجراء'];
+  const rows=reports.map(r=>[r.id,r.studentName,r.universityId,collegeLabel(r),r.actionType,r.actionDate,r.actionBy]);
+  downloadCSV(headers,rows,'سجل_الإجراءات_'); toast('تم تصدير الملف','ok');
 }
-function downloadCSV(headers, rows, filenamePrefix){
-  let csv = '﻿' + headers.join(',') + '\n';
-  rows.forEach(row=>{
-    csv += row.map(cell => `"${String(cell||'').replace(/"/g,'""')}"`).join(',') + '\n';
+function downloadCSV(headers,rows,prefix){
+  let csv='﻿'+headers.join(',')+'\n';
+  rows.forEach(row=>{ csv+=row.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')+'\n'; });
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=prefix+new Date().toISOString().slice(0,10)+'.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+// ---- Profile ----
+function renderProfile(){
+  const c=getCommitteeSession(); const r=getRecorderSession(); const s=c||r; const el=document.getElementById('profileContent');
+  if(!s){ el.innerHTML=`<div class="card pad"><div class="empty" style="padding:40px"><div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h4>لم تسجّلي الدخول بعد</h4><p style="margin-bottom:16px">سجّلي الدخول لعرض ملفك الشخصي</p><button class="btn primary" onclick="go('dashboard')">دخول اللجنة</button> <button class="btn ghost" onclick="go('submit')">دخول التسجيل</button></div></div>`; return; }
+  const acts = c ? loadReports().filter(x=>x.actionBy===s.displayName).slice(0,6) : [];
+  el.innerHTML=`
+    <div class="profile-head">
+      <div class="p-avatar">${escapeHtml(initials(s.displayName))||'ع'}</div>
+      <div class="p-info"><h2>${escapeHtml(s.displayName)}</h2><div style="opacity:.85; font-size:.9rem">@${escapeHtml(s.username)}</div><span class="role-pill"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>${ROLE_LABELS[s.role]||s.role}</span></div>
+    </div>
+    <div class="profile-grid">
+      <div class="card pad"><h3 class="section-title">البيانات</h3>
+        <div class="info-row"><span class="k">الاسم الظاهر</span><span class="v">${escapeHtml(s.displayName)}</span></div>
+        <div class="info-row"><span class="k">اسم المستخدم</span><span class="v" dir="ltr">${escapeHtml(s.username)}</span></div>
+        <div class="info-row"><span class="k">الصلاحية</span><span class="v">${ROLE_LABELS[s.role]||s.role}</span></div>
+        <div class="info-row"><span class="k">حالة الجلسة</span><span class="v" style="color:var(--ok)">● نشطة</span></div>
+      </div>
+      <div class="card pad"><h3 class="section-title">الصلاحيات</h3>
+        <div class="values-list">
+          ${(s.role==='recorder'||s.role==='both')?'<span class="chip">تسجيل المخالفات</span>':''}
+          ${(s.role==='committee'||s.role==='both')?'<span class="chip">عرض البلاغات</span><span class="chip">اتخاذ الإجراءات</span><span class="chip">سجل الطالبة</span>':''}
+          ${s.role==='both'?'<span class="chip">إدارة الأعضاء</span>':''}
+        </div>
+        <div class="btn-row" style="margin-top:20px">
+          ${c?'<button class="btn ghost sm" onclick="go(\'dashboard\')">لوحة اللجنة</button>':''}
+          ${r?'<button class="btn ghost sm" onclick="go(\'submit\')">تسجيل بلاغ</button>':''}
+          <button class="btn ghost sm" onclick="${c?'logoutDashboard':'logoutRecorder'}()">تسجيل الخروج</button>
+        </div>
+      </div>
+    </div>
+    ${c?`<div class="card pad" style="margin-top:16px"><h3 class="section-title">آخر العمليات</h3>${acts.length?acts.map(a=>`<div class="recent-item"><div><div class="who">${escapeHtml(a.actionType)}</div><div class="meta">${escapeHtml(a.studentName)} — ${a.actionDate||''}</div></div><span class="badge action">إجراء</span></div>`).join(''):'<div class="empty" style="padding:24px"><p>لا توجد عمليات مسجّلة باسمك بعد</p></div>'}</div>`:''}`;
+}
+
+// ---- Notifications ----
+function buildNotifs(){
+  const list={unread:[],read:[],important:[],system:[]};
+  list.system.push({ic:'gear', title:'مرحباً بك في المنصة', text:'منصة لجنة متابعة المخالفات — جامعة الطائف.', ago:''});
+  const c=getCommitteeSession();
+  if(c){
+    const reports=loadReports();
+    reports.filter(r=>r.status==='جديد').slice(0,15).forEach(r=>list.unread.push({ic:'file', title:'بلاغ جديد', text:`${r.studentName} — ${collegeLabel(r)}`, ago:new Date(r.createdAt).toLocaleDateString('ar-SA')}));
+    reports.filter(r=>r.status==='تم اتخاذ إجراء').slice(0,15).forEach(r=>list.read.push({ic:'check', title:'تم اتخاذ إجراء', text:`${r.studentName} — ${r.actionType}`, ago:r.actionDate||''}));
+    // repeat offenders = important
+    const byStu={}; reports.forEach(r=>{ byStu[r.universityId]=(byStu[r.universityId]||[]); byStu[r.universityId].push(r); });
+    Object.values(byStu).filter(arr=>arr.length>=2).forEach(arr=>list.important.push({ic:'warn', title:'طالبة متكررة المخالفة', text:`${arr[0].studentName} — ${arr.length} مخالفات`, ago:''}));
+  } else {
+    list.system.push({ic:'lock', title:'تسجيل الدخول', text:'سجّلي الدخول لعرض إشعارات البلاغات والإجراءات.', ago:''});
+  }
+  return list;
+}
+const NIC={file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>',warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'};
+const NICBG={file:'var(--info-bg);color:var(--info)',check:'var(--ok-bg);color:var(--ok)',warn:'var(--warn-bg);color:var(--warn)',gear:'var(--green-050);color:var(--green)',lock:'var(--bg);color:var(--muted)'};
+function openNotifs(){ document.getElementById('panelOverlay').classList.add('show'); document.getElementById('notifPanel').classList.add('show'); renderNotifs(); }
+function closeNotifs(){ document.getElementById('panelOverlay').classList.remove('show'); document.getElementById('notifPanel').classList.remove('show'); }
+function switchNotifTab(t){ notifTab=t; document.querySelectorAll('#notifTabs button').forEach(b=>b.classList.toggle('active', b.dataset.nt===t)); renderNotifs(); }
+function renderNotifs(){
+  const data=buildNotifs(); const items=data[notifTab]||[]; const el=document.getElementById('notifList');
+  if(!items.length){ el.innerHTML='<div class="empty" style="padding:40px"><div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></div><p>لا توجد إشعارات هنا</p></div>'; return; }
+  el.innerHTML=items.map(n=>`<div class="notif ${notifTab==='unread'?'unread':''}"><div class="nic" style="background:${NICBG[n.ic]}">${NIC[n.ic]}</div><div><div class="ntitle">${escapeHtml(n.title)}</div><div class="ntext">${escapeHtml(n.text)}</div>${n.ago?`<div class="nago">${escapeHtml(n.ago)}</div>`:''}</div></div>`).join('');
+}
+function updateNotifDot(){ const d=buildNotifs(); document.getElementById('notifDot').style.display=(d.unread.length)?'block':'none'; }
+
+// ---- Animated counters ----
+function runCounters(){
+  document.querySelectorAll('[data-counter]').forEach(el=>{
+    if(el.dataset.done) return; el.dataset.done='1';
+    const target=parseInt(el.dataset.counter,10); const dur=1200; const t0=performance.now();
+    (function step(t){ const p=Math.min(1,(t-t0)/dur); el.textContent=Math.round(target*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(step); })(t0);
   });
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filenamePrefix + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
 }
+// ---- Scroll reveal ----
+const io=new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-document.getElementById('passInput').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
-document.getElementById('committeeUsername').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
-document.getElementById('recorderUsername').addEventListener('keydown', e => { if(e.key==='Enter') tryRecorderLogin(); });
-document.getElementById('recorderPassword').addEventListener('keydown', e => { if(e.key==='Enter') tryRecorderLogin(); });
-document.getElementById('studentSearchInput').addEventListener('keydown', e => { if(e.key==='Enter') renderStudentHistory(); });
+// ---- Keyboard / Enter ----
+document.getElementById('passInput').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+document.getElementById('committeeUsername').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+document.getElementById('recorderUsername').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
+document.getElementById('recorderPassword').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
+document.getElementById('studentSearchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') renderStudentHistory(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeNotifs(); } });
+document.querySelector('.brand').addEventListener('keydown', e=>{ if(e.key==='Enter') go('home'); });
+
+// ---- Init ----
 refreshRecorderGate();
+updateNotifDot();
+runCounters();
 </script>
-
 </body>
 </html>
