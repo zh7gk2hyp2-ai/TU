@@ -756,7 +756,7 @@ th.sortable:hover{color:var(--green);}
       <form id="reportForm" class="card pad">
         <div class="grid2">
           <div class="field full"><label>١. اسم الطالبة <span class="req">*</span></label><input type="text" name="studentName" required placeholder="الاسم الكامل"/></div>
-          <div class="field"><label>٢. الرقم الجامعي <span class="req">*</span></label><input type="number" inputmode="numeric" name="universityId" required placeholder="رقم صحيح"/></div>
+          <div class="field"><label>٢. الرقم الجامعي <span class="req">*</span></label><input type="text" inputmode="numeric" name="universityId" required pattern="[0-9]{8}" title="يجب أن يتكوّن الرقم الجامعي من ٨ أرقام" placeholder="٨ أرقام" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,8)"/></div>
           <div class="field"><label>٣. الكلية <span class="req">*</span></label>
             <select name="college" id="collegeSelect" required>
               <option value="">حدد الكلية</option>
@@ -769,22 +769,23 @@ th.sortable:hover{color:var(--green);}
           </div>
           <div class="field full hidden" id="collegeOtherWrap"><label>يرجى تحديد الكلية</label><input type="text" name="collegeOther" placeholder="اسم الكلية"/></div>
           <div class="field full"><label>٤. القسم <span class="req">*</span></label><input type="text" name="department" required placeholder="اسم القسم"/></div>
-          <div class="field full"><label>٥. المبنى / البوابة <span class="req">*</span></label>
-            <div class="opt-list" id="buildingGateList">
-              <label class="opt"><input type="radio" name="buildingGate" value="بوابة 16" required/> بوابة 16</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="بوابة 2"/> بوابة 2</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="بوابة 27"/> بوابة 27</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="مبنى 18"/> مبنى 18</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="مبنى 9"/> مبنى 9</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="مبنى 13"/> مبنى 13</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="الكلية الصحية"/> الكلية الصحية</label>
-              <label class="opt"><input type="radio" name="buildingGate" value="كليه العلوم الطبية التطبيقية"/> كليه العلوم الطبية التطبيقية</label>
-              <label class="opt other"><input type="radio" name="buildingGate" value="غير ذلك" id="buildingGateOtherRadio"/> غير ذلك</label>
-            </div>
+          <div class="field"><label>٥. المبنى / البوابة <span class="req">*</span></label>
+            <select name="buildingGate" id="buildingGateSelect" required>
+              <option value="">حدد المبنى / البوابة</option>
+              <option>بوابة 16</option>
+              <option>بوابة 2</option>
+              <option>بوابة 27</option>
+              <option>مبنى 18</option>
+              <option>مبنى 9</option>
+              <option>مبنى 13</option>
+              <option>الكلية الصحية</option>
+              <option>كليه العلوم الطبية التطبيقية</option>
+              <option value="غير ذلك">غير ذلك</option>
+            </select>
           </div>
           <div class="field full hidden" id="buildingGateOtherWrap"><label>يرجى تحديد المبنى/البوابة</label><input type="text" name="buildingGateOther" placeholder="المبنى/البوابة"/></div>
           <div class="field full"><label>٦. اسم من ضبط المخالفة <span class="req">*</span></label><input type="text" name="recorderName" id="recorderNameField" required readonly style="background:var(--bg); cursor:not-allowed"/></div>
-          <div class="field full"><label>٧. نوع المخالفة <span class="req">*</span></label>
+          <div class="field full"><label>٧. نوع المخالفة <span class="req">*</span> <span style="color:var(--muted); font-weight:400; font-size:.8rem">(يمكن اختيار أكثر من نوع)</span></label>
             <div class="opt-list" id="violationTypeList">
               <label class="opt"><input type="checkbox" name="violationType" value="لبس مخالف"/> لبس مخالف</label>
               <label class="opt"><input type="checkbox" name="violationType" value="ذوق عام"/> ذوق عام</label>
@@ -1276,7 +1277,7 @@ async function deleteMember(username){
 
 // ---- Conditional "other" fields ----
 document.getElementById('collegeSelect').addEventListener('change', function(){ document.getElementById('collegeOtherWrap').classList.toggle('hidden', this.value!=='غير ذلك'); });
-document.getElementById('buildingGateList').addEventListener('change', function(){ document.getElementById('buildingGateOtherWrap').classList.toggle('hidden', !document.getElementById('buildingGateOtherRadio').checked); });
+document.getElementById('buildingGateSelect').addEventListener('change', function(){ document.getElementById('buildingGateOtherWrap').classList.toggle('hidden', this.value!=='غير ذلك'); });
 document.getElementById('violationTypeList').addEventListener('change', function(){ document.getElementById('violationOtherWrap').classList.toggle('hidden', !document.getElementById('violationOtherCheck').checked); });
 
 // ---- Submit form ----
@@ -1284,6 +1285,8 @@ document.getElementById('reportForm').addEventListener('submit', async function(
   e.preventDefault();
   const form=e.target; const fd=new FormData(form); const session=getRecorderSession();
   if(!session){ toast('يرجى تسجيل الدخول أولاً','warn'); return; }
+  const uid=(fd.get('universityId')||'').trim();
+  if(!/^\d{8}$/.test(uid)){ toast('الرقم الجامعي يجب أن يكون ٨ أرقام','warn'); return; }
   const violationTypes=fd.getAll('violationType');
   if(!violationTypes.length){ toast('يرجى اختيار نوع المخالفة','warn'); return; }
   const id='RPT-'+Date.now().toString(36).toUpperCase();
