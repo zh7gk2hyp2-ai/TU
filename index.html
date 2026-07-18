@@ -717,6 +717,7 @@ th.sortable:hover{color:var(--green);}
       <details><summary>هل بيانات الطالبات آمنة؟ <span class="plus">+</span></summary><div class="ans">نعم، تُحفظ في قاعدة بيانات محمية، ولا يمكن الاطلاع عليها إلا عبر تسجيل دخول صحيح بالصلاحية المناسبة. كلمات السر مشفّرة بالكامل.</div></details>
       <details><summary>كيف تتخذ اللجنة الإجراء على المخالفة؟ <span class="plus">+</span></summary><div class="ans">من لوحة التحكم، يفتح العضو البلاغ ويحدّد حالته (قيد المراجعة / تم اتخاذ إجراء) مع تسجيل نوع الإجراء وتاريخه والمسؤول عنه.</div></details>
       <details><summary>هل يمكن استخراج محضر رسمي؟ <span class="plus">+</span></summary><div class="ans">نعم، لكل بلاغ زر «طباعة المحضر» يصدر مستنداً رسمياً بترويسة الجامعة وحقول توقيع اللجنة والطالبة.</div></details>
+      <details><summary>ما المرجعية النظامية لعمل اللجنة؟ <span class="plus">+</span></summary><div class="ans">تستند اللجنة إلى «قواعد السلوك والانضباط الطلابي بجامعة الطائف» المعتمدة، وتعالج المخالفات وفق الإجراءات النظامية بالتنسيق مع <a href="https://www.tu.edu.sa/Ar/%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D8%AF%D8%A7%D8%AA/114/%D8%B9%D9%85%D8%A7%D8%AF%D8%A9-%D8%B4%D8%A4%D9%88%D9%86-%D8%A7%D9%84%D8%B7%D9%84%D8%A7%D8%A8" target="_blank" rel="noopener noreferrer" style="color:var(--gold); font-weight:600">عمادة شؤون الطلاب ↗</a>.</div></details>
     </div>
   </div>
 
@@ -727,14 +728,18 @@ th.sortable:hover{color:var(--green);}
         <div class="fbrand"><div class="mark"><img id="footLogo" alt="شعار جامعة الطائف"/></div><div><strong style="color:#fff; display:block">جامعة الطائف</strong><span style="font-size:.8rem">لجنة متابعة مخالفات الملبس والمظهر</span></div></div>
         <p>منصة رقمية داخلية لخدمة أعمال اللجنة، تهدف لتنظيم وتوثيق المخالفات ومعالجتها إلكترونياً بكفاءة وسرية.</p>
         <div class="social">
-          <a onclick="toast('حساب رسمي — يُضاف لاحقاً','info')" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7 8 8.2 12h-6.4l-5-6.6L6 22H2.9l7.5-8.6L2.5 2H9l4.5 6z"/></svg></a>
-          <a onclick="toast('حساب رسمي — يُضاف لاحقاً','info')" aria-label="بريد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></a>
-          <a onclick="toast('حساب رسمي — يُضاف لاحقاً','info')" aria-label="موقع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></a>
+          <a href="https://twitter.com/TaifUniversity" target="_blank" rel="noopener noreferrer" aria-label="حساب الجامعة على X" title="حساب الجامعة على X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7 8 8.2 12h-6.4l-5-6.6L6 22H2.9l7.5-8.6L2.5 2H9l4.5 6z"/></svg></a>
+          <a href="https://www.tu.edu.sa" target="_blank" rel="noopener noreferrer" aria-label="الموقع الرسمي للجامعة" title="الموقع الرسمي للجامعة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></a>
         </div>
       </div>
-      <div><h5>روابط سريعة</h5><ul><li><a onclick="go('home')">الرئيسية</a></li><li><a onclick="go('submit')">تسجيل بلاغ</a></li><li><a onclick="go('dashboard')">لوحة اللجنة</a></li></ul></div>
-      <div><h5>الخدمات</h5><ul><li><a onclick="go('submit')">تسجيل مخالفة</a></li><li><a onclick="requireCommittee('reports')">متابعة البلاغات</a></li><li><a onclick="requireCommittee('student')">سجل الطالبة</a></li></ul></div>
-      <div><h5>الجهات ذات العلاقة</h5><ul><li><a>عمادة شؤون الطلاب</a></li><li><a>وكالة الشؤون التعليمية</a></li><li><a>لجنة الانضباط الطلابي</a></li></ul></div>
+      <div><h5>روابط سريعة</h5><ul><li><a onclick="go('home')">الرئيسية</a></li><li><a onclick="go('submit')">تسجيل بلاغ</a></li><li><a onclick="go('dashboard')">تسجيل الدخول</a></li></ul></div>
+      <div><h5>خدمات المنصة</h5><ul><li><a onclick="go('submit')">تسجيل مخالفة</a></li><li><a onclick="requireCommittee('reports')">متابعة البلاغات</a></li><li><a onclick="requireCommittee('student')">سجل الطالبة</a></li></ul></div>
+      <div><h5>روابط الجامعة</h5><ul>
+        <li><a href="https://www.tu.edu.sa" target="_blank" rel="noopener noreferrer">الموقع الرسمي للجامعة</a></li>
+        <li><a href="https://www.tu.edu.sa/Ar/%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D8%AF%D8%A7%D8%AA/114/%D8%B9%D9%85%D8%A7%D8%AF%D8%A9-%D8%B4%D8%A4%D9%88%D9%86-%D8%A7%D9%84%D8%B7%D9%84%D8%A7%D8%A8" target="_blank" rel="noopener noreferrer">عمادة شؤون الطلاب</a></li>
+        <li><a href="https://www.tu.edu.sa/Ar/%D8%A7%D9%84%D9%88%D9%83%D8%A7%D9%84%D8%A7%D8%AA/167/%D9%88%D9%83%D8%A7%D9%84%D8%A9-%D8%A7%D9%84%D8%AC%D8%A7%D9%85%D8%B9%D8%A9-%D9%84%D9%84%D8%B4%D8%A4%D9%88%D9%86-%D8%A7%D9%84%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9-%D9%88%D8%A7%D9%84%D8%AA%D8%B7%D9%88%D9%8A%D8%B1" target="_blank" rel="noopener noreferrer">وكالة الجامعة للشؤون الأكاديمية والتطوير</a></li>
+        <li><a href="https://www.tu.edu.sa/Ar/%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D8%AF%D8%A7%D8%AA/114/%D8%B9%D9%85%D8%A7%D8%AF%D8%A9-%D8%B4%D8%A4%D9%88%D9%86-%D8%A7%D9%84%D8%B7%D9%84%D8%A7%D8%A8" target="_blank" rel="noopener noreferrer">قواعد السلوك والانضباط الطلابي</a></li>
+      </ul></div>
     </div>
     <div class="footer-bar">© جامعة الطائف — لجنة متابعة مخالفات الملبس والمظهر. جميع الحقوق محفوظة.</div>
   </footer>
