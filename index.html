@@ -291,6 +291,22 @@ textarea{resize:vertical; min-height:96px;}
 .opt.other input[type="text"]{margin-inline-start:6px;}
 .check-line{display:flex; align-items:flex-start; gap:10px; font-size:.86rem; color:var(--muted);}
 .check-line input{width:auto; margin-top:4px; accent-color:var(--green);}
+/* file attachments */
+.file-drop{display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:22px; border:1.5px dashed var(--border-2); border-radius:12px; cursor:pointer; color:var(--muted); font-size:.85rem; transition:.2s var(--ease); background:var(--surface-2);}
+.file-drop:hover{border-color:var(--green); color:var(--green); background:var(--green-050);}
+.file-drop svg{width:30px; height:30px;}
+.file-preview{display:flex; flex-direction:column; gap:8px; margin-top:10px;}
+.file-chip{display:flex; align-items:center; gap:11px; padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:var(--surface); font-size:.85rem;}
+.file-chip .fi{width:34px; height:34px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:var(--green-050); color:var(--green);}
+.file-chip .fi svg{width:17px; height:17px;}
+.file-chip .fn{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.file-chip .fsz{color:var(--faint); font-size:.75rem; white-space:nowrap;}
+.file-chip .fx{background:none; border:none; color:var(--danger); cursor:pointer; font-size:1.1rem; padding:2px 6px; border-radius:6px;}
+.file-chip .fx:hover{background:var(--danger-bg);}
+.file-chip a.fdl{color:var(--green); font-weight:600; cursor:pointer; font-size:.8rem; text-decoration:none;}
+.file-thumb{width:34px; height:34px; border-radius:8px; object-fit:cover; flex-shrink:0; border:1px solid var(--border);}
+#imgOverlay{cursor:zoom-out;}
+#imgViewer{max-width:92vw; max-height:88vh; border-radius:12px; box-shadow:var(--shadow-lg); background:#fff;}
 
 /* ═══ Gate (login) ═══ */
 .gate{max-width:430px; margin:56px auto;}
@@ -826,6 +842,15 @@ th.sortable:hover{color:var(--green);}
           </div>
           <div class="field full hidden" id="violationOtherWrap"><label>يرجى تحديد نوع المخالفة</label><input type="text" name="violationTypeOther" placeholder="نوع المخالفة"/></div>
           <div class="field full"><label>٨. ملاحظات إضافية</label><textarea name="notes" placeholder="أي تفاصيل إضافية (اختياري)"></textarea></div>
+          <div class="field full">
+            <label>٩. المرفقات <span style="color:var(--muted); font-weight:400; font-size:.8rem">(اختياري — صور أو مستندات)</span></label>
+            <label class="file-drop" for="reportFiles">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>اضغط لاختيار ملفات — صور (JPG/PNG) أو مستندات (PDF/Word/Excel)</span>
+            </label>
+            <input type="file" id="reportFiles" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx" style="display:none" onchange="onFilesPicked(this)"/>
+            <div id="filePreview" class="file-preview"></div>
+          </div>
         </div>
         <div class="btn-row" style="margin-top:22px">
           <button type="submit" class="btn primary">إرسال البلاغ</button>
@@ -1133,6 +1158,12 @@ th.sortable:hover{color:var(--green);}
         <button class="btn danger" id="modalDeleteBtn" onclick="deleteReport()">أرشفة</button>
       </div>
 
+      <!-- attachments -->
+      <div id="attachWrap" style="margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
+        <h3 class="section-title">المرفقات</h3>
+        <div id="attachList"></div>
+      </div>
+
       <!-- version history -->
       <div id="versionsWrap" style="margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
         <h3 class="section-title" style="cursor:pointer" onclick="document.getElementById('versionsBody').classList.toggle('hidden')">سجل الإصدارات (اضغط للعرض)</h3>
@@ -1193,6 +1224,9 @@ th.sortable:hover{color:var(--green);}
     </div>
   </div>
 </div>
+
+<!-- Image lightbox -->
+<div class="overlay" id="imgOverlay" onclick="closeImg()"><img id="imgViewer" alt="معاينة المرفق"/></div>
 
 <!-- Printable report -->
 <div id="printArea">
@@ -1485,7 +1519,7 @@ function resetMemberForm(){
   document.getElementById('memberDisplayNameInput').value=''; document.getElementById('memberRoleInput').value='both';
 }
 async function deleteMember(username){
-  if(!await confirmDialog('حذف العضو','سيتم حذف حساب هذا العضو نهائياً. هل تريدين المتابعة؟')) return;
+  if(!await confirmDialog('حذف العضو','سيتم حذف حساب هذا العضو نهائياً. هل ترغب في المتابعة؟')) return;
   const s=getCommitteeSession(); if(!s) return;
   try{
     const res=await sbCall('app_delete_member',{p_token:s.token,p_username:username});
@@ -1517,9 +1551,24 @@ document.getElementById('reportForm').addEventListener('submit', async function(
   try{
     const res=await sbCall('app_submit_report',{p_token:session.token,p_report:report});
     if(!res.ok){ toast('تعذّر حفظ البلاغ','err'); return; }
+    // upload optional attachments
+    if(pendingFiles.length){
+      submitBtn.textContent='جارٍ رفع المرفقات...';
+      let ok=0;
+      for(const f of pendingFiles){
+        try{
+          const data=await fileToBase64(f);
+          const fr=await sbCall('app_add_file',{p_token:session.token,p_report_id:id,p_file_name:f.name,p_mime:f.type||'application/octet-stream',p_size:f.size,p_data:data});
+          if(fr && fr.ok) ok++;
+        }catch(_e){}
+      }
+      if(ok) toast('تم إرفاق '+ok+' ملف','ok');
+      if(ok<pendingFiles.length) toast('تعذّر رفع بعض المرفقات (قد يكون الحجم كبيراً)','warn');
+    }
     document.getElementById('successRef').textContent=id;
     document.getElementById('successBanner').classList.add('show');
     form.reset();
+    pendingFiles=[]; renderFilePreview();
     document.getElementById('collegeOtherWrap').classList.add('hidden');
     document.getElementById('buildingGateOtherWrap').classList.add('hidden');
     document.getElementById('violationOtherWrap').classList.add('hidden');
@@ -1528,6 +1577,40 @@ document.getElementById('reportForm').addEventListener('submit', async function(
   }catch(err){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
   finally{ submitBtn.disabled=false; submitBtn.textContent='إرسال البلاغ'; }
 });
+
+// ---- File attachments ----
+let pendingFiles = [];
+function fmtSize(b){ b=+b||0; if(b<1024) return b+' ب'; if(b<1048576) return (b/1024).toFixed(1)+' ك.ب'; return (b/1048576).toFixed(1)+' م.ب'; }
+function isImg(mime){ return (mime||'').startsWith('image/'); }
+const FILE_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
+function fileToBase64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]||''); r.onerror=rej; r.readAsDataURL(file); }); }
+function onFilesPicked(input){ for(const f of input.files) pendingFiles.push(f); input.value=''; renderFilePreview(); }
+function removePendingFile(i){ pendingFiles.splice(i,1); renderFilePreview(); }
+function renderFilePreview(){
+  const el=document.getElementById('filePreview'); if(!el) return;
+  el.innerHTML=pendingFiles.map((f,i)=>`<div class="file-chip"><div class="fi">${FILE_SVG}</div><div class="fn" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div><div class="fsz">${fmtSize(f.size)}</div><button type="button" class="fx" onclick="removePendingFile(${i})" aria-label="إزالة">✕</button></div>`).join('');
+}
+async function renderAttachments(reportId){
+  const el=document.getElementById('attachList'); if(!el) return;
+  el.innerHTML='<div class="sk sk-line" style="width:40%"></div>';
+  const s=getCommitteeSession(); if(!s){ el.innerHTML=''; return; }
+  let files=[];
+  try{ const rows=await sbCall('app_list_files',{p_token:s.token,p_report_id:reportId}); files=Array.isArray(rows)?rows:[]; }
+  catch(e){ el.innerHTML='<div class="empty" style="padding:14px"><p>ميزة المرفقات تحتاج تفعيل التحديث</p></div>'; return; }
+  if(!files.length){ el.innerHTML='<div class="empty" style="padding:14px"><p>لا توجد مرفقات لهذا البلاغ</p></div>'; return; }
+  el.innerHTML=files.map(f=>`<div class="file-chip"><div class="fi">${FILE_SVG}</div><div class="fn" title="${escapeHtml(f.file_name)}">${escapeHtml(f.file_name)}</div><div class="fsz">${fmtSize(f.size_bytes)}</div><a class="fdl" onclick="viewFile(${f.id},'${isImg(f.mime_type)?'img':'dl'}')">${isImg(f.mime_type)?'عرض':'تنزيل'}</a></div>`).join('');
+}
+async function viewFile(fid, mode){
+  const s=getCommitteeSession(); if(!s) return;
+  try{
+    const r=await sbCall('app_get_file',{p_token:s.token,p_id:fid});
+    if(!r || !r.ok){ toast('تعذّر فتح الملف','err'); return; }
+    const url='data:'+(r.mime_type||'application/octet-stream')+';base64,'+r.data;
+    if(mode==='img'){ document.getElementById('imgViewer').src=url; document.getElementById('imgOverlay').classList.add('show'); }
+    else { const a=document.createElement('a'); a.href=url; a.download=r.file_name||'attachment'; document.body.appendChild(a); a.click(); a.remove(); }
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
+}
+function closeImg(){ document.getElementById('imgOverlay').classList.remove('show'); document.getElementById('imgViewer').src=''; }
 
 // ---- Helpers ----
 function statusBadgeClass(s){ return {'جديد':'new','قيد المراجعة':'review','تم اتخاذ إجراء':'action','إغلاق دون إجراء':'closed'}[s]||'new'; }
@@ -1668,7 +1751,7 @@ function renderArchive(){
   rows.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td style="white-space:nowrap">${r.deletedAt?new Date(r.deletedAt).toLocaleString('ar-SA'):'-'}</td><td>${escapeHtml(r.studentName)}</td><td dir="ltr" style="text-align:start">${escapeHtml(r.universityId)}</td><td>${escapeHtml(r.deleteReason)||'-'}</td><td>${escapeHtml(r.deletedBy)||'-'}</td><td class="row-actions"><button onclick="restoreReport('${r.id}')">استعادة</button></td>`; tbody.appendChild(tr); });
 }
 async function restoreReport(id){
-  if(!await confirmDialog('استعادة البلاغ','سيعود هذا البلاغ إلى القوائم الرئيسية. هل تريدين المتابعة؟')) return;
+  if(!await confirmDialog('استعادة البلاغ','سيعود هذا البلاغ إلى القوائم الرئيسية. هل ترغب في المتابعة؟')) return;
   const s=getCommitteeSession(); if(!s) return;
   try{
     const res=await sbCall('app_restore_report',{p_token:s.token,p_id:id});
@@ -1803,6 +1886,7 @@ function openModal(id){
   ['committeeNotes','statusSelect','actionTypeSelect','actionDateInput','actionByInput'].forEach(id=>{ const el=document.getElementById(id); if(el) el.disabled=!editable && !showReq; });
   document.getElementById('versionsBody').classList.add('hidden');
   renderVersions(id);
+  renderAttachments(id);
   document.getElementById('modalOverlay').classList.add('show');
 }
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); activeReportId=null; }
@@ -1983,7 +2067,7 @@ document.getElementById('committeeUsername').addEventListener('keydown', e=>{ if
 document.getElementById('recorderUsername').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
 document.getElementById('recorderPassword').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
 document.getElementById('studentSearchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') renderStudentHistory(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeNotifs(); closeDelDialog(); closeRequestEdit(); if(document.getElementById('confirmOverlay').classList.contains('show')) resolveConfirm(false); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeImg(); closeModal(); closeNotifs(); closeDelDialog(); closeRequestEdit(); if(document.getElementById('confirmOverlay').classList.contains('show')) resolveConfirm(false); } });
 document.querySelector('.brand').addEventListener('keydown', e=>{ if(e.key==='Enter') go('home'); });
 
 // ---- Light parallax on hero ----
