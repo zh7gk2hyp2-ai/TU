@@ -1358,9 +1358,18 @@ function switchSubView(name){
 function lockMsg(until){ let t=''; try{ t=' حتى '+new Date(until).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}); }catch(e){} return 'الحساب مقفل مؤقتاً بسبب تكرار محاولات الدخول الفاشلة'+t; }
 
 // ── الدخول الموحّد ──
+// اضبطي EDGE_LOGIN_URL على رابط دالة login-secure بعد نشرها لتفعيل التقاط IP وحدّ المحاولات على البوابة.
+const EDGE_LOGIN_URL = '';
+async function loginRequest(username, password){
+  if(EDGE_LOGIN_URL){
+    const res=await fetch(EDGE_LOGIN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+    return res.json();
+  }
+  return sbCall('app_login',{p_username:username,p_password:password});
+}
 async function doLogin(u, p, err){
   try{
-    const res=await sbCall('app_login',{p_username:u,p_password:p});
+    const res=await loginRequest(u,p);
     if(res.ok && ROLE_CAPS[res.role]){
       sessionStorage.setItem(SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
       if(err) err.style.display='none';
@@ -1368,6 +1377,7 @@ async function doLogin(u, p, err){
       updateAuthUI(); refreshRecorderGate(); await refreshDashboard();
       return true;
     } else if(res.error==='locked'){ if(err){ err.textContent=lockMsg(res.until); err.style.display='block'; } }
+    else if(res.error==='ip_blocked'){ if(err){ err.textContent='تم تجاوز عدد المحاولات المسموح من هذا الجهاز. حاول لاحقاً.'; err.style.display='block'; } }
     else { if(err){ err.textContent='اسم المستخدم أو كلمة السر غير صحيحة'; err.style.display='block'; } }
   }catch(e){ if(err){ err.textContent='تعذّر الاتصال بقاعدة البيانات'; err.style.display='block'; } }
   return false;
@@ -1628,7 +1638,7 @@ function renderAudit(){
   });
   tbody.innerHTML='';
   document.getElementById('auditEmpty').style.display=rows.length?'none':'block';
-  rows.forEach(a=>{ const tr=document.createElement('tr'); const meta=[a.actor_role?ROLE_LABELS[a.actor_role]||a.actor_role:'', a.device||''].filter(Boolean).join(' · '); tr.innerHTML=`<td style="white-space:nowrap">${new Date(a.ts).toLocaleString('ar-SA')}</td><td><span class="badge ${AUDIT_BADGE[a.event]||'new'}">${AUDIT_EVENT[a.event]||a.event}</span></td><td>${escapeHtml(a.student_name)||'-'}</td><td>${escapeHtml(a.details)||'-'}</td><td>${escapeHtml(a.reason)||'-'}</td><td>${escapeHtml(a.actor)||'-'}${meta?`<div style="font-size:.7rem;color:var(--faint)">${escapeHtml(meta)}</div>`:''}</td>`; tbody.appendChild(tr); });
+  rows.forEach(a=>{ const tr=document.createElement('tr'); const meta=[a.actor_role?ROLE_LABELS[a.actor_role]||a.actor_role:'', a.device||'', a.ip||''].filter(Boolean).join(' · '); tr.innerHTML=`<td style="white-space:nowrap">${new Date(a.ts).toLocaleString('ar-SA')}</td><td><span class="badge ${AUDIT_BADGE[a.event]||'new'}">${AUDIT_EVENT[a.event]||a.event}</span></td><td>${escapeHtml(a.student_name)||'-'}</td><td>${escapeHtml(a.details)||'-'}</td><td>${escapeHtml(a.reason)||'-'}</td><td>${escapeHtml(a.actor)||'-'}${meta?`<div style="font-size:.7rem;color:var(--faint)">${escapeHtml(meta)}</div>`:''}</td>`; tbody.appendChild(tr); });
 }
 function exportAuditCSV(){
   if(!auditCache.length){ toast('لا توجد سجلات للتصدير','warn'); return; }
