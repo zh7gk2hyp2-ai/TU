@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://bplxjiiauxeviqrvkygh.supabase.co; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"/>
+<meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
 <meta name="description" content="المنصة الرقمية للجنة متابعة مخالفات الملبس والمظهر — جامعة الطائف. تسجيل ومتابعة البلاغات واتخاذ الإجراءات إلكترونياً."/>
 <meta name="theme-color" content="#0d5c46" media="(prefers-color-scheme: light)"/>
 <meta name="theme-color" content="#0b1411" media="(prefers-color-scheme: dark)"/>
@@ -443,6 +446,16 @@ th.sortable:hover{color:var(--green);}
 .detail-grid .full{grid-column:1/-1;}
 .action-box{background:var(--gold-050); border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent); border-radius:var(--r); padding:18px; margin-top:16px;}
 .confirm-ic{width:60px; height:60px; margin:0 auto 14px; border-radius:50%; background:var(--danger-bg); color:var(--danger); display:flex; align-items:center; justify-content:center;}
+.ver-item{background:var(--surface-2); border:1px solid var(--border); border-radius:11px; padding:12px 14px; margin-bottom:8px;}
+.ver-head{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;}
+.ver-meta{font-size:.75rem; color:var(--faint);}
+.ver-diff{margin-top:8px; font-size:.82rem; display:flex; flex-direction:column; gap:4px;}
+.ver-diff .old{color:var(--danger); text-decoration:line-through; opacity:.8;}
+.ver-diff .new{color:var(--ok); font-weight:600;}
+.req-card{background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:15px 16px; margin-bottom:12px;}
+.req-top{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:8px;}
+.req-body{font-size:.86rem; display:flex; flex-direction:column; gap:4px;}
+.reqct{background:var(--gold); color:#231a02; border-radius:100px; min-width:18px; height:18px; padding:0 5px; font-size:.7rem; font-weight:700; align-items:center; justify-content:center; margin-inline-start:4px;}
 .confirm-ic svg{width:28px; height:28px;}
 
 /* ═══ Notifications panel ═══ */
@@ -839,6 +852,7 @@ th.sortable:hover{color:var(--green);}
         <button data-sub="members" onclick="switchSubView('members')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>الأعضاء</button>
         <button data-sub="audit" onclick="switchSubView('audit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/><path d="M3 3l2 2M21 3l-2 2"/></svg>سجل التدقيق</button>
         <button data-sub="archive" onclick="switchSubView('archive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>الأرشيف</button>
+        <button data-sub="requests" onclick="switchSubView('requests')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>طلبات التعديل <span id="reqBadge" class="reqct" style="display:none"></span></button>
       </div>
 
       <!-- overview -->
@@ -891,6 +905,8 @@ th.sortable:hover{color:var(--green);}
               <option value="">كل الحالات</option><option value="جديد">جديد</option><option value="قيد المراجعة">قيد المراجعة</option><option value="تم اتخاذ إجراء">تم اتخاذ إجراء</option><option value="إغلاق دون إجراء">إغلاق دون إجراء</option>
             </select>
             <select id="collegeFilter" onchange="renderTable()"><option value="">كل الكليات</option></select>
+            <button class="btn ghost sm" onclick="exportReportsCSV()">Excel</button>
+            <button class="btn ghost sm" onclick="exportReportsPDF()">PDF</button>
           </div>
           <div class="tbl-wrap">
             <table>
@@ -923,7 +939,8 @@ th.sortable:hover{color:var(--green);}
             <select id="actionTypeFilter" onchange="renderActionsTable()">
               <option value="">كل الإجراءات</option><option>توجيه شفهي</option><option>إنذار كتابي أول</option><option>إنذار كتابي ثاني</option><option>إنذار نهائي</option><option>خصم من درجة المواظبة</option><option>إحالة إلى عمادة شؤون الطلاب</option><option>إحالة إلى لجنة الانضباط</option><option>فصل مؤقت</option><option value="أخرى">أخرى</option>
             </select>
-            <button class="btn ghost sm" onclick="exportActionsCSV()">تصدير</button>
+            <button class="btn ghost sm" onclick="exportActionsCSV()">Excel</button>
+            <button class="btn ghost sm" onclick="exportActionsPDF()">PDF</button>
           </div>
           <div class="tbl-wrap">
             <table>
@@ -960,7 +977,19 @@ th.sortable:hover{color:var(--green);}
             <div class="field"><label>اسم المستخدم</label><input type="text" id="memberUsernameInput" placeholder="username" dir="ltr"/></div>
             <div class="field"><label>كلمة السر</label><input type="text" id="memberPasswordInput" placeholder="كلمة السر"/></div>
             <div class="field"><label>الاسم الظاهر</label><input type="text" id="memberDisplayNameInput" placeholder="مثال: أ. سارة القحطاني"/></div>
-            <div class="field"><label>الصلاحية</label><select id="memberRoleInput"><option value="both">تسجيل مخالفات + لوحة اللجنة</option><option value="recorder">تسجيل مخالفات فقط</option><option value="committee">لوحة اللجنة فقط</option></select></div>
+            <div class="field"><label>الصلاحية (الدور)</label><select id="memberRoleInput">
+              <option value="super">مشرف عام — كل الصلاحيات</option>
+              <option value="governance">مشرف الحوكمة — أرشفة/استعادة/اعتماد التعديلات</option>
+              <option value="chair">رئيس اللجنة — اتخاذ إجراء + اعتماد طلبات التعديل</option>
+              <option value="committee">عضو اللجنة — عرض + اتخاذ إجراء + طلب تعديل</option>
+              <option value="supervisor">مشرف متابعة — عرض وتصدير فقط</option>
+              <option value="investigator">محقّق — تسجيل + عرض</option>
+              <option value="data_entry">مُدخل بيانات — تسجيل فقط</option>
+              <option value="auditor">مدقّق — عرض + سجل التدقيق</option>
+              <option value="readonly">اطّلاع فقط</option>
+              <option value="both">— (قديم) مشرف عام</option>
+              <option value="recorder">— (قديم) تسجيل فقط</option>
+            </select></div>
           </div>
           <div class="btn-row" style="margin-top:18px"><button class="btn primary" onclick="saveMemberForm()">إضافة / حفظ العضو</button><button class="btn ghost" onclick="resetMemberForm()">تفريغ الحقول</button></div>
         </div>
@@ -980,7 +1009,8 @@ th.sortable:hover{color:var(--green);}
             <select id="auditFilter" onchange="renderAudit()">
               <option value="">كل العمليات</option><option value="submit">تسجيل بلاغ</option><option value="status_change">تغيير حالة</option><option value="action_taken">اتخاذ إجراء</option><option value="action_edited">تعديل إجراء</option><option value="delete">حذف بلاغ</option>
             </select>
-            <button class="btn ghost sm" onclick="exportAuditCSV()">تصدير</button>
+            <button class="btn ghost sm" onclick="exportAuditCSV()">Excel</button>
+            <button class="btn ghost sm" onclick="exportAuditPDF()">PDF</button>
           </div>
           <div class="tbl-wrap">
             <table><thead><tr><th>الوقت</th><th>العملية</th><th>الطالبة</th><th>التفاصيل</th><th>السبب</th><th>المسؤول</th></tr></thead><tbody id="auditTableBody"></tbody></table>
@@ -1006,6 +1036,19 @@ th.sortable:hover{color:var(--green);}
           <div class="empty" id="archiveEmpty" style="display:none">
             <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1z"/></svg></div>
             <h4>الأرشيف فارغ</h4><p>لا توجد بلاغات مؤرشفة</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- edit requests (approvals) -->
+      <div class="subview" id="sub-requests">
+        <div class="card pad">
+          <div class="eyebrow">الحوكمة</div><h2 class="h-sec">طلبات تعديل الإجراءات المعتمدة</h2>
+          <p class="h-sub">أي تعديل على بلاغ اتُّخذ فيه إجراء يتطلّب طلباً يعتمده رئيس اللجنة أو مسؤول الحوكمة قبل تطبيقه.</p>
+          <div id="requestsList"></div>
+          <div class="empty" id="requestsEmpty" style="display:none">
+            <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg></div>
+            <h4>لا توجد طلبات</h4><p>ستظهر هنا طلبات التعديل المعلّقة والمُعتمدة</p>
           </div>
         </div>
       </div>
@@ -1055,12 +1098,19 @@ th.sortable:hover{color:var(--green);}
       </div>
       <div id="modalLockNote" class="hidden" style="margin-top:16px; background:var(--warn-bg); color:var(--warn); border:1px solid color-mix(in srgb,var(--warn) 40%,transparent); border-radius:11px; padding:12px 14px; font-size:.86rem; display:flex; align-items:center; gap:8px">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        هذا البلاغ اتُّخذ فيه إجراء — التعديل والحذف متاح للمشرف فقط.
+        <span id="modalLockText">هذا البلاغ اتُّخذ فيه إجراء — التعديل محمي.</span>
       </div>
       <div class="btn-row" style="margin-top:20px">
         <button class="btn primary" id="modalSaveBtn" onclick="saveReport()">حفظ</button>
+        <button class="btn gold" id="modalRequestBtn" style="display:none" onclick="openRequestEdit()">طلب تعديل</button>
         <button class="btn ghost" onclick="printReport()">🖨️ طباعة المحضر</button>
-        <button class="btn danger" id="modalDeleteBtn" onclick="deleteReport()">حذف</button>
+        <button class="btn danger" id="modalDeleteBtn" onclick="deleteReport()">أرشفة</button>
+      </div>
+
+      <!-- version history -->
+      <div id="versionsWrap" style="margin-top:22px; border-top:1px solid var(--border); padding-top:16px">
+        <h3 class="section-title" style="cursor:pointer" onclick="document.getElementById('versionsBody').classList.toggle('hidden')">سجل الإصدارات (اضغط للعرض)</h3>
+        <div id="versionsBody" class="hidden"></div>
       </div>
     </div>
   </div>
@@ -1100,6 +1150,24 @@ th.sortable:hover{color:var(--green);}
   </div>
 </div>
 
+<!-- Request-edit dialog -->
+<div class="overlay" id="reqOverlay">
+  <div class="modal" style="max-width:460px" role="alertdialog" aria-modal="true">
+    <div class="modal-body">
+      <div style="text-align:center">
+        <div class="confirm-ic" style="background:var(--gold-050); color:var(--gold)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+        <h3 style="margin-bottom:6px">طلب تعديل</h3>
+        <p style="color:var(--muted); font-size:.86rem; margin-bottom:16px">هذا البلاغ محمي (اتُّخذ فيه إجراء). سيُرسَل التعديل الذي أدخلتِه في النموذج كـ<b>طلب</b> يعتمده رئيس اللجنة أو مسؤول الحوكمة قبل تطبيقه.</p>
+      </div>
+      <div class="field"><label>سبب طلب التعديل <span class="req">*</span></label><textarea id="reqReason" placeholder="اشرحي سبب الحاجة للتعديل..." style="min-height:80px"></textarea></div>
+      <div class="btn-row" style="justify-content:center; margin-top:16px">
+        <button class="btn gold" id="reqConfirmBtn">إرسال الطلب</button>
+        <button class="btn ghost" onclick="closeRequestEdit()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Printable report -->
 <div id="printArea">
   <div class="print-header"><img id="printLogo" alt="جامعة الطائف — Taif University"/></div>
@@ -1128,7 +1196,27 @@ let membersCache = [];
 let notifTab = 'unread';
 
 const COLLEGES = ['كلية التربية','كلية الآداب','كلية الشريعة والأنظمة','كلية إدارة الأعمال','كلية العلوم','كلية الحاسبات','كلية التصاميم والفنون التطبيقية','كلية الطب','كلية الصيدلة','كلية الهندسة','كلية التمريض','الكلية التطبيقية / الدبلوم','كلية العلوم الطبية التطبيقية'];
-const ROLE_LABELS = {both:'تسجيل مخالفات + لوحة اللجنة', recorder:'تسجيل مخالفات فقط', committee:'لوحة اللجنة فقط'};
+const ROLE_LABELS = {
+  both:'مشرف عام', super:'مشرف عام (Super Admin)', governance:'مشرف الحوكمة', chair:'رئيس اللجنة',
+  committee:'عضو اللجنة', supervisor:'مشرف متابعة', investigator:'محقّق',
+  recorder:'مُدخل بيانات', data_entry:'مُدخل بيانات', readonly:'اطّلاع فقط', auditor:'مدقّق'
+};
+// نظام الصلاحيات RBAC — مطابق لدوال قاعدة البيانات (_caps)
+const ROLE_CAPS = {
+  both:        {submit:1,view:1,act:1,archive:1,restore:1,edit_locked:1,manage_members:1,view_audit:1,approve_edit:1,request_edit:1,export:1},
+  super:       {submit:1,view:1,act:1,archive:1,restore:1,edit_locked:1,manage_members:1,view_audit:1,approve_edit:1,request_edit:1,export:1},
+  governance:  {view:1,act:1,archive:1,restore:1,edit_locked:1,view_audit:1,approve_edit:1,export:1},
+  chair:       {view:1,act:1,view_audit:1,approve_edit:1,export:1},
+  committee:   {view:1,act:1,request_edit:1,export:1},
+  supervisor:  {view:1,export:1},
+  investigator:{submit:1,view:1},
+  recorder:    {submit:1},
+  data_entry:  {submit:1},
+  readonly:    {view:1},
+  auditor:     {view:1,view_audit:1,export:1}
+};
+function caps(){ const s=getCommitteeSession(); return (s&&ROLE_CAPS[s.role])||{}; }
+function can(cap){ return !!caps()[cap]; }
 const STATUS_META = {'جديد':{c:'#c98a1c'},'قيد المراجعة':{c:'#2f6bb0'},'تم اتخاذ إجراء':{c:'#1e8a5c'},'إغلاق دون إجراء':{c:'#8a9a92'}};
 
 // ---- Supabase RPC helper ----
@@ -1156,9 +1244,9 @@ function loadMembers(){ return membersCache; }
 async function fetchReports(){ const s=getCommitteeSession(); if(!s){reportsCache=[];return;} const rows=await sbCall('app_list_reports',{p_token:s.token}); reportsCache=(rows||[]).map(normalizeReport); }
 async function fetchMembers(){ const s=getCommitteeSession(); if(!s){membersCache=[];return;} const rows=await sbCall('app_list_members',{p_token:s.token}); membersCache=(rows||[]).map(m=>({username:m.username,displayName:m.display_name,role:m.role})); }
 let auditCache=[]; let archiveCache=[];
-async function fetchAudit(){ const s=getCommitteeSession(); if(!s||s.role!=='both'){auditCache=[];return;} try{ const rows=await sbCall('app_list_audit',{p_token:s.token}); auditCache=rows||[]; }catch(e){ auditCache=[]; } }
-async function fetchArchive(){ const s=getCommitteeSession(); if(!s||s.role!=='both'){archiveCache=[];return;} try{ const rows=await sbCall('app_list_archive',{p_token:s.token}); archiveCache=(rows||[]).map(normalizeReport); }catch(e){ archiveCache=[]; } }
-function isAdmin(){ const s=getCommitteeSession(); return !!(s&&s.role==='both'); }
+async function fetchAudit(){ const s=getCommitteeSession(); if(!s||!can('view_audit')){auditCache=[];return;} try{ const rows=await sbCall('app_list_audit',{p_token:s.token}); auditCache=Array.isArray(rows)?rows:[]; }catch(e){ auditCache=[]; } }
+async function fetchArchive(){ const s=getCommitteeSession(); if(!s||!can('restore')){archiveCache=[];return;} try{ const rows=await sbCall('app_list_archive',{p_token:s.token}); archiveCache=(Array.isArray(rows)?rows:[]).map(normalizeReport); }catch(e){ archiveCache=[]; } }
+function isAdmin(){ return can('manage_members'); }
 const AUDIT_EVENT={submit:'تسجيل بلاغ', status_change:'تغيير حالة', action_taken:'اتخاذ إجراء', action_edited:'تعديل إجراء', delete:'حذف/أرشفة', restore:'استعادة', update:'تحديث', login:'تسجيل دخول', logout:'تسجيل خروج', print:'طباعة محضر', export:'تصدير بيانات'};
 const AUDIT_BADGE={submit:'review', status_change:'new', action_taken:'action', action_edited:'action', delete:'closed', restore:'action', update:'new', login:'review', logout:'closed', print:'new', export:'new'};
 // device/browser (no reliable client-side IP without extra infra)
@@ -1240,6 +1328,7 @@ function switchSubView(name){
   if(name==='members') renderMembersTable();
   if(name==='audit') renderAudit();
   if(name==='archive') renderArchive();
+  if(name==='requests') renderEditRequests();
 }
 
 async function refreshDashboard(){
@@ -1250,19 +1339,21 @@ async function refreshDashboard(){
   if(session){
     document.getElementById('dashWelcome').textContent = session.displayName + ' — ' + (ROLE_LABELS[session.role]||'');
     // admin-only tabs (members / audit)
-    document.querySelector('.subnav button[data-sub="members"]').style.display = isAdmin()?'flex':'none';
-    document.querySelector('.subnav button[data-sub="audit"]').style.display = isAdmin()?'flex':'none';
-    document.querySelector('.subnav button[data-sub="archive"]').style.display = isAdmin()?'flex':'none';
+    document.querySelector('.subnav button[data-sub="members"]').style.display = can('manage_members')?'flex':'none';
+    document.querySelector('.subnav button[data-sub="audit"]').style.display = can('view_audit')?'flex':'none';
+    document.querySelector('.subnav button[data-sub="archive"]').style.display = can('restore')?'flex':'none';
+    document.querySelector('.subnav button[data-sub="requests"]').style.display = can('approve_edit')?'flex':'none';
+    document.querySelector('.subnav button[data-sub="actions"]').style.display = can('act')?'flex':'none';
     populateCollegeFilter();
     document.getElementById('dashSkeleton').style.display='block';
     document.getElementById('dashReal').style.display='none';
     document.getElementById('dashError').style.display='none';
     try {
-      await fetchReports(); await fetchMembers(); await fetchAudit(); await fetchArchive();
+      await fetchReports(); await fetchMembers(); await fetchAudit(); await fetchArchive(); await fetchEditRequests();
       document.getElementById('dashSkeleton').style.display='none';
       document.getElementById('dashReal').style.display='block';
-      renderOverview(); renderTable(); renderActionsTable(); renderMembersTable(); renderAudit(); renderArchive();
-      updateNotifDot();
+      renderOverview(); renderTable(); renderActionsTable(); renderMembersTable(); renderAudit(); renderArchive(); renderEditRequests();
+      updateNotifDot(); updateReqBadge();
     } catch(e){
       console.error(e);
       document.getElementById('dashSkeleton').style.display='none';
@@ -1278,7 +1369,7 @@ async function tryLogin(){
   const err=document.getElementById('gateError');
   try{
     const res=await sbCall('app_login',{p_username:u,p_password:p});
-    if(res.ok && (res.role==='committee'||res.role==='both')){
+    if(res.ok && ROLE_CAPS[res.role] && ROLE_CAPS[res.role].view){
       sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
       err.style.display='none'; toast('مرحباً '+res.display_name,'ok'); await refreshDashboard();
     } else if(res.error==='locked'){ err.textContent=lockMsg(res.until); err.style.display='block'; }
@@ -1305,7 +1396,7 @@ async function tryRecorderLogin(){
   const err=document.getElementById('recorderGateError');
   try{
     const res=await sbCall('app_login',{p_username:u,p_password:p});
-    if(res.ok && (res.role==='recorder'||res.role==='both')){
+    if(res.ok && ROLE_CAPS[res.role] && ROLE_CAPS[res.role].submit){
       sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
       err.style.display='none'; toast('مرحباً '+res.display_name,'ok'); refreshRecorderGate();
     } else if(res.error==='locked'){ err.textContent=lockMsg(res.until); err.style.display='block'; }
@@ -1548,6 +1639,66 @@ async function restoreReport(id){
   }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
 
+// ---- Version history (Diff) ----
+async function renderVersions(reportId){
+  const body=document.getElementById('versionsBody'); body.innerHTML='<div class="sk sk-line" style="width:50%"></div>';
+  const s=getCommitteeSession(); if(!s){ body.innerHTML=''; return; }
+  let vers=[];
+  try{ vers=await sbCall('app_list_versions',{p_token:s.token,p_report_id:reportId})||[]; }
+  catch(e){ body.innerHTML='<div class="empty" style="padding:16px"><p>سجل الإصدارات يحتاج تفعيل التحديث v4</p></div>'; return; }
+  if(!vers.length){ body.innerHTML='<div class="empty" style="padding:16px"><p>لا توجد إصدارات مسجّلة بعد</p></div>'; return; }
+  const CT={submit:'تسجيل',update:'تعديل',archive:'أرشفة',restore:'استعادة'};
+  body.innerHTML=vers.map((v,i)=>{
+    const prev=i>0?vers[i-1].snapshot:null; const diff=prev?diffSnapshot(prev,v.snapshot):[];
+    return `<div class="ver-item"><div class="ver-head"><span class="badge ${v.change_type==='submit'?'review':v.change_type==='archive'?'closed':'action'}">${CT[v.change_type]||v.change_type} · إصدار ${v.version_no}</span><span class="ver-meta">${escapeHtml(v.changed_by)||'-'} — ${new Date(v.changed_at).toLocaleString('ar-SA')}</span></div>${diff.length?`<div class="ver-diff">${diff.map(d=>`<div><b>${escapeHtml(d.label)}:</b> <span class="old">${escapeHtml(d.from)||'—'}</span> ← <span class="new">${escapeHtml(d.to)||'—'}</span></div>`).join('')}</div>`:(i>0?'<div class="ver-meta">لا تغيير في الحقول المتابَعة</div>':'')}</div>`;
+  }).reverse().join('');
+}
+function diffSnapshot(a,b){
+  const F=[['status','الحالة'],['committee_notes','ملاحظات اللجنة'],['action_type','نوع الإجراء'],['action_date','تاريخ الإجراء'],['action_by','المسؤول'],['is_deleted','مؤرشف']];
+  const out=[]; F.forEach(([k,label])=>{ const av=String(a&&a[k]!=null?a[k]:''), bv=String(b&&b[k]!=null?b[k]:''); if(av!==bv) out.push({label,from:av,to:bv}); }); return out;
+}
+
+// ---- Request-edit (for locked reports) ----
+function openRequestEdit(){ document.getElementById('reqReason').value=''; document.getElementById('reqOverlay').classList.add('show'); setTimeout(()=>document.getElementById('reqReason').focus(),50); }
+function closeRequestEdit(){ document.getElementById('reqOverlay').classList.remove('show'); }
+async function doRequestEdit(){
+  if(!activeReportId) return; const reason=document.getElementById('reqReason').value.trim();
+  if(!reason){ toast('يرجى كتابة سبب التعديل','warn'); return; }
+  const s=getCommitteeSession(); if(!s) return;
+  const proposed={ status:document.getElementById('statusSelect').value, committeeNotes:document.getElementById('committeeNotes').value, actionType:document.getElementById('actionTypeSelect').value, actionDate:document.getElementById('actionDateInput').value, actionBy:document.getElementById('actionByInput').value };
+  try{
+    const res=await sbCall('app_request_edit',{p_token:s.token,p_id:activeReportId,p_proposed:proposed,p_reason:reason});
+    if(!res.ok){ toast(res.error==='unauthorized'?'لا تملكين صلاحية طلب التعديل':'تعذّر إرسال الطلب','err'); return; }
+    closeRequestEdit(); closeModal(); toast('تم إرسال طلب التعديل للاعتماد','ok');
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
+}
+
+// ---- Edit-request approvals ----
+let editReqCache=[];
+async function fetchEditRequests(){ const s=getCommitteeSession(); if(!s||!can('approve_edit')){editReqCache=[];return;} try{ const rows=await sbCall('app_list_edit_requests',{p_token:s.token}); editReqCache=Array.isArray(rows)?rows:[]; }catch(e){ editReqCache=[]; } }
+function renderEditRequests(){
+  const el=document.getElementById('requestsList'); if(!el) return;
+  document.getElementById('requestsEmpty').style.display=editReqCache.length?'none':'block';
+  el.innerHTML=editReqCache.map(r=>{
+    const p=r.proposed||{}; const isPending=r.status==='pending';
+    return `<div class="req-card"><div class="req-top"><div><b>${escapeHtml(r.student_name)||'-'}</b> <span class="badge ${isPending?'new':r.status==='approved'?'action':'closed'}">${isPending?'معلّق':r.status==='approved'?'معتمد':'مرفوض'}</span></div><span class="ver-meta">${escapeHtml(r.requested_by)} — ${new Date(r.requested_at).toLocaleString('ar-SA')}</span></div>
+    <div class="req-body"><div><b>التعديل المقترح:</b> الحالة = ${escapeHtml(p.status||'-')} · الإجراء = ${escapeHtml(p.actionType||'-')} (${escapeHtml(p.actionDate||'-')})</div><div style="color:var(--muted)"><b>السبب:</b> ${escapeHtml(r.reason)}</div></div>
+    ${isPending?`<div class="btn-row" style="margin-top:10px"><button class="btn primary sm" onclick="decideEdit(${r.id},true)">اعتماد وتطبيق</button><button class="btn ghost sm" onclick="decideEdit(${r.id},false)">رفض</button></div>`:`<div class="ver-meta" style="margin-top:8px">القرار بواسطة: ${escapeHtml(r.decided_by)||'-'}</div>`}</div>`;
+  }).join('');
+}
+async function decideEdit(id, approve){
+  if(!await confirmDialog(approve?'اعتماد التعديل':'رفض الطلب', approve?'سيُطبَّق التعديل على البلاغ فوراً ويُسجَّل في التدقيق. متابعة؟':'سيُرفض طلب التعديل دون تطبيق. متابعة؟')) return;
+  const s=getCommitteeSession(); if(!s) return;
+  try{
+    const res=await sbCall('app_decide_edit',{p_token:s.token,p_request_id:id,p_approve:approve});
+    if(!res.ok){ toast('تعذّر تنفيذ القرار','err'); return; }
+    await fetchEditRequests(); await fetchReports(); await fetchAudit();
+    renderEditRequests(); renderOverview(); renderTable(); renderActionsTable(); renderAudit(); updateReqBadge();
+    toast(approve?'تم اعتماد التعديل وتطبيقه':'تم رفض الطلب','ok');
+  }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
+}
+function updateReqBadge(){ const b=document.getElementById('reqBadge'); if(!b) return; const n=editReqCache.filter(r=>r.status==='pending').length; if(n&&can('approve_edit')){ b.textContent=n; b.style.display='inline-flex'; } else b.style.display='none'; }
+
 // ---- Student history ----
 function renderStudentHistory(){
   const q=(document.getElementById('studentSearchInput').value||'').trim(); const el=document.getElementById('studentHistoryResult');
@@ -1594,12 +1745,24 @@ function openModal(id){
   document.getElementById('actionDateInput').value=r.actionDate||'';
   document.getElementById('actionByInput').value=r.actionBy||(getCommitteeSession()?getCommitteeSession().displayName:'');
   toggleActionBox();
-  // ── Role-based protection ──
-  const admin=isAdmin(); const hasAction=!!r.actionType; const locked=hasAction && !admin;
-  document.getElementById('modalDeleteBtn').style.display = admin ? 'inline-flex':'none';
-  document.getElementById('modalSaveBtn').style.display = locked ? 'none':'inline-flex';
-  document.getElementById('modalLockNote').classList.toggle('hidden', !locked);
-  ['committeeNotes','statusSelect','actionTypeSelect','actionDateInput','actionByInput'].forEach(id=>{ const el=document.getElementById(id); if(el) el.disabled=locked; });
+  // ── Capability-based protection (RBAC) ──
+  const canActC=can('act'), canArch=can('archive'), canEditLocked=can('edit_locked'), canReq=can('request_edit');
+  const hasAction=!!r.actionType; const closed=(r.status==='إغلاق دون إجراء');
+  const locked = hasAction || closed;
+  const editable = canActC && (!locked || canEditLocked);
+  document.getElementById('modalDeleteBtn').style.display = canArch ? 'inline-flex':'none';
+  document.getElementById('modalSaveBtn').style.display = editable ? 'inline-flex':'none';
+  const showReq = locked && canActC && !canEditLocked && canReq;
+  document.getElementById('modalRequestBtn').style.display = showReq ? 'inline-flex':'none';
+  const lockNote=document.getElementById('modalLockNote');
+  lockNote.classList.toggle('hidden', editable || !canActC && !locked);
+  document.getElementById('modalLockText').textContent = !canActC
+    ? 'صلاحيتك للاطّلاع فقط — لا يمكنك تعديل هذا البلاغ.'
+    : showReq ? 'هذا البلاغ محمي (اتُّخذ فيه إجراء) — عدّلي القيم ثم اضغطي «طلب تعديل» لاعتماده.'
+    : 'هذا البلاغ محمي — التعديل متاح لمسؤول الحوكمة فقط.';
+  ['committeeNotes','statusSelect','actionTypeSelect','actionDateInput','actionByInput'].forEach(id=>{ const el=document.getElementById(id); if(el) el.disabled=!editable && !showReq; });
+  document.getElementById('versionsBody').classList.add('hidden');
+  renderVersions(id);
   document.getElementById('modalOverlay').classList.add('show');
 }
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); activeReportId=null; }
@@ -1644,6 +1807,8 @@ async function doDelete(){
   finally{ btn.disabled=false; btn.textContent='تأكيد الأرشفة'; }
 }
 document.getElementById('delConfirmBtn').addEventListener('click', doDelete);
+document.getElementById('reqConfirmBtn').addEventListener('click', doRequestEdit);
+document.getElementById('reqOverlay').addEventListener('click', e=>{ if(e.target.id==='reqOverlay') closeRequestEdit(); });
 document.getElementById('delOverlay').addEventListener('click', e=>{ if(e.target.id==='delOverlay') closeDelDialog(); });
 
 // ---- Exports ----
@@ -1666,6 +1831,36 @@ function downloadCSV(headers,rows,prefix){
   rows.forEach(row=>{ csv+=row.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')+'\n'; });
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download=prefix+new Date().toISOString().slice(0,10)+'.csv'; a.click(); URL.revokeObjectURL(url);
+}
+// ---- PDF export (formatted, printable) ----
+function exportTablePDF(title, headers, rows){
+  if(!rows.length){ toast('لا توجد بيانات للتصدير','warn'); return; }
+  const w=window.open('','_blank'); if(!w){ toast('يرجى السماح بالنوافذ المنبثقة للطباعة','warn'); return; }
+  const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const style='<style>@page{size:A4 landscape;margin:12mm}body{font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif;direction:rtl;color:#14231d;margin:0}.hd{border-bottom:3px solid #c9a227;padding-bottom:10px;margin-bottom:6px;display:flex;justify-content:center}.hd img{width:110px}.sub{text-align:center;color:#666;font-size:.8rem;margin:2px 0}h1{color:#0d5c46;text-align:center;font-size:1.15rem;margin:10px 0}table{width:100%;border-collapse:collapse;font-size:.72rem}th,td{border:1px solid #cfd8d3;padding:6px 8px;text-align:right}th{background:#eef4f0;color:#0d5c46}tr:nth-child(even) td{background:#f8fbf9}.ft{margin-top:14px;font-size:.7rem;color:#888;display:flex;justify-content:space-between}</style>';
+  const s=getCommitteeSession();
+  w.document.write('<html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>'+esc(title)+'</title>'+style+'</head><body>'+
+    '<div class="hd"><img src="'+TU_LOGO+'" alt="جامعة الطائف"></div>'+
+    '<div class="sub">جامعة الطائف — لجنة متابعة مخالفات الملبس والمظهر</div>'+
+    '<h1>'+esc(title)+'</h1>'+
+    '<table><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+
+    rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>'+
+    '<div class="ft"><span>عدد السجلات: '+rows.length+'</span><span>طُبع بواسطة: '+esc(s?s.displayName:'-')+' — '+new Date().toLocaleString('ar-SA')+'</span></div>'+
+    '</body></html>');
+  w.document.close(); setTimeout(()=>{ try{w.focus();w.print();}catch(e){} }, 500);
+  logEvent('export','تصدير PDF — '+title);
+}
+function exportReportsPDF(){
+  const rows=filteredReports().map(r=>[new Date(r.createdAt).toLocaleDateString('ar-SA'),r.studentName,r.universityId,collegeLabel(r),violationTypesLabel(r),r.status]);
+  exportTablePDF('تقرير البلاغات', ['التاريخ','اسم الطالبة','الرقم الجامعي','الكلية','نوع المخالفة','الحالة'], rows);
+}
+function exportActionsPDF(){
+  const rows=loadReports().filter(r=>r.status==='تم اتخاذ إجراء'&&r.actionType).map(r=>[r.actionDate||'-',r.studentName,r.universityId,r.actionType,r.actionBy||'-']);
+  exportTablePDF('سجل الإجراءات', ['تاريخ الإجراء','اسم الطالبة','الرقم الجامعي','نوع الإجراء','المسؤول'], rows);
+}
+function exportAuditPDF(){
+  const rows=auditCache.map(a=>[new Date(a.ts).toLocaleString('ar-SA'),AUDIT_EVENT[a.event]||a.event,a.student_name||'-',a.details||'-',a.reason||'-',a.actor||'-']);
+  exportTablePDF('سجل التدقيق', ['الوقت','العملية','الطالبة','التفاصيل','السبب','المسؤول'], rows);
 }
 
 // ---- Profile ----
@@ -1748,7 +1943,7 @@ document.getElementById('committeeUsername').addEventListener('keydown', e=>{ if
 document.getElementById('recorderUsername').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
 document.getElementById('recorderPassword').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
 document.getElementById('studentSearchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') renderStudentHistory(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeNotifs(); closeDelDialog(); if(document.getElementById('confirmOverlay').classList.contains('show')) resolveConfirm(false); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeNotifs(); closeDelDialog(); closeRequestEdit(); if(document.getElementById('confirmOverlay').classList.contains('show')) resolveConfirm(false); } });
 document.querySelector('.brand').addEventListener('keydown', e=>{ if(e.key==='Enter') go('home'); });
 
 // ---- Light parallax on hero ----
