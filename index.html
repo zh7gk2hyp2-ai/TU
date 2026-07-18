@@ -837,6 +837,7 @@ th.sortable:hover{color:var(--green);}
         <button data-sub="actions" onclick="switchSubView('actions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>الإجراءات</button>
         <button data-sub="student" onclick="switchSubView('student')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>سجل الطالبة</button>
         <button data-sub="members" onclick="switchSubView('members')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>الأعضاء</button>
+        <button data-sub="audit" onclick="switchSubView('audit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/><path d="M3 3l2 2M21 3l-2 2"/></svg>سجل التدقيق</button>
       </div>
 
       <!-- overview -->
@@ -968,6 +969,28 @@ th.sortable:hover{color:var(--green);}
         </div>
       </div>
 
+      <!-- audit log -->
+      <div class="subview" id="sub-audit">
+        <div class="card pad">
+          <div class="eyebrow">الرقابة</div><h2 class="h-sec">سجل التدقيق</h2>
+          <p class="h-sub">توثيق كامل لكل العمليات (التسجيل، الإجراءات، التعديلات، الحذف) مع المسؤول والوقت — للمشرف فقط.</p>
+          <div class="toolbar">
+            <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" id="auditSearch" placeholder="بحث بالاسم أو العضو..." oninput="renderAudit()" autocomplete="off"/></div>
+            <select id="auditFilter" onchange="renderAudit()">
+              <option value="">كل العمليات</option><option value="submit">تسجيل بلاغ</option><option value="status_change">تغيير حالة</option><option value="action_taken">اتخاذ إجراء</option><option value="action_edited">تعديل إجراء</option><option value="delete">حذف بلاغ</option>
+            </select>
+            <button class="btn ghost sm" onclick="exportAuditCSV()">تصدير</button>
+          </div>
+          <div class="tbl-wrap">
+            <table><thead><tr><th>الوقت</th><th>العملية</th><th>الطالبة</th><th>التفاصيل</th><th>السبب</th><th>المسؤول</th></tr></thead><tbody id="auditTableBody"></tbody></table>
+          </div>
+          <div class="empty" id="auditEmpty" style="display:none">
+            <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+            <h4>لا توجد سجلات بعد</h4><p>ستظهر هنا كل العمليات فور حدوثها</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1011,10 +1034,14 @@ th.sortable:hover{color:var(--green);}
           <div class="field full"><label>اسم عضو اللجنة المسؤول</label><input type="text" id="actionByInput" placeholder="أدخل الاسم"/></div>
         </div>
       </div>
+      <div id="modalLockNote" class="hidden" style="margin-top:16px; background:var(--warn-bg); color:var(--warn); border:1px solid color-mix(in srgb,var(--warn) 40%,transparent); border-radius:11px; padding:12px 14px; font-size:.86rem; display:flex; align-items:center; gap:8px">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        هذا البلاغ اتُّخذ فيه إجراء — التعديل والحذف متاح للمشرف فقط.
+      </div>
       <div class="btn-row" style="margin-top:20px">
-        <button class="btn primary" onclick="saveReport()">حفظ</button>
+        <button class="btn primary" id="modalSaveBtn" onclick="saveReport()">حفظ</button>
         <button class="btn ghost" onclick="printReport()">🖨️ طباعة المحضر</button>
-        <button class="btn danger" onclick="deleteReport()">حذف</button>
+        <button class="btn danger" id="modalDeleteBtn" onclick="deleteReport()">حذف</button>
       </div>
     </div>
   </div>
@@ -1030,6 +1057,24 @@ th.sortable:hover{color:var(--green);}
       <div class="btn-row" style="justify-content:center">
         <button class="btn danger" id="confirmYes">تأكيد</button>
         <button class="btn ghost" onclick="resolveConfirm(false)">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete-with-reason dialog (admin only) -->
+<div class="overlay" id="delOverlay">
+  <div class="modal" style="max-width:460px" role="alertdialog" aria-modal="true">
+    <div class="modal-body">
+      <div style="text-align:center">
+        <div class="confirm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+        <h3 style="margin-bottom:6px">حذف البلاغ نهائياً</h3>
+        <p style="color:var(--muted); font-size:.88rem; margin-bottom:16px">هذا الإجراء لا يمكن التراجع عنه ويُسجَّل في سجل التدقيق. يرجى كتابة سبب الحذف.</p>
+      </div>
+      <div class="field"><label>سبب الحذف <span class="req">*</span></label><textarea id="delReason" placeholder="مثال: بلاغ مكرر / خطأ في الإدخال..." style="min-height:80px"></textarea></div>
+      <div class="btn-row" style="justify-content:center; margin-top:16px">
+        <button class="btn danger" id="delConfirmBtn">تأكيد الحذف</button>
+        <button class="btn ghost" onclick="closeDelDialog()">إلغاء</button>
       </div>
     </div>
   </div>
@@ -1086,6 +1131,11 @@ function loadReports(){ return reportsCache; }
 function loadMembers(){ return membersCache; }
 async function fetchReports(){ const s=getCommitteeSession(); if(!s){reportsCache=[];return;} const rows=await sbCall('app_list_reports',{p_token:s.token}); reportsCache=(rows||[]).map(normalizeReport); }
 async function fetchMembers(){ const s=getCommitteeSession(); if(!s){membersCache=[];return;} const rows=await sbCall('app_list_members',{p_token:s.token}); membersCache=(rows||[]).map(m=>({username:m.username,displayName:m.display_name,role:m.role})); }
+let auditCache=[];
+async function fetchAudit(){ const s=getCommitteeSession(); if(!s||s.role!=='both'){auditCache=[];return;} try{ const rows=await sbCall('app_list_audit',{p_token:s.token}); auditCache=rows||[]; }catch(e){ auditCache=[]; } }
+function isAdmin(){ const s=getCommitteeSession(); return !!(s&&s.role==='both'); }
+const AUDIT_EVENT={submit:'تسجيل بلاغ', status_change:'تغيير حالة', action_taken:'اتخاذ إجراء', action_edited:'تعديل إجراء', delete:'حذف بلاغ', update:'تحديث'};
+const AUDIT_BADGE={submit:'review', status_change:'new', action_taken:'action', action_edited:'action', delete:'closed', update:'new'};
 
 // ═══ Theme ═══
 const SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
@@ -1159,6 +1209,7 @@ function switchSubView(name){
   if(name==='reports') renderTable();
   if(name==='actions') renderActionsTable();
   if(name==='members') renderMembersTable();
+  if(name==='audit') renderAudit();
 }
 
 async function refreshDashboard(){
@@ -1168,15 +1219,18 @@ async function refreshDashboard(){
   document.getElementById('logoutBtn').style.display = session ? 'inline-flex' : 'none';
   if(session){
     document.getElementById('dashWelcome').textContent = session.displayName + ' — ' + (ROLE_LABELS[session.role]||'');
+    // admin-only tabs (members / audit)
+    document.querySelector('.subnav button[data-sub="members"]').style.display = isAdmin()?'flex':'none';
+    document.querySelector('.subnav button[data-sub="audit"]').style.display = isAdmin()?'flex':'none';
     populateCollegeFilter();
     document.getElementById('dashSkeleton').style.display='block';
     document.getElementById('dashReal').style.display='none';
     document.getElementById('dashError').style.display='none';
     try {
-      await fetchReports(); await fetchMembers();
+      await fetchReports(); await fetchMembers(); await fetchAudit();
       document.getElementById('dashSkeleton').style.display='none';
       document.getElementById('dashReal').style.display='block';
-      renderOverview(); renderTable(); renderActionsTable(); renderMembersTable();
+      renderOverview(); renderTable(); renderActionsTable(); renderMembersTable(); renderAudit();
       updateNotifDot();
     } catch(e){
       console.error(e);
@@ -1419,6 +1473,26 @@ function renderActionsTable(){
   filtered.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.actionDate||'-'}</td><td>${escapeHtml(r.studentName)}</td><td dir="ltr" style="text-align:start">${escapeHtml(r.universityId)}</td><td><span class="badge action">${escapeHtml(r.actionType)}</span></td><td>${escapeHtml(r.actionBy)||'-'}</td><td class="row-actions"><button onclick="openModal('${r.id}')">عرض</button></td>`; tbody.appendChild(tr); });
 }
 
+// ---- Audit log ----
+function renderAudit(){
+  const tbody=document.getElementById('auditTableBody'); if(!tbody) return;
+  const q=(document.getElementById('auditSearch').value||'').trim();
+  const f=document.getElementById('auditFilter').value;
+  const rows=auditCache.filter(a=>{
+    const mq=!q||((a.student_name||'')+(a.actor||'')).includes(q);
+    const mf=!f||a.event===f; return mq&&mf;
+  });
+  tbody.innerHTML='';
+  document.getElementById('auditEmpty').style.display=rows.length?'none':'block';
+  rows.forEach(a=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td style="white-space:nowrap">${new Date(a.ts).toLocaleString('ar-SA')}</td><td><span class="badge ${AUDIT_BADGE[a.event]||'new'}">${AUDIT_EVENT[a.event]||a.event}</span></td><td>${escapeHtml(a.student_name)||'-'}</td><td>${escapeHtml(a.details)||'-'}</td><td>${escapeHtml(a.reason)||'-'}</td><td>${escapeHtml(a.actor)||'-'}</td>`; tbody.appendChild(tr); });
+}
+function exportAuditCSV(){
+  if(!auditCache.length){ toast('لا توجد سجلات للتصدير','warn'); return; }
+  const headers=['الوقت','العملية','الطالبة','رقم البلاغ','التفاصيل','السبب','المسؤول'];
+  const rows=auditCache.map(a=>[new Date(a.ts).toLocaleString('ar-SA'), AUDIT_EVENT[a.event]||a.event, a.student_name, a.report_id, a.details, a.reason, a.actor]);
+  downloadCSV(headers,rows,'سجل_التدقيق_'); toast('تم تصدير السجل','ok');
+}
+
 // ---- Student history ----
 function renderStudentHistory(){
   const q=(document.getElementById('studentSearchInput').value||'').trim(); const el=document.getElementById('studentHistoryResult');
@@ -1460,7 +1534,14 @@ function openModal(id){
   document.getElementById('actionTypeSelect').value=r.actionType||'';
   document.getElementById('actionDateInput').value=r.actionDate||'';
   document.getElementById('actionByInput').value=r.actionBy||(getCommitteeSession()?getCommitteeSession().displayName:'');
-  toggleActionBox(); document.getElementById('modalOverlay').classList.add('show');
+  toggleActionBox();
+  // ── Role-based protection ──
+  const admin=isAdmin(); const hasAction=!!r.actionType; const locked=hasAction && !admin;
+  document.getElementById('modalDeleteBtn').style.display = admin ? 'inline-flex':'none';
+  document.getElementById('modalSaveBtn').style.display = locked ? 'none':'inline-flex';
+  document.getElementById('modalLockNote').classList.toggle('hidden', !locked);
+  ['committeeNotes','statusSelect','actionTypeSelect','actionDateInput','actionByInput'].forEach(id=>{ const el=document.getElementById(id); if(el) el.disabled=locked; });
+  document.getElementById('modalOverlay').classList.add('show');
 }
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); activeReportId=null; }
 async function saveReport(){
@@ -1468,20 +1549,32 @@ async function saveReport(){
   const status=document.getElementById('statusSelect').value; const isAction=status==='تم اتخاذ إجراء';
   try{
     const res=await sbCall('app_update_report',{p_token:s.token,p_id:activeReportId,p_status:status,p_committee_notes:document.getElementById('committeeNotes').value,p_action_type:isAction?document.getElementById('actionTypeSelect').value:'',p_action_date:isAction?document.getElementById('actionDateInput').value:'',p_action_by:isAction?document.getElementById('actionByInput').value:''});
-    if(!res.ok){ toast('تعذّر حفظ التعديل','err'); return; }
-    closeModal(); await fetchReports(); renderOverview(); renderTable(); renderActionsTable(); updateNotifDot(); toast('تم حفظ التعديل','ok');
+    if(!res.ok){ toast(res.error==='action_locked'?'لا يمكنكِ تعديل إجراء مسجّل — المشرف فقط':res.error==='unauthorized'?'ليست لديكِ صلاحية':'تعذّر حفظ التعديل','err'); return; }
+    closeModal(); await fetchReports(); await fetchAudit(); renderOverview(); renderTable(); renderActionsTable(); renderAudit(); updateNotifDot(); toast('تم حفظ التعديل','ok');
   }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
-async function deleteReport(){
+// ── Delete (admin only, requires reason, audited) ──
+function deleteReport(){
   if(!activeReportId) return;
-  if(!await confirmDialog('حذف البلاغ','سيتم حذف هذا البلاغ نهائياً ولا يمكن التراجع. هل أنت متأكدة؟')) return;
+  if(!isAdmin()){ toast('حذف البلاغات متاح للمشرف فقط','warn'); return; }
+  document.getElementById('delReason').value='';
+  document.getElementById('delOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('delReason').focus(),50);
+}
+function closeDelDialog(){ document.getElementById('delOverlay').classList.remove('show'); }
+async function doDelete(){
+  if(!activeReportId) return;
+  const reason=document.getElementById('delReason').value.trim();
+  if(!reason){ toast('يرجى كتابة سبب الحذف','warn'); return; }
   const s=getCommitteeSession(); if(!s) return;
   try{
-    const res=await sbCall('app_delete_report',{p_token:s.token,p_id:activeReportId});
-    if(!res.ok){ toast('تعذّر الحذف','err'); return; }
-    closeModal(); await fetchReports(); renderOverview(); renderTable(); renderActionsTable(); toast('تم حذف البلاغ','ok');
+    const res=await sbCall('app_delete_report',{p_token:s.token,p_id:activeReportId,p_reason:reason});
+    if(!res.ok){ toast(res.error==='unauthorized'?'حذف البلاغات للمشرف فقط':res.error==='reason_required'?'يرجى كتابة سبب الحذف':'تعذّر الحذف','err'); return; }
+    closeDelDialog(); closeModal(); await fetchReports(); await fetchAudit(); renderOverview(); renderTable(); renderActionsTable(); renderAudit(); toast('تم حذف البلاغ وتسجيله في سجل التدقيق','ok');
   }catch(e){ toast('تعذّر الاتصال بقاعدة البيانات','err'); }
 }
+document.getElementById('delConfirmBtn').addEventListener('click', doDelete);
+document.getElementById('delOverlay').addEventListener('click', e=>{ if(e.target.id==='delOverlay') closeDelDialog(); });
 
 // ---- Exports ----
 function exportReportsCSV(){
@@ -1585,7 +1678,7 @@ document.getElementById('committeeUsername').addEventListener('keydown', e=>{ if
 document.getElementById('recorderUsername').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
 document.getElementById('recorderPassword').addEventListener('keydown', e=>{ if(e.key==='Enter') tryRecorderLogin(); });
 document.getElementById('studentSearchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') renderStudentHistory(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeNotifs(); if(document.getElementById('confirmOverlay').classList.contains('show')) resolveConfirm(false); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeNotifs(); closeDelDialog(); if(document.getElementById('confirmOverlay').classList.contains('show')) resolveConfirm(false); } });
 document.querySelector('.brand').addEventListener('keydown', e=>{ if(e.key==='Enter') go('home'); });
 
 // ---- Light parallax on hero ----
