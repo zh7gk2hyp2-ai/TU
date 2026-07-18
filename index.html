@@ -526,20 +526,22 @@ th.sortable:hover{color:var(--green);}
 /* ═══ Print ═══ */
 #printArea{display:none;}
 @media print{
-  body *{visibility:hidden;}
-  #printArea, #printArea *{visibility:visible;}
-  #printArea{display:block; position:absolute; top:0; inset-inline:0; margin:0 auto; padding:24px; width:100%;}
-  .print-header{display:flex; justify-content:center; align-items:center; border-bottom:3px solid #C9A227; padding-bottom:12px;}
-  #printLogo{width:120px; height:auto;}
-  .print-meta{direction:rtl; display:flex; justify-content:space-between; font-size:.72rem; color:#777; margin-top:14px; border-top:1px dashed #ccc; padding-top:8px;}
-  .print-committee{direction:rtl; text-align:center; color:#555; font-size:.85rem; margin:10px 0;}
-  .print-title{direction:rtl; text-align:center; color:var(--green-700); margin:14px 0; font-size:1.2rem;}
-  .print-table{direction:rtl; width:100%; border-collapse:collapse; margin-top:10px;}
-  .print-table td{border:1px solid #ccc; padding:8px 10px; font-size:.88rem;}
-  .print-table td.k{background:#f0f5f2; font-weight:700; width:32%;}
-  .print-signatures{direction:rtl; display:flex; justify-content:space-between; margin-top:60px; gap:20px;}
-  .print-signatures div{flex:1; text-align:center; font-size:.85rem;}
-  .print-signatures hr{margin-top:40px; border:none; border-top:1px solid #999;}
+  @page{ size:A4 portrait; margin:11mm 12mm; }
+  html,body{ height:auto; background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body > *{ display:none !important; }
+  #printArea{display:flex !important; flex-direction:column; margin:0; padding:0; width:100%; height:262mm; overflow:hidden; break-inside:avoid;}
+  .print-header{display:flex; justify-content:center; align-items:center; border-bottom:2.5px solid #C9A227; padding-bottom:7px; flex:0 0 auto;}
+  #printLogo{width:74px; height:auto;}
+  .print-committee{direction:rtl; text-align:center; color:#555; font-size:.8rem; margin:6px 0 2px; flex:0 0 auto;}
+  .print-title{direction:rtl; text-align:center; color:#083a2c; margin:8px 0 6px; font-size:1.08rem; flex:0 0 auto;}
+  .print-table{direction:rtl; width:100%; border-collapse:collapse; table-layout:fixed; flex:0 0 auto;}
+  .print-table td{border:1px solid #cfd8d3; padding:4.5px 9px; font-size:.8rem; line-height:1.4; word-break:break-word; vertical-align:top;}
+  .print-table td.k{background:#f0f5f2; font-weight:700; width:30%;}
+  .print-table tr{ break-inside:avoid; }
+  .print-meta{direction:rtl; display:flex; justify-content:space-between; font-size:.68rem; color:#777; margin-top:8px; border-top:1px dashed #ccc; padding-top:6px; flex:0 0 auto;}
+  .print-signatures{direction:rtl; display:flex; justify-content:space-between; margin-top:auto; padding-top:24px; gap:18px; flex:0 0 auto;}
+  .print-signatures div{flex:1; text-align:center; font-size:.8rem;}
+  .print-signatures hr{margin-top:30px; border:none; border-top:1px solid #999;}
 }
 </style>
 </head>
@@ -744,12 +746,21 @@ th.sortable:hover{color:var(--green);}
     <div class="gate" id="recorderGateBox">
       <div class="card">
         <div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <h2>دخول تسجيل المخالفات</h2>
-        <p class="sub">سجّلي الدخول باسم العضو وكلمة السر لتسجيل مخالفة</p>
-        <div class="field"><label>اسم العضو</label><input type="text" id="recorderUsername" placeholder="اسم المستخدم" autocomplete="username"/></div>
+        <h2>تسجيل الدخول</h2>
+        <p class="sub">أدخلي اسم المستخدم وكلمة السر للوصول إلى المنصة</p>
+        <div class="field"><label>اسم المستخدم</label><input type="text" id="recorderUsername" placeholder="اسم المستخدم" autocomplete="username"/></div>
         <div class="field"><label>كلمة السر</label><input type="password" id="recorderPassword" placeholder="كلمة السر" autocomplete="current-password"/></div>
-        <button class="btn primary" style="width:100%; margin-top:8px" onclick="tryRecorderLogin()">تسجيل الدخول</button>
+        <button class="btn primary" style="width:100%; margin-top:8px" onclick="tryRecorderLogin()">دخول</button>
         <p class="err" id="recorderGateError">اسم المستخدم أو كلمة السر غير صحيحة</p>
+      </div>
+    </div>
+
+    <div class="gate" id="recorderNoPerm" style="display:none">
+      <div class="card">
+        <div class="lock" style="background:var(--danger-bg); color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.9 4.9l14.2 14.2"/></svg></div>
+        <h2>لا توجد لديك صلاحية</h2>
+        <p class="sub">حسابك لا يملك صلاحية تسجيل المخالفات على هذه الصفحة. إذا كنت تعتقد أن هذا خطأ، تواصل مع مسؤول النظام.</p>
+        <div class="btn-row" style="justify-content:center"><button class="btn primary" onclick="go('dashboard')">الذهاب للوحة اللجنة</button><button class="btn ghost" onclick="go('home')">الرئيسية</button></div>
       </div>
     </div>
 
@@ -826,12 +837,21 @@ th.sortable:hover{color:var(--green);}
     <div class="gate" id="gateBox">
       <div class="card">
         <div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <h2>دخول أعضاء اللجنة</h2>
-        <p class="sub">سجّلي الدخول باسم العضو وكلمة السر</p>
-        <div class="field"><label>اسم العضو</label><input type="text" id="committeeUsername" placeholder="اسم المستخدم" autocomplete="username"/></div>
+        <h2>تسجيل الدخول</h2>
+        <p class="sub">أدخلي اسم المستخدم وكلمة السر للوصول إلى المنصة</p>
+        <div class="field"><label>اسم المستخدم</label><input type="text" id="committeeUsername" placeholder="اسم المستخدم" autocomplete="username"/></div>
         <div class="field"><label>كلمة السر</label><input type="password" id="passInput" placeholder="كلمة السر" autocomplete="current-password"/></div>
-        <button class="btn primary" style="width:100%; margin-top:8px" onclick="tryLogin()">تسجيل الدخول</button>
+        <button class="btn primary" style="width:100%; margin-top:8px" onclick="tryLogin()">دخول</button>
         <p class="err" id="gateError">اسم المستخدم أو كلمة السر غير صحيحة</p>
+      </div>
+    </div>
+
+    <div class="gate" id="dashNoPerm" style="display:none">
+      <div class="card">
+        <div class="lock" style="background:var(--danger-bg); color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.9 4.9l14.2 14.2"/></svg></div>
+        <h2>لا توجد لديك صلاحية</h2>
+        <p class="sub">حسابك لا يملك صلاحية الوصول إلى لوحة اللجنة. إذا كنت تعتقد أن هذا خطأ، تواصل مع مسؤول النظام.</p>
+        <div class="btn-row" style="justify-content:center"><button class="btn primary" onclick="go('submit')">الذهاب لتسجيل بلاغ</button><button class="btn ghost" onclick="go('home')">الرئيسية</button></div>
       </div>
     </div>
 
@@ -1215,7 +1235,7 @@ const ROLE_CAPS = {
   readonly:    {view:1},
   auditor:     {view:1,view_audit:1,export:1}
 };
-function caps(){ const s=getCommitteeSession(); return (s&&ROLE_CAPS[s.role])||{}; }
+function caps(){ const s=getSession(); return (s&&ROLE_CAPS[s.role])||{}; }
 function can(cap){ return !!caps()[cap]; }
 const STATUS_META = {'جديد':{c:'#c98a1c'},'قيد المراجعة':{c:'#2f6bb0'},'تم اتخاذ إجراء':{c:'#1e8a5c'},'إغلاق دون إجراء':{c:'#8a9a92'}};
 
@@ -1237,8 +1257,12 @@ function normalizeReport(r){
     actionType:r.action_type||'', actionDate:r.action_date||'', actionBy:r.action_by||'',
     deletedAt:r.deleted_at||'', deletedBy:r.deleted_by||'', deleteReason:r.delete_reason||''};
 }
-function getRecorderSession(){ try { return JSON.parse(sessionStorage.getItem(RECORDER_SESSION_KEY)); } catch(e){ return null; } }
-function getCommitteeSession(){ try { return JSON.parse(sessionStorage.getItem(COMMITTEE_SESSION_KEY)); } catch(e){ return null; } }
+// ── جلسة موحّدة واحدة ──
+const SESSION_KEY = 'tu_session_v1';
+function getSession(){ try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); } catch(e){ return null; } }
+// أغلفة متوافقة رجعياً: تُعيد الجلسة فقط لمن يملك القدرة المطلوبة
+function getRecorderSession(){ const s=getSession(); return (s && ROLE_CAPS[s.role] && ROLE_CAPS[s.role].submit) ? s : null; }
+function getCommitteeSession(){ const s=getSession(); return (s && ROLE_CAPS[s.role] && ROLE_CAPS[s.role].view) ? s : null; }
 function loadReports(){ return reportsCache; }
 function loadMembers(){ return membersCache; }
 async function fetchReports(){ const s=getCommitteeSession(); if(!s){reportsCache=[];return;} const rows=await sbCall('app_list_reports',{p_token:s.token}); reportsCache=(rows||[]).map(normalizeReport); }
@@ -1306,7 +1330,7 @@ function go(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   document.getElementById('navLinks').classList.remove('open');
-  document.getElementById('logoutBtn').style.display = (name==='dashboard' && getCommitteeSession()) ? 'inline-flex' : 'none';
+  updateAuthUI();
   window.scrollTo({top:0, behavior:'smooth'});
   if(name==='dashboard') refreshDashboard();
   if(name==='submit') refreshRecorderGate();
@@ -1331,14 +1355,45 @@ function switchSubView(name){
   if(name==='requests') renderEditRequests();
 }
 
+function lockMsg(until){ let t=''; try{ t=' حتى '+new Date(until).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}); }catch(e){} return 'الحساب مقفل مؤقتاً بسبب تكرار محاولات الدخول الفاشلة'+t; }
+
+// ── الدخول الموحّد ──
+async function doLogin(u, p, err){
+  try{
+    const res=await sbCall('app_login',{p_username:u,p_password:p});
+    if(res.ok && ROLE_CAPS[res.role]){
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
+      if(err) err.style.display='none';
+      toast('مرحباً '+res.display_name,'ok');
+      updateAuthUI(); refreshRecorderGate(); await refreshDashboard();
+      return true;
+    } else if(res.error==='locked'){ if(err){ err.textContent=lockMsg(res.until); err.style.display='block'; } }
+    else { if(err){ err.textContent='اسم المستخدم أو كلمة السر غير صحيحة'; err.style.display='block'; } }
+  }catch(e){ if(err){ err.textContent='تعذّر الاتصال بقاعدة البيانات'; err.style.display='block'; } }
+  return false;
+}
+function tryLogin(){ return doLogin(document.getElementById('committeeUsername').value.trim(), document.getElementById('passInput').value, document.getElementById('gateError')); }
+function tryRecorderLogin(){ return doLogin(document.getElementById('recorderUsername').value.trim(), document.getElementById('recorderPassword').value, document.getElementById('recorderGateError')); }
+
+function logout(){
+  const s=getSession(); if(s){ logEvent('logout','تسجيل خروج'); sbCall('app_logout',{p_token:s.token}).catch(()=>{}); }
+  sessionStorage.removeItem(SESSION_KEY);
+  reportsCache=[]; membersCache=[]; auditCache=[]; archiveCache=[]; editReqCache=[];
+  toast('تم تسجيل الخروج','info'); updateAuthUI(); refreshRecorderGate(); go('home'); refreshDashboard();
+}
+function logoutDashboard(){ logout(); }
+function logoutRecorder(){ logout(); }
+function updateAuthUI(){ const s=getSession(); const b=document.getElementById('logoutBtn'); if(b) b.style.display = s ? 'inline-flex':'none'; }
+
+// ── لوحة اللجنة: دخول / محتوى / لا صلاحية ──
 async function refreshDashboard(){
-  const session = getCommitteeSession();
-  document.getElementById('gateBox').style.display = session ? 'none' : 'block';
-  document.getElementById('dashboardContent').style.display = session ? 'block' : 'none';
-  document.getElementById('logoutBtn').style.display = session ? 'inline-flex' : 'none';
-  if(session){
-    document.getElementById('dashWelcome').textContent = session.displayName + ' — ' + (ROLE_LABELS[session.role]||'');
-    // admin-only tabs (members / audit)
+  const s=getSession(); const allowed = s && can('view');
+  document.getElementById('gateBox').style.display = s ? 'none' : 'block';
+  document.getElementById('dashboardContent').style.display = allowed ? 'block' : 'none';
+  document.getElementById('dashNoPerm').style.display = (s && !allowed) ? 'block' : 'none';
+  updateAuthUI();
+  if(allowed){
+    document.getElementById('dashWelcome').textContent = s.displayName + ' — ' + (ROLE_LABELS[s.role]||'');
     document.querySelector('.subnav button[data-sub="members"]').style.display = can('manage_members')?'flex':'none';
     document.querySelector('.subnav button[data-sub="audit"]').style.display = can('view_audit')?'flex':'none';
     document.querySelector('.subnav button[data-sub="archive"]').style.display = can('restore')?'flex':'none';
@@ -1363,49 +1418,13 @@ async function refreshDashboard(){
   }
 }
 
-async function tryLogin(){
-  const u=document.getElementById('committeeUsername').value.trim();
-  const p=document.getElementById('passInput').value;
-  const err=document.getElementById('gateError');
-  try{
-    const res=await sbCall('app_login',{p_username:u,p_password:p});
-    if(res.ok && ROLE_CAPS[res.role] && ROLE_CAPS[res.role].view){
-      sessionStorage.setItem(COMMITTEE_SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
-      err.style.display='none'; toast('مرحباً '+res.display_name,'ok'); await refreshDashboard();
-    } else if(res.error==='locked'){ err.textContent=lockMsg(res.until); err.style.display='block'; }
-    else { err.textContent='اسم المستخدم أو كلمة السر غير صحيحة'; err.style.display='block'; }
-  }catch(e){ err.textContent='تعذّر الاتصال بقاعدة البيانات'; err.style.display='block'; }
-}
-function lockMsg(until){ let t=''; try{ t=' حتى '+new Date(until).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}); }catch(e){} return 'الحساب مقفل مؤقتاً بسبب تكرار محاولات الدخول الفاشلة'+t; }
-function logoutDashboard(){
-  const s=getCommitteeSession(); if(s){ logEvent('logout','تسجيل خروج'); sbCall('app_logout',{p_token:s.token}).catch(()=>{}); }
-  sessionStorage.removeItem(COMMITTEE_SESSION_KEY); reportsCache=[]; membersCache=[]; auditCache=[]; archiveCache=[];
-  toast('تم تسجيل الخروج','info'); go('home'); refreshDashboard();
-}
-
-// ---- Recorder login ----
+// ── تسجيل بلاغ: دخول / نموذج / لا صلاحية ──
 function refreshRecorderGate(){
-  const s=getRecorderSession();
+  const s=getSession(); const allowed = s && can('submit');
   document.getElementById('recorderGateBox').style.display = s ? 'none':'block';
-  document.getElementById('recorderFormWrap').style.display = s ? 'block':'none';
-  if(s){ document.getElementById('recorderNameDisplay').textContent=s.displayName; const rf=document.getElementById('recorderNameField'); if(rf) rf.value=s.displayName; }
-}
-async function tryRecorderLogin(){
-  const u=document.getElementById('recorderUsername').value.trim();
-  const p=document.getElementById('recorderPassword').value;
-  const err=document.getElementById('recorderGateError');
-  try{
-    const res=await sbCall('app_login',{p_username:u,p_password:p});
-    if(res.ok && ROLE_CAPS[res.role] && ROLE_CAPS[res.role].submit){
-      sessionStorage.setItem(RECORDER_SESSION_KEY, JSON.stringify({token:res.token,username:res.username,displayName:res.display_name,role:res.role}));
-      err.style.display='none'; toast('مرحباً '+res.display_name,'ok'); refreshRecorderGate();
-    } else if(res.error==='locked'){ err.textContent=lockMsg(res.until); err.style.display='block'; }
-    else { err.textContent='اسم المستخدم أو كلمة السر غير صحيحة'; err.style.display='block'; }
-  }catch(e){ err.textContent='تعذّر الاتصال بقاعدة البيانات'; err.style.display='block'; }
-}
-function logoutRecorder(){
-  const s=getRecorderSession(); if(s){ logEvent('logout','تسجيل خروج'); sbCall('app_logout',{p_token:s.token}).catch(()=>{}); }
-  sessionStorage.removeItem(RECORDER_SESSION_KEY); toast('تم تسجيل الخروج','info'); refreshRecorderGate();
+  document.getElementById('recorderFormWrap').style.display = allowed ? 'block':'none';
+  document.getElementById('recorderNoPerm').style.display = (s && !allowed) ? 'block':'none';
+  if(allowed){ document.getElementById('recorderNameDisplay').textContent=s.displayName; const rf=document.getElementById('recorderNameField'); if(rf) rf.value=s.displayName; }
 }
 
 // ---- Members ----
@@ -1958,6 +1977,7 @@ document.getElementById('footLogo').src=LOGO_GLYPH;
 document.getElementById('heroLogo').src=TU_LOGO;
 
 // ---- Init ----
+updateAuthUI();
 refreshRecorderGate();
 updateNotifDot();
 runCounters();
